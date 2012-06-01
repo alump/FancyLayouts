@@ -15,11 +15,13 @@ import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Link;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.BaseTheme;
 
 public class FancyLayoutsApplication extends Application {
     @Override
@@ -39,25 +41,41 @@ public class FancyLayoutsApplication extends Application {
         tabs.addTab(buildWelcome(), "Welcome");
         tabs.addTab(buildFancyImage(), "FancyImage");
         tabs.addTab(buildFancyPanel(), "FancyPanel");
+        tabs.addTab(buildFancyLayout(), "FanceLayout");
 
         return tabs;
     }
 
     private ComponentContainer buildWelcome() {
+
         VerticalLayout layout = new VerticalLayout();
         layout.setMargin(true);
-        layout.setSizeFull();
+        layout.setSpacing(true);
+        layout.setWidth("100%");
 
         Label header = new Label(
                 "This is online demo for FancyLayouts Vaadin AddOn.");
         header.addStyleName("demo-header");
         layout.addComponent(header);
 
-        Label desc = new Label(
-                "FancyLayouts adds transitions to UI when you replace content with new. This allows you to have fancier UI in your vaadin based application.");
+        StringBuilder sb = new StringBuilder();
+        sb.append("FancyLayouts adds transitions to UI when you replace content with new. This allows you to have fancier UI in your vaadin based application.");
+        sb.append(" Currently package contains Image widget that can be used to present multiple images in one component slot. And Panel widget which is useful");
+        sb.append(" if you have to replace content inside your UI often.");
+
+        Label desc = new Label(sb.toString());
         desc.addStyleName("demo-desc");
         layout.addComponent(desc);
         layout.setExpandRatio(desc, 1.0f);
+
+        Link link = new Link(
+                "Source code of this demo application",
+                new ExternalResource(
+                        "https://github.com/alump/FancyLayouts/blob/master/src/org/vaadin/alump/fancylayouts/FancyLayoutsApplication.java"));
+        layout.addComponent(link);
+
+        Button sourceLink = new Button();
+        sourceLink.addStyleName(BaseTheme.BUTTON_LINK);
 
         return layout;
     }
@@ -160,6 +178,7 @@ public class FancyLayoutsApplication extends Application {
 
     private ComponentContainer buildFancyPanel() {
         VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
         layout.setSizeFull();
         layout.setSpacing(true);
 
@@ -286,6 +305,19 @@ public class FancyLayoutsApplication extends Application {
         layout.addComponent(table);
 
         return layout;
+    }
+
+    private ComponentContainer buildFancyLayout() {
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        layout.setSpacing(true);
+
+        Label todo = new Label(
+                "TODO: Idea is to have CSS Layout which will add animaitions when content is added and removed.");
+        layout.addComponent(todo);
+
+        return layout;
+
     }
 
 }

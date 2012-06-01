@@ -3,4 +3,9 @@
 .demo-header {
 	font-size: 18px;
 	font-weight: bold;
+	line-height: normal !important;
+}
+
+.demo-desc {
+	max-width: 20cm;
 }

@@ -32,16 +32,29 @@ public class FancyPanel extends AbstractComponentContainer implements
         setContent(null);
     }
 
+    /**
+     * Create new panel with given content
+     * @param content Content used inside panel
+     */
     public FancyPanel(ComponentContainer content) {
         super();
         setContent(content);
     }
 
+    /**
+     * Create new panel with given caption
+     * @param caption Caption of panel
+     */
     public FancyPanel(String caption) {
         this();
         setCaption(caption);
     }
 
+    /**
+     * Create new panel with content and caption
+     * @param content Content of panel
+     * @param caption Caption of panel
+     */
     public FancyPanel(ComponentContainer content, String caption) {
         this(content);
         setCaption(caption);
@@ -55,10 +68,18 @@ public class FancyPanel extends AbstractComponentContainer implements
         return layout;
     }
 
+    /**
+     * Get current content of panel
+     * @return Current content of panel
+     */
     public ComponentContainer getContent() {
         return content;
     }
 
+    /**
+     * Set content of panel
+     * @param content New content to panel
+     */
     public void setContent(ComponentContainer content) {
 
         if (content == null) {
@@ -150,17 +171,29 @@ public class FancyPanel extends AbstractComponentContainer implements
         }
     }
 
-    public void disableTransitions(boolean disable) {
+    /**
+     * Disable transitions
+     * @param disable true to disabled transitions
+     */
+    public void setTransitionsDisabled(boolean disable) {
         if (transitionsDisabled != disable) {
             transitionsDisabled = disable;
             requestRepaint();
         }
     }
 
+    /**
+     * Check if transitions are disabled
+     * @return true if disabled
+     */
     public boolean isTransitionsDisabled() {
         return transitionsDisabled;
     }
 
+    /**
+     * Set panel scrollable (TODO)
+     * @param scrollable
+     */
     public void setScrollable(boolean scrollable) {
         if (this.scrollable != scrollable) {
             this.scrollable = scrollable;

@@ -1,0 +1,6 @@
+@import "../reindeer/styles.css";
+
+.demo-header {
+	font-size: 18px;
+	font-weight: bold;
+}

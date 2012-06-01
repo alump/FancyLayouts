@@ -1,0 +1,14 @@
+.fancy-image {
+ border-width: 0px;	
+}
+.fancy-image IMG {
+ -moz-transition: opacity 0.5s ease-in-out;
+ -webkit-transition: opacity 0.5s ease-in-out;
+ -o-transition: opacity 0.5s ease-in-out;
+}
+
+.fancy-panel-content {
+ -moz-transition: opacity 0.5s ease-in-out;
+ -webkit-transition: opacity 0.5s ease-in-out;
+ -o-transition: opacity 0.5s ease-in-out;	
+}

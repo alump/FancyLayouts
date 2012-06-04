@@ -46,6 +46,9 @@ public class GwtFancyPanel extends SimplePanel {
 
         setScrollPanel(false);
 
+        // TODO: Is is temporary hack!!!!
+        // TODO: Add proper version checks here (when transitionEnds support has
+        // been added)
         if (browserMode == BrowserMode.DEFAULT) {
             String agent = getUserAgent();
             if (agent.contains("webkit")) {
@@ -53,6 +56,9 @@ public class GwtFancyPanel extends SimplePanel {
                 transitionsEnabled = true;
             } else if (agent.contains("gecko/")) {
                 browserMode = BrowserMode.MODERN_GECKO;
+                transitionsEnabled = true;
+            } else if (agent.contains("presto/")) {
+                browserMode = BrowserMode.MODERN_OPERA;
                 transitionsEnabled = true;
             } else {
                 transitionsEnabled = false;

@@ -192,8 +192,8 @@ public class FancyPanel extends AbstractComponentContainer implements
     }
 
     /**
-     * Set panel scrollable (TODO)
-     * @param scrollable
+     * Set FancyPanel scrollable
+     * @param scrollable true to make panel scrollable
      */
     public void setScrollable(boolean scrollable) {
         if (this.scrollable != scrollable) {
@@ -202,6 +202,10 @@ public class FancyPanel extends AbstractComponentContainer implements
         }
     }
 
+    /**
+     * Check if FancyPanel is scrollable
+     * @return true if scrollable
+     */
     public boolean isScrollable() {
         return scrollable;
     }

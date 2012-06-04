@@ -22,6 +22,7 @@ public class FancyPanel extends AbstractComponentContainer implements
         ComponentContainer.ComponentAttachListener,
         ComponentContainer.ComponentDetachListener, Action.Notifier {
 
+    private static final long serialVersionUID = -8147501423567501688L;
     protected ComponentContainer content;
     protected ActionManager actionManager;
     private boolean transitionsDisabled = false;
@@ -201,11 +202,16 @@ public class FancyPanel extends AbstractComponentContainer implements
         }
     }
 
+    public boolean isScrollable() {
+        return scrollable;
+    }
+
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         content.paint(target);
 
         target.addAttribute("transitions", !transitionsDisabled);
+        target.addAttribute("scrollable", scrollable);
 
         if (actionManager != null) {
             actionManager.paintActions(null, target);

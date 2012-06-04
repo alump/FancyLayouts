@@ -17,10 +17,10 @@ public class VFancyPanel extends GwtFancyPanel implements Paintable, Container {
 
     private Paintable content = null;
 
-    private String height = "";
-    private String width = "";
-
     protected final static String ATTR_TRANSITIONS = "transitions";
+    protected final static String ATTR_SCROLLABLE = "scrollable";
+    protected final static String ATTR_SCROLL_TOP = "scroll-top";
+    protected final static String ATTR_SCROLL_LEFT = "scroll-left";
 
     private final RenderInformation renderInformation = new RenderInformation();
 
@@ -34,6 +34,18 @@ public class VFancyPanel extends GwtFancyPanel implements Paintable, Container {
 
         if (uidl.hasAttribute(ATTR_TRANSITIONS)) {
             disableTransitions(!uidl.getBooleanAttribute(ATTR_TRANSITIONS));
+        }
+
+        if (uidl.hasAttribute(ATTR_SCROLLABLE)) {
+            setScrollable(uidl.getBooleanAttribute(ATTR_SCROLLABLE));
+        }
+
+        if (uidl.hasAttribute(ATTR_SCROLL_TOP)) {
+            setScrollTop(uidl.getIntAttribute(ATTR_SCROLL_TOP));
+        }
+
+        if (uidl.hasAttribute(ATTR_SCROLL_LEFT)) {
+            setScrollLeft(uidl.getIntAttribute(ATTR_SCROLL_LEFT));
         }
 
         // Render content
@@ -99,22 +111,6 @@ public class VFancyPanel extends GwtFancyPanel implements Paintable, Container {
         }
 
         return new RenderSpace(w, h, true);
-    }
-
-    @Override
-    public void setWidth(String width) {
-        if (this.width.endsWith(width)) {
-            return;
-        }
-
-        this.width = width;
-        super.setWidth(width);
-    }
-
-    @Override
-    public void setHeight(String height) {
-        this.height = height;
-        super.setHeight(height);
     }
 
 }

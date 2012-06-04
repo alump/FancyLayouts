@@ -16,6 +16,7 @@ import com.vaadin.ui.AbstractComponent;
 @com.vaadin.ui.ClientWidget(org.vaadin.alump.fancylayouts.widgetset.client.ui.VFancyImage.class)
 public class FancyImage extends AbstractComponent {
 
+    private static final long serialVersionUID = -3112985073589754117L;
     private final List<Resource> images = new ArrayList<Resource>();
     private boolean autoBrowseEnabled = false;
     private int autoBrowseTimeout = 3000;

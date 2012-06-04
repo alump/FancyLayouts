@@ -6,7 +6,6 @@ import java.util.List;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.ImageElement;
-import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Timer;
@@ -15,7 +14,6 @@ import com.google.gwt.user.client.ui.Widget;
 public class GwtFancyImage extends Widget {
     private final List<ImageElement> images = new ArrayList<ImageElement>();
     private int currentIndex = 0;
-    private final boolean autoBrowseMode = false;
     private Timer autoBrowseTimer;
     private int autoBrowseTimeoutMs = 3000;
 
@@ -120,17 +118,6 @@ public class GwtFancyImage extends Widget {
                 break;
             }
         }
-    }
-
-    private void setDisplay(int prev, int next) {
-        for (int i = 0; i < images.size(); ++i) {
-            if (i == next) {
-                images.get(i).getStyle().setDisplay(Display.INLINE_BLOCK);
-            } else if (i != prev) {
-                images.get(i).getStyle().setDisplay(Display.NONE);
-            }
-        }
-
     }
 
     public void showImage(int index) {

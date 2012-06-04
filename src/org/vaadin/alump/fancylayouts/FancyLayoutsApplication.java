@@ -41,7 +41,7 @@ public class FancyLayoutsApplication extends Application {
         tabs.addTab(buildWelcome(), "Welcome");
         tabs.addTab(buildFancyImage(), "FancyImage");
         tabs.addTab(buildFancyPanel(), "FancyPanel");
-        tabs.addTab(buildFancyLayout(), "FanceLayout");
+        tabs.addTab(buildFancyLayout(), "FancyLayout");
 
         return tabs;
     }
@@ -183,11 +183,11 @@ public class FancyLayoutsApplication extends Application {
         layout.setSpacing(true);
 
         Label desc = new Label(
-                "FancyPanel works like VPanel but adds transition when you replace the content with setContent() all.");
+                "FancyPanel is panel that offer scrolling and transition when you replace it's content with setContent() call. It's like Vaadin Panel, but I haven't added panel styling DOM elements to keep this clean and simple.");
         layout.addComponent(desc);
 
         HorizontalLayout buttonLayout = new HorizontalLayout();
-        buttonLayout.setMargin(true);
+        buttonLayout.setSpacing(true);
         layout.addComponent(buttonLayout);
 
         Button contA = new Button("Panel content A");
@@ -199,7 +199,17 @@ public class FancyLayoutsApplication extends Application {
         Button contC = new Button("Panel content C");
         buttonLayout.addComponent(contC);
 
+        CheckBox scrollable = new CheckBox("scrollable");
+        scrollable.setImmediate(true);
+        buttonLayout.addComponent(scrollable);
+
+        CheckBox transitions = new CheckBox("transitions");
+        transitions.setValue(true);
+        transitions.setImmediate(true);
+        buttonLayout.addComponent(transitions);
+
         final FancyPanel panel = new FancyPanel();
+        // panel.setTransitionsDisabled(true);
         panel.setContent(createPanelContentStart());
         panel.setSizeFull();
 
@@ -228,6 +238,22 @@ public class FancyLayoutsApplication extends Application {
             }
         });
 
+        scrollable.addListener(new Property.ValueChangeListener() {
+
+            public void valueChange(ValueChangeEvent event) {
+                boolean enable = (Boolean) event.getProperty().getValue();
+                panel.setScrollable(enable);
+            }
+        });
+
+        transitions.addListener(new Property.ValueChangeListener() {
+
+            public void valueChange(ValueChangeEvent event) {
+                boolean enable = (Boolean) event.getProperty().getValue();
+                panel.setTransitionsDisabled(!enable);
+            }
+        });
+
         return layout;
     }
 
@@ -246,7 +272,6 @@ public class FancyLayoutsApplication extends Application {
     private ComponentContainer createPanelContentA() {
 
         VerticalLayout layout = new VerticalLayout();
-        layout.setMargin(true);
         layout.setSpacing(true);
 
         Label label = new Label(
@@ -268,7 +293,6 @@ public class FancyLayoutsApplication extends Application {
     private ComponentContainer createPanelContentB() {
 
         VerticalLayout layout = new VerticalLayout();
-        layout.setMargin(true);
         layout.setSpacing(true);
 
         Label label = new Label(
@@ -292,7 +316,6 @@ public class FancyLayoutsApplication extends Application {
 
     private ComponentContainer createPanelContentC() {
         VerticalLayout layout = new VerticalLayout();
-        layout.setMargin(true);
         layout.setSpacing(true);
 
         Table table = new Table();

@@ -2,11 +2,14 @@ package org.vaadin.alump.fancylayouts.widgetset.client.ui;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.DOM;
+import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.user.client.ui.ComplexPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class GwtFancyPanel extends ComplexPanel {
+public class GwtFancyPanel extends SimplePanel {
 
     private Widget contentWidget = null;
     private Widget oldContentWidget = null;
@@ -14,11 +17,17 @@ public class GwtFancyPanel extends ComplexPanel {
     public static final String CLASS_NAME = "fancy-panel";
     public static final String CONTENT_CLASS_NAME = "fancy-panel-content";
 
-    private final com.google.gwt.user.client.Element contentElement;
-
     private boolean transitionsEnabled = true;
 
     private static BrowserMode browserMode = BrowserMode.DEFAULT;
+
+    protected String height = "";
+    protected String width = "";
+
+    protected ScrollPanel scrollPanel;
+    protected ComplexPanel contentPanel;
+
+    private String overflowBeforeHide;
 
     private enum BrowserMode {
         DEFAULT, MODERN_WEBKIT, MODERN_GECKO, MODERN_OPERA
@@ -32,9 +41,10 @@ public class GwtFancyPanel extends ComplexPanel {
         root.addClassName(CLASS_NAME);
         setElement(root);
 
-        contentElement = DOM.createDiv();
-        contentElement.addClassName(CONTENT_CLASS_NAME);
-        root.appendChild(contentElement);
+        contentPanel = new FlowPanel();
+        contentPanel.addStyleName(CONTENT_CLASS_NAME);
+
+        setScrollPanel(false);
 
         if (browserMode == BrowserMode.DEFAULT) {
             String agent = getUserAgent();
@@ -46,6 +56,30 @@ public class GwtFancyPanel extends ComplexPanel {
                 transitionsEnabled = true;
             } else {
                 transitionsEnabled = false;
+            }
+        }
+
+        setScrollable(false);
+    }
+
+    private void setScrollPanel(boolean scrollable) {
+
+        if (scrollable) {
+            if (scrollPanel == null) {
+                scrollPanel = new ScrollPanel();
+                scrollPanel.addStyleName(CLASS_NAME + "-scroll");
+                scrollPanel.setSize("100%", "100%");
+                this.remove(contentPanel);
+                scrollPanel.add(contentPanel);
+                this.add(scrollPanel);
+            }
+        } else {
+            if (scrollPanel != null) {
+                this.remove(scrollPanel);
+                scrollPanel = null;
+                this.add(contentPanel);
+            } else if (contentPanel.getParent() != this) {
+                this.add(contentPanel);
             }
         }
     }
@@ -83,13 +117,22 @@ public class GwtFancyPanel extends ComplexPanel {
 
         Element element = (Element) object;
 
-        if (contentElement == element) {
+        if (getContentElement() == element) {
 
-            float value = new Float(contentElement.getStyle().getOpacity());
-            if (value == 0.0f) {
-                remove(oldContentWidget);
-                contentElement.getStyle().setOpacity(1.0);
+            float value = new Float(getContentElement().getStyle().getOpacity());
+            if (value < 0.1f) {
+                contentPanel.remove(oldContentWidget);
+                oldContentWidget = null;
                 contentWidget.getElement().getStyle().setOpacity(1.0);
+                getContentElement().getStyle().setOpacity(1.0);
+
+                if (overflowBeforeHide != null) {
+
+                    scrollPanel.getElement().getStyle()
+                            .setProperty("overflow-y", overflowBeforeHide);
+                    overflowBeforeHide = null;
+
+                }
             }
         }
     }
@@ -98,11 +141,19 @@ public class GwtFancyPanel extends ComplexPanel {
         oldContentWidget = contentWidget;
         contentWidget = content;
 
-        add(content, contentElement);
-        content.getElement().getStyle().setOpacity(0.01);
+        if (scrollPanel != null) {
+            overflowBeforeHide = scrollPanel.getElement().getStyle()
+                    .getOverflowY();
+            scrollPanel.getElement().getStyle().setOverflowY(Overflow.HIDDEN);
+        } else {
+            overflowBeforeHide = null;
+        }
 
-        addTransitionEndListener(contentElement);
-        contentElement.getStyle().setOpacity(0.0);
+        contentPanel.add(content);
+        content.getElement().getStyle().setOpacity(0.0);
+
+        addTransitionEndListener(getContentElement());
+        getContentElement().getStyle().setOpacity(0.0);
     }
 
     public void setContent(Widget content) {
@@ -114,10 +165,10 @@ public class GwtFancyPanel extends ComplexPanel {
             setContentWithTransition(content);
         } else {
             if (contentWidget != null) {
-                remove(contentWidget);
+                contentPanel.remove(contentWidget);
             }
             contentWidget = content;
-            add(content, contentElement);
+            contentPanel.add(contentWidget);
         }
     }
 
@@ -129,7 +180,57 @@ public class GwtFancyPanel extends ComplexPanel {
     }
 
     protected Element getContentElement() {
-        return contentElement;
+        return contentPanel.getElement();
+    }
+
+    public void setScrollable(boolean scroll) {
+
+        setScrollPanel(scroll);
+    }
+
+    public void setScrollTop(int value) {
+        if (scrollPanel != null) {
+            scrollPanel.setVerticalScrollPosition(value);
+        }
+    }
+
+    public int getScrollTop() {
+        if (scrollPanel != null) {
+            return scrollPanel.getVerticalScrollPosition();
+        } else {
+            return 0;
+        }
+    }
+
+    public void setScrollLeft(int value) {
+        if (scrollPanel != null) {
+            scrollPanel.setHorizontalScrollPosition(value);
+        }
+    }
+
+    public int getScrollLeft() {
+        if (scrollPanel != null) {
+            return scrollPanel.getHorizontalScrollPosition();
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public void setWidth(String width) {
+        if (this.width.endsWith(width)) {
+            return;
+        }
+
+        this.width = width;
+        super.setWidth(width);
+
+    }
+
+    @Override
+    public void setHeight(String height) {
+        this.height = height;
+        super.setHeight(height);
     }
 
     private static native String getUserAgent()

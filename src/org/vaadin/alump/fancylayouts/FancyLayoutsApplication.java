@@ -24,6 +24,9 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.BaseTheme;
 
 public class FancyLayoutsApplication extends Application {
+
+    private int layoutCounter = 0;
+
     @Override
     public void init() {
 
@@ -293,6 +296,7 @@ public class FancyLayoutsApplication extends Application {
     private ComponentContainer createPanelContentB() {
 
         VerticalLayout layout = new VerticalLayout();
+        layout.setWidth("100%");
         layout.setSpacing(true);
 
         Label label = new Label(
@@ -336,11 +340,52 @@ public class FancyLayoutsApplication extends Application {
         layout.setSpacing(true);
 
         Label todo = new Label(
-                "TODO: Idea is to have CSS Layout which will add animaitions when content is added and removed.");
+                "NOTICE: This component is still under development. This is just development preview of current state!<br/>"
+                        + "FancyCssLayout adds transitions to added and removed components!");
         layout.addComponent(todo);
+
+        Button addContent = new Button("Add new content item");
+        layout.addComponent(addContent);
+
+        final FancyCssLayout cssLayout = new FancyCssLayout();
+        cssLayout.setSizeFull();
+        layout.addComponent(cssLayout);
+        layout.setExpandRatio(cssLayout, 1.0f);
+
+        for (int i = 0; i < 10; ++i) {
+            addCssLayoutContent(cssLayout);
+        }
+
+        addContent.addListener(new Button.ClickListener() {
+
+            public void buttonClick(ClickEvent event) {
+                addCssLayoutContent(cssLayout);
+            }
+        });
 
         return layout;
 
+    }
+
+    private void addCssLayoutContent(final FancyCssLayout layout) {
+        final HorizontalLayout hLayout = new HorizontalLayout();
+        hLayout.addStyleName("demo-removable-layout");
+        hLayout.setSpacing(true);
+        hLayout.setWidth("100%");
+        Button remove = new Button("Remove");
+        remove.addListener(new Button.ClickListener() {
+
+            public void buttonClick(ClickEvent event) {
+                layout.fancyRemoveComponent(hLayout);
+            }
+        });
+        hLayout.addComponent(remove);
+
+        Label label = new Label("Lorem ipsum #" + (++layoutCounter));
+        hLayout.addComponent(label);
+        hLayout.setExpandRatio(label, 1.0f);
+
+        layout.addComponent(hLayout);
     }
 
 }

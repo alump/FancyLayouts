@@ -9,3 +9,11 @@
 .demo-desc {
 	max-width: 20cm;
 }
+
+.demo-removable-layout {
+	border-width: 0px 0px 1px 0px;
+	border-color: silver;
+	border-style: solid;
+	margin: 5px;
+	padding: 5px;
+}

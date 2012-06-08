@@ -1,0 +1,202 @@
+package org.vaadin.alump.fancylayouts.widgetset.client.ui;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.vaadin.alump.fancylayouts.widgetset.client.ui.model.BrowserMode;
+
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.RepeatingCommand;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
+
+public class GwtFancyCssLayout extends SimplePanel {
+
+    public final static String CLASS_NAME = "fancy-csslayout";
+    private static BrowserMode browserMode;
+    protected boolean transitionsEnabled = false;
+    protected String width = "";
+    protected String height = "";
+
+    protected FlowPanel flowPanel = new FlowPanel();
+    protected List<Widget> children = new ArrayList<Widget>();
+    protected Map<Element, Widget> widgetMap = new HashMap<Element, Widget>();
+    protected Set<Widget> removingMap = new HashSet<Widget>();
+
+    public GwtFancyCssLayout() {
+        addStyleName(CLASS_NAME);
+
+        flowPanel.addStyleName(CLASS_NAME + "-content");
+        super.add(flowPanel);
+
+        // TODO: Is is temporary hack!!!!
+        // TODO: Add proper version checks here (when transitionEnds support has
+        // been added)
+        if (browserMode == null) {
+            browserMode = BrowserMode.resolve();
+        }
+        transitionsEnabled = !(browserMode == BrowserMode.DEFAULT);
+    }
+
+    @Override
+    public void add(Widget widget) {
+
+        if (hasChild(widget)) {
+            return;
+        }
+
+        SimplePanel wrapper = new SimplePanel();
+        wrapper.setStyleName(CLASS_NAME + "-item");
+        flowPanel.add(wrapper);
+        wrapper.add(widget);
+
+        final Element wrapperElement = wrapper.getElement();
+        widgetMap.put(wrapperElement, widget);
+
+        children.add(widget);
+
+        if (this.isVisible()) {
+            wrapperElement.getStyle().setOpacity(0.0);
+            Scheduler.get().scheduleFixedDelay(new RepeatingCommand() {
+
+                public boolean execute() {
+                    wrapperElement.getStyle().setOpacity(1.0);
+                    return false;
+                }
+
+            }, 100);
+        }
+    }
+
+    public boolean hasChild(Widget widget) {
+        return children.contains(widget);
+    }
+
+    private void addTransitionEndListener(Element element) {
+
+        if (element.hasAttribute("hasTransitionEndListener")
+                && element.getAttribute("hasTransitionEndListener").equals("1")) {
+            return;
+        }
+
+        String eventName = null;
+        if (browserMode == BrowserMode.MODERN_WEBKIT) {
+            eventName = "webkitTransitionEnd";
+        } else if (browserMode == BrowserMode.MODERN_GECKO) {
+            eventName = "transitionend";
+        } else if (browserMode == BrowserMode.MODERN_OPERA) {
+            eventName = "oTransitionEnd";
+        }
+
+        if (eventName != null) {
+            addTransitionEndListener(eventName, element);
+        }
+    }
+
+    private native void addTransitionEndListener(String eventName,
+            Element element)
+    /*-{
+         var that = this;
+         element.addEventListener(eventName, function(event){
+         that.@org.vaadin.alump.fancylayouts.widgetset.client.ui.GwtFancyCssLayout::onTransitionEnd(Ljava/lang/Object;)(element);
+         },false);
+         element.hasTransitionEndListener = true;
+    }-*/;
+
+    private void onTransitionEnd(Object object) {
+
+        if (!(object instanceof Element)) {
+            return;
+        }
+
+        Element element = (Element) object;
+        Widget widget = widgetMap.get(element);
+        if (widget == null) {
+            return;
+        }
+
+        float value = new Float(element.getStyle().getOpacity());
+        if (value < 0.1f) {
+            removingMap.remove(widget);
+            performFancyRemove(widget);
+        }
+    }
+
+    private void removeWidgetWithTransition(Widget child) {
+        if (!child.isVisible()) {
+            performFancyRemove(child);
+        } else {
+            removingMap.add(child);
+            Element wrapperElement = child.getParent().getElement();
+            addTransitionEndListener(wrapperElement);
+            wrapperElement.getStyle().setOpacity(0.0);
+        }
+    }
+
+    public boolean fancyRemove(Widget widget) {
+        if (!children.contains(widget)) {
+            return false;
+        }
+
+        if (transitionsEnabled && this.isVisible()) {
+            removeWidgetWithTransition(widget);
+        } else {
+            performFancyRemove(widget);
+        }
+
+        return true;
+    }
+
+    /**
+     * To be overwritten if additional actions has to be performed. For example
+     * do the deletion via server.
+     * @param widget Child widget removed
+     */
+    protected void performFancyRemove(Widget widget) {
+        remove(widget);
+    }
+
+    @Override
+    public boolean remove(Widget widget) {
+
+        if (children.contains(widget)) {
+            Widget wrapper = widget.getParent();
+            widgetMap.remove(wrapper.getElement());
+            removingMap.remove(widget);
+            flowPanel.remove(wrapper);
+            children.remove(widget);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public void setWidth(String width) {
+        if (this.width.endsWith(width)) {
+            return;
+        }
+
+        this.width = width;
+        super.setWidth(width);
+
+    }
+
+    @Override
+    public void setHeight(String height) {
+        this.height = height;
+        super.setHeight(height);
+    }
+
+    public Iterator<Widget> childIterator() {
+        return children.iterator();
+    }
+
+}

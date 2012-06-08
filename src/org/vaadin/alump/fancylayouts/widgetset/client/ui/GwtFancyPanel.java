@@ -1,5 +1,7 @@
 package org.vaadin.alump.fancylayouts.widgetset.client.ui;
 
+import org.vaadin.alump.fancylayouts.widgetset.client.ui.model.BrowserMode;
+
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Overflow;
@@ -19,7 +21,7 @@ public class GwtFancyPanel extends SimplePanel {
 
     private boolean transitionsEnabled = true;
 
-    private static BrowserMode browserMode = BrowserMode.DEFAULT;
+    private static BrowserMode browserMode;
 
     protected String height = "";
     protected String width = "";
@@ -28,10 +30,6 @@ public class GwtFancyPanel extends SimplePanel {
     protected ComplexPanel contentPanel;
 
     private String overflowBeforeHide;
-
-    private enum BrowserMode {
-        DEFAULT, MODERN_WEBKIT, MODERN_GECKO, MODERN_OPERA
-    };
 
     public GwtFancyPanel() {
 
@@ -49,21 +47,10 @@ public class GwtFancyPanel extends SimplePanel {
         // TODO: Is is temporary hack!!!!
         // TODO: Add proper version checks here (when transitionEnds support has
         // been added)
-        if (browserMode == BrowserMode.DEFAULT) {
-            String agent = getUserAgent();
-            if (agent.contains("webkit")) {
-                browserMode = BrowserMode.MODERN_WEBKIT;
-                transitionsEnabled = true;
-            } else if (agent.contains("gecko/")) {
-                browserMode = BrowserMode.MODERN_GECKO;
-                transitionsEnabled = true;
-            } else if (agent.contains("presto/")) {
-                browserMode = BrowserMode.MODERN_OPERA;
-                transitionsEnabled = true;
-            } else {
-                transitionsEnabled = false;
-            }
+        if (browserMode == null) {
+            browserMode = BrowserMode.resolve();
         }
+        transitionsEnabled = !(browserMode == BrowserMode.DEFAULT);
 
         setScrollable(false);
     }
@@ -91,6 +78,12 @@ public class GwtFancyPanel extends SimplePanel {
     }
 
     private void addTransitionEndListener(Element element) {
+
+        if (element.hasAttribute("hasTransitionEndListener")
+                && element.getAttribute("hasTransitionEndListener").equals("1")) {
+            return;
+        }
+
         String eventName = null;
         if (browserMode == BrowserMode.MODERN_WEBKIT) {
             eventName = "webkitTransitionEnd";
@@ -238,10 +231,5 @@ public class GwtFancyPanel extends SimplePanel {
         this.height = height;
         super.setHeight(height);
     }
-
-    private static native String getUserAgent()
-    /*-{
-    return navigator.userAgent.toLowerCase();
-    }-*/;
 
 }

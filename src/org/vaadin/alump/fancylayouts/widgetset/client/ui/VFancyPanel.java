@@ -89,6 +89,7 @@ public class VFancyPanel extends GwtFancyPanel implements Paintable, Container {
         if (height != null && height != "" && width != null && width != "") {
             return true;
         }
+
         return !renderInformation.updateSize(getElement());
     }
 

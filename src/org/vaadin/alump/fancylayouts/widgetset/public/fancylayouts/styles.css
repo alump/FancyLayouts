@@ -14,7 +14,7 @@
 }
 
 .fancy-csslayout-item {
- -moz-transition: opacity 0.25s ease-in-out;
- -webkit-transition: opacity 0.25s ease-in-out;
- -o-transition: opacity 0.25s ease-in-out;	
+ -moz-transition: opacity 0.34s ease-in;
+ -webkit-transition: opacity 0.34s ease-in;
+ -o-transition: opacity 0.34s ease-in;	
 }

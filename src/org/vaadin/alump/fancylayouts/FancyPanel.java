@@ -22,7 +22,7 @@ public class FancyPanel extends AbstractComponentContainer implements
         ComponentContainer.ComponentAttachListener,
         ComponentContainer.ComponentDetachListener, Action.Notifier {
 
-    private static final long serialVersionUID = -8147501423567501688L;
+    private static final long serialVersionUID = 3640371327771360990L;
     protected ComponentContainer content;
     protected ActionManager actionManager;
     private boolean transitionsDisabled = false;

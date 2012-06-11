@@ -13,7 +13,6 @@ import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.ValueMap;
 
 public class VFancyCssLayout extends GwtFancyCssLayout implements Paintable,
         Container {
@@ -71,10 +70,10 @@ public class VFancyCssLayout extends GwtFancyCssLayout implements Paintable,
             oldWidgets.add(iterator.next());
         }
 
-        ValueMap mapAttribute = null;
-        if (uidl.hasAttribute("css")) {
-            mapAttribute = uidl.getMapAttribute("css");
-        }
+        // ValueMap mapAttribute = null;
+        // if (uidl.hasAttribute("css")) {
+        // mapAttribute = uidl.getMapAttribute("css");
+        // }
 
         lastChildIndex = 0;
         for (final Iterator<Object> i = uidl.getChildIterator(); i.hasNext();) {

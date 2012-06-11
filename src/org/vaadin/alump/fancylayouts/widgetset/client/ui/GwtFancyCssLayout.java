@@ -71,7 +71,7 @@ public class GwtFancyCssLayout extends SimplePanel {
                     return false;
                 }
 
-            }, 100);
+            }, 50);
         }
     }
 
@@ -116,16 +116,20 @@ public class GwtFancyCssLayout extends SimplePanel {
             return;
         }
 
-        Element element = (Element) object;
+        final Element element = (Element) object;
         Widget widget = widgetMap.get(element);
         if (widget == null) {
             return;
         }
 
-        float value = new Float(element.getStyle().getOpacity());
-        if (value < 0.1f) {
-            removingMap.remove(widget);
-            performFancyRemove(widget);
+        try {
+            float value = new Float(element.getStyle().getOpacity());
+            if (value < 0.01f) {
+                removingMap.remove(widget);
+                performFancyRemove(widget);
+            }
+        } catch (Exception e) {
+
         }
     }
 

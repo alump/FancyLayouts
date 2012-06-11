@@ -32,7 +32,8 @@ public class FancyLayoutsApplication extends Application {
 
         setTheme("demo");
 
-        Window mainWindow = new Window("FancyLayouts Demo Application");
+        Window mainWindow = new Window(
+                "FancyLayouts Demo Application - version 0.0.3");
         mainWindow.setContent(buildLayout());
         setMainWindow(mainWindow);
     }
@@ -372,7 +373,7 @@ public class FancyLayoutsApplication extends Application {
         hLayout.addStyleName("demo-removable-layout");
         hLayout.setSpacing(true);
         hLayout.setWidth("100%");
-        Button remove = new Button("Remove");
+        Button remove = new Button("X");
         remove.addListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
@@ -380,12 +381,22 @@ public class FancyLayoutsApplication extends Application {
             }
         });
         hLayout.addComponent(remove);
+        hLayout.setComponentAlignment(remove, Alignment.MIDDLE_CENTER);
 
-        Label label = new Label("Lorem ipsum #" + (++layoutCounter));
-        hLayout.addComponent(label);
-        hLayout.setExpandRatio(label, 1.0f);
+        VerticalLayout vLayout = new VerticalLayout();
+        vLayout.setWidth("100%");
+        hLayout.addComponent(vLayout);
+        hLayout.setExpandRatio(vLayout, 1.0f);
+
+        Label label = new Label("Entry #" + (++layoutCounter));
+        label.addStyleName("demo-big-label");
+        vLayout.addComponent(label);
+
+        Label label2 = new Label("Lorem ipsum, foo bar?");
+        label2.addStyleName("demo-small-label-"
+                + String.valueOf(layoutCounter % 4));
+        vLayout.addComponent(label2);
 
         layout.addComponent(hLayout);
     }
-
 }

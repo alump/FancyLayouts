@@ -27,6 +27,7 @@ public class FancyCssLayout extends AbstractLayout implements
         LayoutClickNotifier, ComponentContainer.ComponentAttachListener,
         ComponentContainer.ComponentDetachListener {
 
+    private static final long serialVersionUID = -5420351306587635883L;
     protected List<Component> components = new ArrayList<Component>();
     protected Set<Component> fancyRemoveComponents = new HashSet<Component>();
 

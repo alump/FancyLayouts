@@ -27,9 +27,10 @@ public class FancyCssLayout extends AbstractLayout implements
         LayoutClickNotifier, ComponentContainer.ComponentAttachListener,
         ComponentContainer.ComponentDetachListener {
 
-    private static final long serialVersionUID = -5420351306587635883L;
+    private static final long serialVersionUID = -5420351316587635883L;
     protected List<Component> components = new ArrayList<Component>();
     protected Set<Component> fancyRemoveComponents = new HashSet<Component>();
+    private boolean marginTransition = true;
 
     public void replaceComponent(Component oldComponent, Component newComponent) {
         if (components.contains(oldComponent)) {
@@ -63,12 +64,14 @@ public class FancyCssLayout extends AbstractLayout implements
     }
 
     /**
-     * NOT IMPLEMENTED YET! Will work as addComponent.
+     * Add widget to specific index
      * @param c Component added
-     * @param index Index for component
+     * @param index Index where component is added
      */
     public void addComponent(Component c, int index) {
-        addComponent(c);
+        super.addComponent(c);
+        components.add(index, c);
+        requestRepaint();
     }
 
     @Override
@@ -128,6 +131,8 @@ public class FancyCssLayout extends AbstractLayout implements
             target.addAttribute("css", componentCss);
         }
 
+        target.addAttribute("margin-transition", marginTransition);
+
         if (!fancyRemoveComponents.isEmpty()) {
             int i = 0;
             Iterator<Component> iter = fancyRemoveComponents.iterator();
@@ -165,6 +170,27 @@ public class FancyCssLayout extends AbstractLayout implements
         if (components.contains(component)) {
             fireComponentAttachEvent(component);
         }
+    }
+
+    /**
+     * Do margin transition magic when item are hidden. This can be disabled
+     * as it might cause issues in some UIs. Also this requires more performance
+     * from browser.
+     * @param enabled false to disable margin transition
+     */
+    public void setMarginTransitionEnabled(boolean enabled) {
+        if (marginTransition != enabled) {
+            marginTransition = enabled;
+            requestRepaint();
+        }
+    }
+
+    /**
+     * Check if margin transitions are enabled
+     * @return true if enabled
+     */
+    public boolean isMarginTransitionEnabled() {
+        return marginTransition;
     }
 
 }

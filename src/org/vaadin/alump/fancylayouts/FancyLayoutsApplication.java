@@ -26,6 +26,7 @@ import com.vaadin.ui.themes.BaseTheme;
 public class FancyLayoutsApplication extends Application {
 
     private int layoutCounter = 0;
+    private boolean addCssMiddle = false;
 
     @Override
     public void init() {
@@ -33,7 +34,7 @@ public class FancyLayoutsApplication extends Application {
         setTheme("demo");
 
         Window mainWindow = new Window(
-                "FancyLayouts Demo Application - version 0.0.3");
+                "FancyLayouts Demo Application - version 0.0.4");
         mainWindow.setContent(buildLayout());
         setMainWindow(mainWindow);
     }
@@ -340,15 +341,28 @@ public class FancyLayoutsApplication extends Application {
         layout.setMargin(true);
         layout.setSpacing(true);
 
+        final FancyCssLayout cssLayout = new FancyCssLayout();
+
         Label todo = new Label(
                 "NOTICE: This component is still under development. This is just development preview of current state!<br/>"
                         + "FancyCssLayout adds transitions to added and removed components!");
         layout.addComponent(todo);
 
-        Button addContent = new Button("Add new content item");
-        layout.addComponent(addContent);
+        HorizontalLayout hLayout = new HorizontalLayout();
+        hLayout.setWidth("100%");
+        layout.addComponent(hLayout);
 
-        final FancyCssLayout cssLayout = new FancyCssLayout();
+        Button addContent = new Button("Add new content item");
+        hLayout.addComponent(addContent);
+
+        CheckBox middleCbox = new CheckBox("add middle");
+        middleCbox.setValue(addCssMiddle);
+        hLayout.addComponent(middleCbox);
+
+        CheckBox marginCbox = new CheckBox("margin trans.");
+        marginCbox.setValue(cssLayout.isMarginTransitionEnabled());
+        hLayout.addComponent(marginCbox);
+
         cssLayout.setSizeFull();
         layout.addComponent(cssLayout);
         layout.setExpandRatio(cssLayout, 1.0f);
@@ -362,6 +376,23 @@ public class FancyLayoutsApplication extends Application {
             public void buttonClick(ClickEvent event) {
                 addCssLayoutContent(cssLayout);
             }
+        });
+
+        middleCbox.addListener(new Property.ValueChangeListener() {
+
+            public void valueChange(ValueChangeEvent event) {
+                addCssMiddle = (Boolean) event.getProperty().getValue();
+            }
+
+        });
+
+        marginCbox.addListener(new Property.ValueChangeListener() {
+
+            public void valueChange(ValueChangeEvent event) {
+                cssLayout.setMarginTransitionEnabled((Boolean) event
+                        .getProperty().getValue());
+            }
+
         });
 
         return layout;
@@ -397,6 +428,10 @@ public class FancyLayoutsApplication extends Application {
                 + String.valueOf(layoutCounter % 4));
         vLayout.addComponent(label2);
 
-        layout.addComponent(hLayout);
+        if (addCssMiddle) {
+            layout.addComponent(hLayout, layout.getComponentCount() / 2);
+        } else {
+            layout.addComponent(hLayout);
+        }
     }
 }

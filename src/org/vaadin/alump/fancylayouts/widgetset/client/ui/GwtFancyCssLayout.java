@@ -13,6 +13,7 @@ import org.vaadin.alump.fancylayouts.widgetset.client.ui.model.BrowserMode;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -30,6 +31,8 @@ public class GwtFancyCssLayout extends SimplePanel {
     protected Map<Element, Widget> widgetMap = new HashMap<Element, Widget>();
     protected Set<Widget> removingMap = new HashSet<Widget>();
 
+    protected boolean marginTransitionEnabled = true;
+
     public GwtFancyCssLayout() {
         addStyleName(CLASS_NAME);
 
@@ -45,16 +48,19 @@ public class GwtFancyCssLayout extends SimplePanel {
         transitionsEnabled = !(browserMode == BrowserMode.DEFAULT);
     }
 
-    @Override
-    public void add(Widget widget) {
-
+    public void add(Widget widget, int index) {
         if (hasChild(widget)) {
             return;
         }
 
         SimplePanel wrapper = new SimplePanel();
         wrapper.setStyleName(CLASS_NAME + "-item");
-        flowPanel.add(wrapper);
+
+        if (index < 0 || index >= flowPanel.getWidgetCount()) {
+            flowPanel.add(wrapper);
+        } else {
+            flowPanel.insert(wrapper, index);
+        }
         wrapper.add(widget);
 
         final Element wrapperElement = wrapper.getElement();
@@ -73,6 +79,11 @@ public class GwtFancyCssLayout extends SimplePanel {
 
             }, 50);
         }
+    }
+
+    @Override
+    public void add(Widget widget) {
+        add(widget, -1);
     }
 
     public boolean hasChild(Widget widget) {
@@ -141,7 +152,21 @@ public class GwtFancyCssLayout extends SimplePanel {
             Element wrapperElement = child.getParent().getElement();
             addTransitionEndListener(wrapperElement);
             wrapperElement.getStyle().setOpacity(0.0);
+            if (marginTransitionEnabled) {
+                wrapperElement.getStyle().setMarginTop(
+                        -wrapperElement.getOffsetHeight() / 2.0, Unit.PX);
+                wrapperElement.getStyle().setMarginBottom(
+                        -wrapperElement.getOffsetHeight() / 2.0, Unit.PX);
+                wrapperElement.getStyle().setMarginLeft(
+                        -wrapperElement.getOffsetWidth() / 2.0, Unit.PX);
+                wrapperElement.getStyle().setMarginRight(
+                        -wrapperElement.getOffsetWidth() / 2.0, Unit.PX);
+            }
         }
+    }
+
+    public void setMarginTransitionEnabled(boolean enabled) {
+        marginTransitionEnabled = enabled;
     }
 
     public boolean fancyRemove(Widget widget) {

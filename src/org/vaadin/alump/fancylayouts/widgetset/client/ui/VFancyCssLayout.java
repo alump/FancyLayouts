@@ -56,7 +56,10 @@ public class VFancyCssLayout extends GwtFancyCssLayout implements Paintable,
         this.client = client;
         paintableId = uidl.getId();
 
-        // clickEventHandler.handleEventHandlerRegistration(client);
+        if (uidl.hasAttribute("margin-transition")) {
+            setMarginTransitionEnabled(uidl
+                    .getBooleanAttribute("margin-transition"));
+        }
 
         updateContentFromUIDL(uidl);
         rendering = false;
@@ -83,20 +86,20 @@ public class VFancyCssLayout extends GwtFancyCssLayout implements Paintable,
             if (hasChild(widget)) {
                 oldWidgets.remove(child);
             } else {
-                add((Widget) child);
+                add((Widget) child, lastChildIndex);
             }
 
             if (!r.getBooleanAttribute("cached")) {
                 child.updateFromUIDL(r, client);
             }
+
+            ++lastChildIndex;
         }
 
         // Remove old widgets
         for (Widget w : oldWidgets) {
-            VConsole.log("Removing child " + w.getParent().getStyleName());
             if (!remove(w)) {
-
-                VConsole.log("Failed to remove child?");
+                VConsole.error("Failed to remove child?");
             }
             if (w instanceof Paintable) {
                 final Paintable p = (Paintable) w;

@@ -97,15 +97,7 @@ public class GwtFancyCssLayout extends SimplePanel {
             return;
         }
 
-        String eventName = null;
-        if (browserMode == BrowserMode.MODERN_WEBKIT) {
-            eventName = "webkitTransitionEnd";
-        } else if (browserMode == BrowserMode.MODERN_GECKO) {
-            eventName = "transitionend";
-        } else if (browserMode == BrowserMode.MODERN_OPERA) {
-            eventName = "oTransitionEnd";
-        }
-
+        String eventName = browserMode.getTransitionEnd();
         if (eventName != null) {
             addTransitionEndListener(eventName, element);
         }
@@ -145,11 +137,12 @@ public class GwtFancyCssLayout extends SimplePanel {
     }
 
     private void removeWidgetWithTransition(Widget child) {
+        Element wrapperElement = child.getParent().getElement();
+
         if (!child.isVisible()) {
             performFancyRemove(child);
-        } else {
+        } else if (!removingMap.contains(child)) {
             removingMap.add(child);
-            Element wrapperElement = child.getParent().getElement();
             addTransitionEndListener(wrapperElement);
             wrapperElement.getStyle().setOpacity(0.0);
             if (marginTransitionEnabled) {

@@ -18,6 +18,23 @@ public enum BrowserMode {
         return ret;
     }
 
+    public boolean hasTransitionEndEvent() {
+        return getTransitionEnd() != null;
+    }
+
+    public String getTransitionEnd() {
+        switch (this) {
+        case MODERN_WEBKIT:
+            return "webkitTransitionEnd";
+        case MODERN_GECKO:
+            return "transitionend";
+        case MODERN_OPERA:
+            return "oTransitionEnd";
+        default:
+            return null;
+        }
+    }
+
     public static BrowserMode resolve() {
         return resolve(getUserAgent());
     }

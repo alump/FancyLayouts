@@ -187,6 +187,8 @@ public class FancyLayoutsApplication extends Application {
         layout.setSizeFull();
         layout.setSpacing(true);
 
+        final FancyPanel panel = new FancyPanel();
+
         Label desc = new Label(
                 "FancyPanel is panel that offer scrolling and transition when you replace it's content with setContent() call. It's like Vaadin Panel, but I haven't added panel styling DOM elements to keep this clean and simple.");
         layout.addComponent(desc);
@@ -209,12 +211,10 @@ public class FancyLayoutsApplication extends Application {
         buttonLayout.addComponent(scrollable);
 
         CheckBox transitions = new CheckBox("transitions");
-        transitions.setValue(true);
+        transitions.setValue(panel.isTransitionEnabled(FancyTransition.FADE));
         transitions.setImmediate(true);
         buttonLayout.addComponent(transitions);
 
-        final FancyPanel panel = new FancyPanel();
-        // panel.setTransitionsDisabled(true);
         panel.setContent(createPanelContentStart());
         panel.setSizeFull();
 
@@ -255,7 +255,7 @@ public class FancyLayoutsApplication extends Application {
 
             public void valueChange(ValueChangeEvent event) {
                 boolean enable = (Boolean) event.getProperty().getValue();
-                panel.setTransitionsDisabled(!enable);
+                panel.setFadeTransitionEnabled(enable);
             }
         });
 
@@ -298,6 +298,7 @@ public class FancyLayoutsApplication extends Application {
     private ComponentContainer createPanelContentB() {
 
         VerticalLayout layout = new VerticalLayout();
+        layout.setSizeUndefined();
         layout.setWidth("100%");
         layout.setSpacing(true);
 
@@ -344,8 +345,9 @@ public class FancyLayoutsApplication extends Application {
         final FancyCssLayout cssLayout = new FancyCssLayout();
 
         Label todo = new Label(
-                "NOTICE: This component is still under development. This is just development preview of current state!<br/>"
+                "<b>NOTICE:</b> This component is still under development. This is just development preview of current state!<br/>"
                         + "FancyCssLayout adds transitions to added and removed components!");
+        todo.setContentMode(Label.CONTENT_XHTML);
         layout.addComponent(todo);
 
         HorizontalLayout hLayout = new HorizontalLayout();
@@ -359,8 +361,9 @@ public class FancyLayoutsApplication extends Application {
         middleCbox.setValue(addCssMiddle);
         hLayout.addComponent(middleCbox);
 
-        CheckBox marginCbox = new CheckBox("margin trans.");
-        marginCbox.setValue(cssLayout.isMarginTransitionEnabled());
+        CheckBox marginCbox = new CheckBox("slide");
+        marginCbox.setValue(cssLayout
+                .isTransitionEnabled(FancyTransition.SLIDE));
         hLayout.addComponent(marginCbox);
 
         cssLayout.setSizeFull();
@@ -389,8 +392,8 @@ public class FancyLayoutsApplication extends Application {
         marginCbox.addListener(new Property.ValueChangeListener() {
 
             public void valueChange(ValueChangeEvent event) {
-                cssLayout.setMarginTransitionEnabled((Boolean) event
-                        .getProperty().getValue());
+                cssLayout.setSlideEnabled((Boolean) event.getProperty()
+                        .getValue());
             }
 
         });

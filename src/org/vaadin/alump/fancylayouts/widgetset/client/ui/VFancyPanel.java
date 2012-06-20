@@ -36,18 +36,6 @@ public class VFancyPanel extends GwtFancyPanel implements Paintable, Container {
             disableTransitions(!uidl.getBooleanAttribute(ATTR_TRANSITIONS));
         }
 
-        if (uidl.hasAttribute(ATTR_SCROLLABLE)) {
-            setScrollable(uidl.getBooleanAttribute(ATTR_SCROLLABLE));
-        }
-
-        if (uidl.hasAttribute(ATTR_SCROLL_TOP)) {
-            setScrollTop(uidl.getIntAttribute(ATTR_SCROLL_TOP));
-        }
-
-        if (uidl.hasAttribute(ATTR_SCROLL_LEFT)) {
-            setScrollLeft(uidl.getIntAttribute(ATTR_SCROLL_LEFT));
-        }
-
         // Render content
         final UIDL layoutUidl = uidl.getChildUIDL(0);
         final Paintable newContent = client.getPaintable(layoutUidl);
@@ -59,6 +47,18 @@ public class VFancyPanel extends GwtFancyPanel implements Paintable, Container {
             content = newContent;
         }
         content.updateFromUIDL(layoutUidl, client);
+
+        if (uidl.hasAttribute(ATTR_SCROLLABLE)) {
+            setScrollable(uidl.getBooleanAttribute(ATTR_SCROLLABLE));
+        }
+
+        if (uidl.hasAttribute(ATTR_SCROLL_TOP)) {
+            setScrollTop(uidl.getIntAttribute(ATTR_SCROLL_TOP));
+        }
+
+        if (uidl.hasAttribute(ATTR_SCROLL_LEFT)) {
+            setScrollLeft(uidl.getIntAttribute(ATTR_SCROLL_LEFT));
+        }
 
     }
 
@@ -98,14 +98,22 @@ public class VFancyPanel extends GwtFancyPanel implements Paintable, Container {
         int h = 0;
 
         if (width != null && !width.equals("")) {
-            w = getOffsetWidth();
+            if (isScrollable()) {
+                w = child.getElement().getOffsetWidth();
+            } else {
+                w = getContentElement().getOffsetWidth();
+            }
             if (w < 0) {
                 w = 0;
             }
         }
 
         if (height != null && !height.equals("")) {
-            h = getContentElement().getOffsetHeight();
+            if (isScrollable()) {
+                h = child.getElement().getOffsetHeight();
+            } else {
+                h = getContentElement().getOffsetHeight();
+            }
             if (h < 0) {
                 h = 0;
             }

@@ -20,7 +20,8 @@ import com.vaadin.ui.CssLayout;
 @com.vaadin.ui.ClientWidget(org.vaadin.alump.fancylayouts.widgetset.client.ui.VFancyPanel.class)
 public class FancyPanel extends AbstractComponentContainer implements
         ComponentContainer.ComponentAttachListener,
-        ComponentContainer.ComponentDetachListener, Action.Notifier {
+        ComponentContainer.ComponentDetachListener, Action.Notifier,
+        FancyAnimator {
 
     private static final long serialVersionUID = 3640371327771360990L;
     protected ComponentContainer content;
@@ -173,25 +174,6 @@ public class FancyPanel extends AbstractComponentContainer implements
     }
 
     /**
-     * Disable transitions
-     * @param disable true to disabled transitions
-     */
-    public void setTransitionsDisabled(boolean disable) {
-        if (transitionsDisabled != disable) {
-            transitionsDisabled = disable;
-            requestRepaint();
-        }
-    }
-
-    /**
-     * Check if transitions are disabled
-     * @return true if disabled
-     */
-    public boolean isTransitionsDisabled() {
-        return transitionsDisabled;
-    }
-
-    /**
      * Set FancyPanel scrollable
      * @param scrollable true to make panel scrollable
      */
@@ -254,6 +236,36 @@ public class FancyPanel extends AbstractComponentContainer implements
         if (getContent() != null) {
             getContent().requestRepaintAll();
         }
+    }
+
+    public boolean setTransitionEnabled(FancyTransition trans, boolean enabled) {
+        switch (trans) {
+        case FADE:
+            if (transitionsDisabled == enabled) {
+                transitionsDisabled = !enabled;
+                requestRepaint();
+            }
+            return !transitionsDisabled;
+        default:
+            return false;
+        }
+    }
+
+    public boolean isTransitionEnabled(FancyTransition trans) {
+        switch (trans) {
+        case FADE:
+            return !transitionsDisabled;
+        default:
+            return false;
+        }
+    }
+
+    /**
+     * Enabled and disable fade transition
+     * @param enabled true to enable, false to disable
+     */
+    public void setFadeTransitionEnabled(boolean enabled) {
+        setTransitionEnabled(FancyTransition.FADE, enabled);
     }
 
 }

@@ -25,7 +25,7 @@ import com.vaadin.ui.ComponentContainer;
 @com.vaadin.ui.ClientWidget(org.vaadin.alump.fancylayouts.widgetset.client.ui.VFancyCssLayout.class)
 public class FancyCssLayout extends AbstractLayout implements
         LayoutClickNotifier, ComponentContainer.ComponentAttachListener,
-        ComponentContainer.ComponentDetachListener {
+        ComponentContainer.ComponentDetachListener, FancyAnimator {
 
     private static final long serialVersionUID = -5420351316587635883L;
     protected List<Component> components = new ArrayList<Component>();
@@ -172,25 +172,34 @@ public class FancyCssLayout extends AbstractLayout implements
         }
     }
 
-    /**
-     * Do margin transition magic when item are hidden. This can be disabled
-     * as it might cause issues in some UIs. Also this requires more performance
-     * from browser.
-     * @param enabled false to disable margin transition
-     */
-    public void setMarginTransitionEnabled(boolean enabled) {
-        if (marginTransition != enabled) {
-            marginTransition = enabled;
-            requestRepaint();
+    public boolean setTransitionEnabled(FancyTransition trans, boolean enabled) {
+        switch (trans) {
+        case FADE:
+            return true;
+        case SLIDE:
+            if (marginTransition != enabled) {
+                marginTransition = enabled;
+                requestRepaint();
+            }
+            return marginTransition;
+        default:
+            return false;
         }
     }
 
-    /**
-     * Check if margin transitions are enabled
-     * @return true if enabled
-     */
-    public boolean isMarginTransitionEnabled() {
-        return marginTransition;
+    public boolean isTransitionEnabled(FancyTransition trans) {
+        switch (trans) {
+        case FADE:
+            return true;
+        case SLIDE:
+            return marginTransition;
+        default:
+            return false;
+        }
+    }
+
+    public void setSlideEnabled(boolean enabled) {
+        setTransitionEnabled(FancyTransition.SLIDE, enabled);
     }
 
 }

@@ -4,7 +4,9 @@ import org.vaadin.alump.fancylayouts.widgetset.client.ui.model.BrowserMode;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Overflow;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -17,7 +19,6 @@ public class GwtFancyPanel extends SimplePanel {
     private Widget oldContentWidget = null;
 
     public static final String CLASS_NAME = "fancy-panel";
-    public static final String CONTENT_CLASS_NAME = "fancy-panel-content";
 
     private boolean transitionsEnabled = true;
 
@@ -29,7 +30,9 @@ public class GwtFancyPanel extends SimplePanel {
     protected ScrollPanel scrollPanel;
     protected ComplexPanel contentPanel;
 
-    private String overflowBeforeHide;
+    private Boolean scrollEnabled;
+    private String overflowXBeforeHide;
+    private String overflowYBeforeHide;
 
     public GwtFancyPanel() {
 
@@ -37,65 +40,41 @@ public class GwtFancyPanel extends SimplePanel {
 
         Element root = Document.get().createDivElement();
         root.addClassName(CLASS_NAME);
+        root.getStyle().setOverflow(Overflow.HIDDEN);
         setElement(root);
 
+        scrollPanel = new ScrollPanel();
+        scrollPanel.addStyleName(CLASS_NAME + "-scroll");
+        scrollPanel.getElement().getStyle().setWidth(100, Unit.PCT);
+        scrollPanel.getElement().getStyle().setHeight(100, Unit.PCT);
+        add(scrollPanel);
+
         contentPanel = new FlowPanel();
-        contentPanel.addStyleName(CONTENT_CLASS_NAME);
+        contentPanel.addStyleName(CLASS_NAME + "-content");
+        scrollPanel.add(contentPanel);
 
-        setScrollPanel(false);
-
-        // TODO: Is is temporary hack!!!!
-        // TODO: Add proper version checks here (when transitionEnds support has
-        // been added)
         if (browserMode == null) {
             browserMode = BrowserMode.resolve();
         }
-        transitionsEnabled = !(browserMode == BrowserMode.DEFAULT);
+        transitionsEnabled = browserMode.hasTransitionEndEvent();
 
         setScrollable(false);
     }
 
-    private void setScrollPanel(boolean scrollable) {
-
-        if (scrollable) {
-            if (scrollPanel == null) {
-                scrollPanel = new ScrollPanel();
-                scrollPanel.addStyleName(CLASS_NAME + "-scroll");
-                scrollPanel.setSize("100%", "100%");
-                this.remove(contentPanel);
-                scrollPanel.add(contentPanel);
-                this.add(scrollPanel);
-            }
-        } else {
-            if (scrollPanel != null) {
-                this.remove(scrollPanel);
-                scrollPanel = null;
-                this.add(contentPanel);
-            } else if (contentPanel.getParent() != this) {
-                this.add(contentPanel);
-            }
-        }
-    }
-
-    private void addTransitionEndListener(Element element) {
+    private boolean addTransitionEndListener(Element element) {
 
         if (element.hasAttribute("hasTransitionEndListener")
                 && element.getAttribute("hasTransitionEndListener").equals("1")) {
-            return;
+            return true;
         }
 
-        String eventName = null;
-        if (browserMode == BrowserMode.MODERN_WEBKIT) {
-            eventName = "webkitTransitionEnd";
-        } else if (browserMode == BrowserMode.MODERN_GECKO) {
-            eventName = "transitionend";
-        } else if (browserMode == BrowserMode.MODERN_OPERA) {
-            eventName = "oTransitionEnd";
-        }
-
+        String eventName = browserMode.getTransitionEnd();
         if (eventName != null) {
             addTransitionEndListener(eventName, element);
+            return true;
         }
+
+        return false;
     }
 
     private native void addTransitionEndListener(String eventName,
@@ -119,40 +98,43 @@ public class GwtFancyPanel extends SimplePanel {
         if (getContentElement() == element) {
 
             float value = new Float(getContentElement().getStyle().getOpacity());
-            if (value < 0.1f) {
-                contentPanel.remove(oldContentWidget);
-                oldContentWidget = null;
-                contentWidget.getElement().getStyle().setOpacity(1.0);
-                getContentElement().getStyle().setOpacity(1.0);
-
-                if (overflowBeforeHide != null) {
-
-                    scrollPanel.getElement().getStyle()
-                            .setProperty("overflow-y", overflowBeforeHide);
-                    overflowBeforeHide = null;
-
-                }
+            if (value < 0.01f) {
+                onFadeOutEnded();
             }
         }
+    }
+
+    private void onFadeOutEnded() {
+        contentPanel.remove(oldContentWidget);
+        oldContentWidget = null;
+        contentWidget.getElement().getStyle().setOpacity(1.0);
+        getContentElement().getStyle().setOpacity(1.0);
+
+        setFadeScrollHide(false);
     }
 
     private void setContentWithTransition(Widget content) {
         oldContentWidget = contentWidget;
         contentWidget = content;
 
-        if (scrollPanel != null) {
-            overflowBeforeHide = scrollPanel.getElement().getStyle()
-                    .getOverflowY();
-            scrollPanel.getElement().getStyle().setOverflowY(Overflow.HIDDEN);
-        } else {
-            overflowBeforeHide = null;
-        }
+        setFadeScrollHide(true);
 
         contentPanel.add(content);
-        content.getElement().getStyle().setOpacity(0.0);
 
-        addTransitionEndListener(getContentElement());
-        getContentElement().getStyle().setOpacity(0.0);
+        if (!getContentElement().getStyle().getOpacity().equals("0")
+                && addTransitionEndListener(getContentElement())) {
+            content.getElement().getStyle().setOpacity(0.0);
+            getContentElement().getStyle().setOpacity(0.0);
+        } else {
+            // Workaround if for some reason browser goes off sync
+            for (int i = contentPanel.getWidgetCount() - 1; i >= 0; --i) {
+                Widget child = contentPanel.getWidget(i);
+                if (child != contentWidget && child != oldContentWidget) {
+                    contentPanel.remove(i);
+                }
+            }
+            onFadeOutEnded();
+        }
     }
 
     public void setContent(Widget content) {
@@ -160,7 +142,7 @@ public class GwtFancyPanel extends SimplePanel {
             return;
         }
 
-        if (contentWidget != null && transitionsEnabled) {
+        if (contentWidget != null && this.isVisible() && transitionsEnabled) {
             setContentWithTransition(content);
         } else {
             if (contentWidget != null) {
@@ -174,7 +156,16 @@ public class GwtFancyPanel extends SimplePanel {
     public void disableTransitions(boolean disable) {
         if (transitionsEnabled == disable) {
             transitionsEnabled = !disable
-                    && (browserMode == BrowserMode.MODERN_WEBKIT || browserMode == BrowserMode.MODERN_GECKO);
+                    && browserMode.hasTransitionEndEvent();
+
+            if (transitionsEnabled == false && contentWidget != null) {
+                getContentElement().getStyle().setOpacity(1.0);
+                contentWidget.getElement().getStyle().setOpacity(1.0);
+                if (oldContentWidget != null) {
+                    contentPanel.remove(oldContentWidget);
+                    oldContentWidget = null;
+                }
+            }
         }
     }
 
@@ -182,9 +173,62 @@ public class GwtFancyPanel extends SimplePanel {
         return contentPanel.getElement();
     }
 
+    public boolean isScrollable() {
+        return overflowYBeforeHide != null
+                || (scrollEnabled != null && scrollEnabled);
+    }
+
+    private void setFadeScrollHide(boolean on) {
+        if (scrollEnabled == null || !scrollEnabled) {
+            return;
+        }
+
+        // Disable on mozilla, causes issues
+        if (browserMode == BrowserMode.MODERN_GECKO) {
+            return;
+        }
+
+        if (on) {
+            if (overflowYBeforeHide == null) {
+                overflowXBeforeHide = scrollPanel.getElement().getStyle()
+                        .getOverflowX();
+                overflowYBeforeHide = scrollPanel.getElement().getStyle()
+                        .getOverflowY();
+                scrollPanel.getElement().getStyle()
+                        .setOverflowX(Overflow.HIDDEN);
+                scrollPanel.getElement().getStyle()
+                        .setOverflowY(Overflow.HIDDEN);
+            }
+        } else {
+            if (overflowYBeforeHide != null) {
+                scrollPanel.getElement().getStyle()
+                        .setProperty("overflow-x", overflowXBeforeHide);
+                scrollPanel.getElement().getStyle()
+                        .setProperty("overflow-y", overflowYBeforeHide);
+                overflowXBeforeHide = null;
+                overflowYBeforeHide = null;
+            }
+        }
+
+    }
+
     public void setScrollable(boolean scroll) {
 
-        setScrollPanel(scroll);
+        if (scrollEnabled != null && scrollEnabled == scroll) {
+            return;
+        }
+
+        setFadeScrollHide(false);
+
+        Style scrollStyle = scrollPanel.getElement().getStyle();
+
+        if (scroll) {
+            scrollStyle.setOverflow(Overflow.AUTO);
+        } else {
+            scrollStyle.setOverflow(Overflow.HIDDEN);
+        }
+
+        scrollEnabled = scroll;
     }
 
     public void setScrollTop(int value) {
@@ -194,7 +238,7 @@ public class GwtFancyPanel extends SimplePanel {
     }
 
     public int getScrollTop() {
-        if (scrollPanel != null) {
+        if (scrollEnabled != null) {
             return scrollPanel.getVerticalScrollPosition();
         } else {
             return 0;
@@ -208,7 +252,7 @@ public class GwtFancyPanel extends SimplePanel {
     }
 
     public int getScrollLeft() {
-        if (scrollPanel != null) {
+        if (scrollEnabled != null) {
             return scrollPanel.getHorizontalScrollPosition();
         } else {
             return 0;
@@ -223,7 +267,6 @@ public class GwtFancyPanel extends SimplePanel {
 
         this.width = width;
         super.setWidth(width);
-
     }
 
     @Override

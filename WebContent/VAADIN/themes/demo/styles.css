@@ -22,6 +22,19 @@
 	border-radius: 5px;
 }
 
+.fancy-csslayout-item {
+	display: inline-block;
+}
+
+.demo-removable-two {
+	width: 200px !important;
+	height: 50px !important;
+	background: -webkit-linear-gradient(bottom, #E8E8C8, #FFFFDF);
+	background: -moz-linear-gradient(bottom, #E8E8C8, #FFFFDF);
+	background: -o-linear-gradient(bottom, #E8E8C8, #FFFFDF);
+	overflow: hidden;
+}
+
 .demo-big-label {
 	font-weight: bold;
 }	

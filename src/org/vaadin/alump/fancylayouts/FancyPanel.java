@@ -35,13 +35,13 @@ import com.vaadin.ui.CssLayout;
  * FancyPanel works like Vaadin Panel but it adds transition when content inside
  * it is changed.
  */
+@SuppressWarnings("serial")
 @com.vaadin.ui.ClientWidget(org.vaadin.alump.fancylayouts.widgetset.client.ui.VFancyPanel.class)
 public class FancyPanel extends AbstractComponentContainer implements
         ComponentContainer.ComponentAttachListener,
         ComponentContainer.ComponentDetachListener, Action.Notifier,
         FancyAnimator {
 
-    private static final long serialVersionUID = 3640371327771360990L;
     protected ComponentContainer content;
     protected ActionManager actionManager;
     private boolean transitionsDisabled = false;

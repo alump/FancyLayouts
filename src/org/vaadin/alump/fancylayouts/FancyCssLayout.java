@@ -42,17 +42,20 @@ import com.vaadin.ui.ComponentContainer;
  * fancyRemoveComponent() which will add transition to removal. Also when Items
  * are added with addComponent() those will be added with transition.
  */
+@SuppressWarnings("serial")
 @com.vaadin.ui.ClientWidget(org.vaadin.alump.fancylayouts.widgetset.client.ui.VFancyCssLayout.class)
 public class FancyCssLayout extends AbstractLayout implements
         LayoutClickNotifier, ComponentContainer.ComponentAttachListener,
         ComponentContainer.ComponentDetachListener, FancyAnimator {
 
-    private static final long serialVersionUID = -5420351316587635883L;
     protected List<Component> components = new ArrayList<Component>();
     protected Set<Component> fancyRemoveComponents = new HashSet<Component>();
     private boolean marginTransition = true;
     private static final String CLICK_EVENT = EventId.LAYOUT_CLICK;
 
+    /**
+     * Replace given component with new. This will not use fancy remove.
+     */
     public void replaceComponent(Component oldComponent, Component newComponent) {
         if (components.contains(oldComponent)) {
             int index = components.indexOf(oldComponent);
@@ -63,15 +66,25 @@ public class FancyCssLayout extends AbstractLayout implements
         }
     }
 
+    /**
+     * Get component iterator
+     * @return Component iterator
+     */
     public Iterator<Component> getComponentIterator() {
         return components.iterator();
     }
 
+    /**
+     * Add layout click listener. Event will be raised when layout is clicked.
+     */
     public void addListener(LayoutClickListener listener) {
         addListener(CLICK_EVENT, LayoutClickEvent.class, listener,
                 LayoutClickListener.clickMethod);
     }
 
+    /**
+     * Remove layout click listener.
+     */
     public void removeListener(LayoutClickListener listener) {
         removeListener(CLICK_EVENT, LayoutClickEvent.class, listener);
     }
@@ -194,6 +207,9 @@ public class FancyCssLayout extends AbstractLayout implements
         }
     }
 
+    /**
+     * Use setSlideEnabled
+     */
     public boolean setTransitionEnabled(FancyTransition trans, boolean enabled) {
         switch (trans) {
         case FADE:
@@ -209,6 +225,9 @@ public class FancyCssLayout extends AbstractLayout implements
         }
     }
 
+    /**
+     * Check if different type of transitions are enabled.
+     */
     public boolean isTransitionEnabled(FancyTransition trans) {
         switch (trans) {
         case FADE:
@@ -220,6 +239,10 @@ public class FancyCssLayout extends AbstractLayout implements
         }
     }
 
+    /**
+     * Enabled slide away effect when component is removed with fancyremove.
+     * @param enabled true to enable, false to disable.
+     */
     public void setSlideEnabled(boolean enabled) {
         setTransitionEnabled(FancyTransition.SLIDE, enabled);
     }

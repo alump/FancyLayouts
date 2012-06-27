@@ -18,6 +18,8 @@
 
 package org.vaadin.alump.fancylayouts.demo;
 
+import java.util.Iterator;
+
 import org.vaadin.alump.fancylayouts.FancyCssLayout;
 import org.vaadin.alump.fancylayouts.FancyTransition;
 
@@ -29,6 +31,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
@@ -42,6 +45,7 @@ public class CssLayoutDemo extends VerticalLayout {
     private boolean addCssMiddle = false;
     private int clickCounter = 0;
     private int layoutClickCounter = 0;
+    private boolean boxMode = false;
 
     public CssLayoutDemo() {
         setMargin(true);
@@ -63,13 +67,20 @@ public class CssLayoutDemo extends VerticalLayout {
         hLayout.addComponent(addContent);
 
         CheckBox middleCbox = new CheckBox("add middle");
+        middleCbox.setImmediate(true);
         middleCbox.setValue(addCssMiddle);
         hLayout.addComponent(middleCbox);
 
         CheckBox marginCbox = new CheckBox("slide");
+        marginCbox.setImmediate(true);
         marginCbox.setValue(cssLayout
                 .isTransitionEnabled(FancyTransition.SLIDE));
         hLayout.addComponent(marginCbox);
+
+        CheckBox styleCbox = new CheckBox("cards");
+        styleCbox.setImmediate(true);
+        styleCbox.setValue(boxMode);
+        hLayout.addComponent(styleCbox);
 
         final Label counterLabel = new Label(getClickCounterCaption());
         hLayout.addComponent(counterLabel);
@@ -106,6 +117,24 @@ public class CssLayoutDemo extends VerticalLayout {
 
         });
 
+        styleCbox.addListener(new Property.ValueChangeListener() {
+
+            public void valueChange(ValueChangeEvent event) {
+                boolean value = (Boolean) event.getProperty().getValue();
+                Iterator<Component> iter = cssLayout.getComponentIterator();
+                while (iter.hasNext()) {
+                    Component component = iter.next();
+                    if (value) {
+                        component.addStyleName("demo-removable-two");
+                    } else {
+                        component.removeStyleName("demo-removable-two");
+                    }
+                }
+                boxMode = value;
+            }
+
+        });
+
         cssLayout.addListener(new LayoutClickListener() {
 
             public void layoutClick(LayoutClickEvent event) {
@@ -128,9 +157,15 @@ public class CssLayoutDemo extends VerticalLayout {
     private void addCssLayoutContent(final FancyCssLayout layout) {
         final HorizontalLayout hLayout = new HorizontalLayout();
         hLayout.addStyleName("demo-removable-layout");
+
+        if (boxMode) {
+            hLayout.addStyleName("demo-removable-two");
+        }
+
         hLayout.setSpacing(true);
         hLayout.setWidth("100%");
-        Button remove = new Button("X");
+        Button remove = new Button("✖");
+        remove.addStyleName("remove-button");
         remove.addListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {

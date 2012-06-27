@@ -31,10 +31,10 @@ import com.vaadin.ui.AbstractComponent;
  * present pictures of product. It adds transtions when presented image is
  * changed. It also adds slideshow mode.
  */
+@SuppressWarnings("serial")
 @com.vaadin.ui.ClientWidget(org.vaadin.alump.fancylayouts.widgetset.client.ui.VFancyImage.class)
 public class FancyImage extends AbstractComponent {
 
-    private static final long serialVersionUID = -3112985073589754117L;
     private final List<Resource> images = new ArrayList<Resource>();
     private boolean autoBrowseEnabled = false;
     private int autoBrowseTimeout = 3000;

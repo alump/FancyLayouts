@@ -14,7 +14,7 @@
 			<description>
 			Vaadin application class to start</description>
 			<param-name>application</param-name>
-			<param-value>org.vaadin.alump.fancylayouts.FancyLayoutsApplication</param-value>
+			<param-value>org.vaadin.alump.fancylayouts.demo.FancyLayoutsApplication</param-value>
 		</init-param>
 		<init-param>
             <description>

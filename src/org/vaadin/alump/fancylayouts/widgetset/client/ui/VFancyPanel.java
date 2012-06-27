@@ -1,3 +1,21 @@
+/**
+ * VFancyPanel.java (FancyLayouts)
+ * 
+ * Copyright 2012 Vaadin Ltd, Sami Viitanen <alump@vaadin.org>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.vaadin.alump.fancylayouts.widgetset.client.ui;
 
 import java.util.Set;
@@ -49,7 +67,10 @@ public class VFancyPanel extends GwtFancyPanel implements Paintable, Container {
         content.updateFromUIDL(layoutUidl, client);
 
         if (uidl.hasAttribute(ATTR_SCROLLABLE)) {
-            setScrollable(uidl.getBooleanAttribute(ATTR_SCROLLABLE));
+            if (isScrollable() != uidl.getBooleanAttribute(ATTR_SCROLLABLE)) {
+                setScrollable(uidl.getBooleanAttribute(ATTR_SCROLLABLE));
+                client.requestLayoutPhase();
+            }
         }
 
         if (uidl.hasAttribute(ATTR_SCROLL_TOP)) {
@@ -99,7 +120,12 @@ public class VFancyPanel extends GwtFancyPanel implements Paintable, Container {
 
         if (width != null && !width.equals("")) {
             if (isScrollable()) {
-                w = child.getElement().getOffsetWidth();
+                if (child.getElement().getOffsetWidth() < getContentElement()
+                        .getOffsetWidth()) {
+                    w = getContentElement().getOffsetWidth();
+                } else {
+                    w = child.getElement().getOffsetWidth();
+                }
             } else {
                 w = getContentElement().getOffsetWidth();
             }

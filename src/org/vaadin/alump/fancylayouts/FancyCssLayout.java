@@ -1,3 +1,21 @@
+/**
+ * FancyCssLayout.java (FancyLayouts)
+ * 
+ * Copyright 2012 Vaadin Ltd, Sami Viitanen <alump@vaadin.org>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.vaadin.alump.fancylayouts;
 
 import java.util.ArrayList;
@@ -8,11 +26,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Paintable;
+import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -31,6 +51,7 @@ public class FancyCssLayout extends AbstractLayout implements
     protected List<Component> components = new ArrayList<Component>();
     protected Set<Component> fancyRemoveComponents = new HashSet<Component>();
     private boolean marginTransition = true;
+    private static final String CLICK_EVENT = EventId.LAYOUT_CLICK;
 
     public void replaceComponent(Component oldComponent, Component newComponent) {
         if (components.contains(oldComponent)) {
@@ -47,13 +68,12 @@ public class FancyCssLayout extends AbstractLayout implements
     }
 
     public void addListener(LayoutClickListener listener) {
-        // TODO Auto-generated method stub
-
+        addListener(CLICK_EVENT, LayoutClickEvent.class, listener,
+                LayoutClickListener.clickMethod);
     }
 
     public void removeListener(LayoutClickListener listener) {
-        // TODO Auto-generated method stub
-
+        removeListener(CLICK_EVENT, LayoutClickEvent.class, listener);
     }
 
     @Override
@@ -146,6 +166,8 @@ public class FancyCssLayout extends AbstractLayout implements
 
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
+
+        super.changeVariables(source, variables);
 
         if (variables.containsKey("remove")) {
 

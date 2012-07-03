@@ -1,0 +1,159 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.vaadin.alump.fancylayouts</groupId>
+  <artifactId>addon</artifactId>
+  <packaging>jar</packaging>
+  <version>0.5</version>
+  <name>FancyLayouts addon</name>
+  <description>FancyLayouts Vaadin addon</description>
+  
+  <parent>
+    <groupId>org.vaadin.alump</groupId>
+    <artifactId>fancylayouts</artifactId>
+    <version>0.5</version>
+  </parent>
+  
+  <organization>
+      <name>Sami Viitanen</name>
+      <url>http://vaadin.com/alump</url>
+  </organization>
+  
+  <url>http://vaadin.com/alump</url>
+  
+  <developers>
+	  <developer>
+	      <name>Sami Viitanen</name>
+	      <id>alump</id>
+	      <email>sami.viitanen at vaadin.com</email>
+	      <organization>Vaadin Ltd</organization>
+	      <timezone>+2</timezone>
+	  </developer>
+    </developers>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- May be overridden by the build system -->
+        <license.short.name>apache2</license.short.name>
+        <vaadin.version>6.8.0</vaadin.version>
+        <gwt.version>2.4.0</gwt.version>
+
+        <Implementation-Version>${project.version}</Implementation-Version>
+        <!-- Must not change this because of the Directory -->
+        <Implementation-Title>FancyLayouts</Implementation-Title>
+        <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
+        
+    </properties>
+  
+  <dependencies>
+    <dependency>
+	    <groupId>junit</groupId>
+	    <artifactId>junit</artifactId>
+	    <version>3.8.1</version>
+	    <scope>test</scope>
+    </dependency>
+    <dependency>
+         <groupId>com.vaadin</groupId>
+         <artifactId>vaadin</artifactId>
+         <version>${vaadin.version}</version>
+     </dependency>
+     <dependency>
+         <groupId>com.google.gwt</groupId>
+         <artifactId>gwt-user</artifactId>
+         <version>${gwt.version}</version>
+         <scope>provided</scope>
+     </dependency>
+  </dependencies>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.5.1</version>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
+	      <groupId>org.apache.maven.plugins</groupId>
+	      <artifactId>maven-jar-plugin</artifactId>
+	      <version>2.3.1</version>
+	      <configuration>
+	          <archive>
+	              <index>true</index>
+	              <manifest>
+	                  <addClasspath>true</addClasspath>
+	                  <!-- Implementation-Title and Implementation-Version come from the 
+	                      POM by default -->
+	                  <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+	              </manifest>
+	              <manifestEntries>
+	                  <!-- Package format version - do not change -->
+	                  <Vaadin-Package-Version>1</Vaadin-Package-Version>
+	
+	                  <!-- Comma-separated list of widgetsets in the package -->
+	                  <Vaadin-Widgetsets>org.vaadin.alump.fancylayouts.widgetset.FancyLayoutsWidgetset</Vaadin-Widgetsets>
+	              </manifestEntries>
+	          </archive>
+	          <!-- exclude other META-INF data under build directory -->
+	          <includes>
+	              <include>META-INF/maven/${project.groupId}/${project.artifactId}/**</include>
+	              <include>org/**</include>
+	          </includes>
+	      </configuration>
+      </plugin>
+      <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>gwt-maven-plugin</artifactId>
+          <version>2.4.0</version>
+          <configuration>
+              <webappDirectory>${project.build.directory}/${project.build.finalName}/VAADIN/widgetsets</webappDirectory>
+              <modules>
+                  <module>org.vaadin.alump.fancylayouts.widgetset.FancyLayoutsWidgetset</module>
+              </modules>
+              <extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
+              <runTarget>xsite</runTarget>
+              <hostedWebapp>${project.build.directory}/${project.build.finalName}</hostedWebapp>
+              <noServer>true</noServer>
+              <port>8080</port>
+              <soyc>false</soyc>
+              <draftCompile>true</draftCompile>
+              <style>OBF</style>     
+          </configuration>
+          <executions>
+	          <execution>
+	              <goals>
+	                  <goal>resources</goal>
+	                  <goal>compile</goal>
+	              </goals>
+	          </execution>
+          </executions>
+      </plugin>
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>2.2.1</version>
+          <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <descriptors>
+                  <descriptor>../assembly/assembly.xml</descriptor>
+              </descriptors>
+          </configuration>
+          <executions>
+              <execution>
+                  <id>make-assembly</id>
+                  <phase>package</phase>
+                  <goals>
+                      <goal>single</goal>
+                  </goals>
+              </execution>
+          </executions>
+        </plugin>
+    </plugins>
+    <finalName>FancyLayouts-${project.version}</finalName>
+  </build>
+</project>

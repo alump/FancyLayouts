@@ -18,10 +18,13 @@
 
 package org.vaadin.alump.fancylayouts.demo;
 
+import org.vaadin.alump.fancylayouts.FancyNotifications;
+
 import com.vaadin.Application;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.TabSheet;
@@ -34,27 +37,38 @@ import com.vaadin.ui.themes.BaseTheme;
  */
 public class FancyLayoutsApplication extends Application {
 
+    FancyNotifications notifications;
+
     @Override
     public void init() {
 
         setTheme("demo");
 
         Window mainWindow = new Window(
-                "FancyLayouts Demo Application - version 0.1.1");
+                "FancyLayouts Demo Application - version pre 0.2");
         mainWindow.setContent(buildLayout());
         setMainWindow(mainWindow);
     }
 
     private ComponentContainer buildLayout() {
+
+        CssLayout topLayout = new CssLayout();
+        topLayout.setSizeFull();
+
         TabSheet tabs = new TabSheet();
+        topLayout.addComponent(tabs);
         tabs.setSizeFull();
 
         tabs.addTab(buildWelcome(), "Welcome");
         tabs.addTab(new ImageDemo(), "FancyImage");
         tabs.addTab(new PanelDemo(), "FancyPanel");
         tabs.addTab(new CssLayoutDemo(), "FancyLayout");
+        tabs.addTab(new NotificationsDemo(), "FancyNotifications");
 
-        return tabs;
+        notifications = new FancyNotifications();
+        topLayout.addComponent(notifications);
+
+        return topLayout;
     }
 
     private ComponentContainer buildWelcome() {
@@ -82,13 +96,17 @@ public class FancyLayoutsApplication extends Application {
         Link link = new Link(
                 "Source code of this demo application",
                 new ExternalResource(
-                        "https://github.com/alump/FancyLayouts/blob/master/src/org/vaadin/alump/fancylayouts/FancyLayoutsApplication.java"));
+                        "https://github.com/alump/FancyLayouts/blob/master/src/org/vaadin/alump/fancylayouts/demo/FancyLayoutsApplication.java"));
         layout.addComponent(link);
 
         Button sourceLink = new Button();
         sourceLink.addStyleName(BaseTheme.BUTTON_LINK);
 
         return layout;
+    }
+
+    public FancyNotifications getNotifications() {
+        return notifications;
     }
 
 }

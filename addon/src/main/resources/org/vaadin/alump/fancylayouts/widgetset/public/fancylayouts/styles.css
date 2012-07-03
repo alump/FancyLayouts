@@ -1,0 +1,76 @@
+.fancy-image {
+ border-width: 0px;	
+}
+.fancy-image IMG {
+ -moz-transition: opacity 0.5s ease-in-out;
+ -webkit-transition: opacity 0.5s ease-in-out;
+ -o-transition: opacity 0.5s ease-in-out;
+}
+.fancy-panel-content {
+ -moz-transition: opacity 0.25s ease-in-out;
+ -webkit-transition: opacity 0.25s ease-in-out;
+ -o-transition: opacity 0.25s ease-in-out;	
+}
+.fancy-csslayout-item {
+ -moz-transition: opacity 0.34s ease-in, margin 0.34s ease-in;
+ -webkit-transition: opacity 0.34s ease-in, margin 0.34s ease-in;
+ -o-transition: opacity 0.34s ease-in, margin 0.34s ease-in;
+ margin: 0px;
+}
+.fancy-notifications {
+ position: absolute;
+ right: 0px;
+ top: 0px;
+ max-height: 100%;
+ overflow: hidden;
+ z-index: 1000;
+}
+.fancy-notifications .fancy-csslayout-item {
+ display: block;
+}
+.fancy-notifications .fancy-notification {
+ position: relative;
+ margin: 3px 10px 3px 0px;
+ background-color: rgba(0,0,0,0.5);
+ color: white;
+ border-radius: 15px;
+ height: 52px;
+ width: 240px;
+}
+.fancy-notifications .fancy-notification:hover {
+ background-color: rgba(0,0,0,0.75);
+}
+.fancy-notifications .demo-special-notification {
+ background-color: rgba(128,0,0,0.5) !important;
+}
+.fancy-notifications .demo-special-notification:hover {
+ background-color: rgba(128,0,0,0.75) !important;
+}
+.fancy-notifications .fancy-notification-icon {
+ position: absolute;
+ left: 8px;
+ top: 2px;
+ max-width: 48px;
+ max-height: 48px;
+}
+.fancy-notifications .fancy-notification-title {
+ position: absolute;
+ left: 64px;
+ top: 5px;
+ color: white;
+ text-shadow: 1px 1px rgba(0,0,0,0.5);
+ font-weight: bold;
+ font-size: 12px;
+ max-width: 156px;
+ overflow: hidden;
+}
+.fancy-notifications .fancy-notification-desc {
+ position: absolute;
+ color: white;
+ text-shadow: 1px 1px rgba(0,0,0,0.5);
+ left: 64px;
+ top: 25px;
+ font-size: 12px;
+ max-width: 156px;
+ overflow: hidden;
+}

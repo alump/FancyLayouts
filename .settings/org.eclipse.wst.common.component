@@ -2,7 +2,9 @@
 <project-modules id="moduleCoreId" project-version="1.5.0">
     <wb-module deploy-name="FancyLayouts">
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/addon/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/demo/src/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/demo/src/main/java"/>
         <property name="context-root" value="FancyLayouts"/>
         <property name="java-output-path" value="/FancyLayouts/build/classes"/>
     </wb-module>

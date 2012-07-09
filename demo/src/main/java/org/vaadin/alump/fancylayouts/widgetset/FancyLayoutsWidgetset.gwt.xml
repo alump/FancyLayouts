@@ -18,4 +18,6 @@
 
 
     <inherits name="com.vaadin.terminal.gwt.DefaultWidgetSet" />
+
+    <inherits name="org.vaadin.alump.fancylayouts.demo.widgetset.FancyLayoutsDemoWidgetset" />
 </module>

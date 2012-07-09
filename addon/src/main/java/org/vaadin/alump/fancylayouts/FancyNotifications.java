@@ -40,13 +40,30 @@ import com.vaadin.ui.Label;
 @com.vaadin.ui.ClientWidget(org.vaadin.alump.fancylayouts.widgetset.client.ui.VFancyNotifications.class)
 public class FancyNotifications extends FancyCssLayout {
 
-    private int closeTimeoutMs = 10000;
+	/**
+	 * Default automatic close timeout in milliseconds.
+	 */
+	public static final int DEFAULT_CLOSE_TIMEOUT_MS = 10000;
+	
+    private int closeTimeoutMs = DEFAULT_CLOSE_TIMEOUT_MS;
     protected List<NotificationsListener> listeners = new ArrayList<NotificationsListener>();
+    protected boolean closeWhenClicked = false;
+    protected Resource defaultIcon = null;
 
+    /**
+     * Interface for notification listeners
+     */
     public interface NotificationsListener {
+    	/**
+    	 * Called when notification is clicked (if it has non null id)
+    	 * @param id ID of notification
+    	 */
         public void notificationClicked(Object id);
     }
 
+    /**
+     * Construct new FancyNotifications
+     */
     public FancyNotifications() {
         super.addListener(layoutClickListener);
     }
@@ -74,6 +91,9 @@ public class FancyNotifications extends FancyCssLayout {
                     for (NotificationsListener listener : listeners) {
                         listener.notificationClicked(id);
                     }
+                }
+                if (closeWhenClicked) {
+                	fancyRemoveComponent (component);
                 }
             }
 
@@ -160,6 +180,10 @@ public class FancyNotifications extends FancyCssLayout {
         if (title == null) {
             return;
         }
+        
+        if (icon == null) {
+        	icon = defaultIcon;
+        }
 
         NotificationLayout notification = new NotificationLayout(id, title,
                 description, icon, styleName);
@@ -167,13 +191,27 @@ public class FancyNotifications extends FancyCssLayout {
         addComponent(notification);
     }
 
+    /**
+     * Get automatic closing timeout in milliseconds.
+     * @return Closing time in milliseconds.
+     */
     public int getCloseTimeout() {
         return closeTimeoutMs;
     }
 
+    /**
+     * Set automatic closing time in milliseconds.
+     * @param millisecs Closing time in milliseconds. 0 (no automatic closing
+     * is only accepted if close by clicking is enabled).
+     */
     public void setCloseTimeout(int millisecs) {
-        if (millisecs > 0 && closeTimeoutMs != millisecs) {
+    	if (millisecs < 0 || (millisecs < 1 && !closeWhenClicked)) {
+    		return;
+    	}
+    	
+        if (closeTimeoutMs != millisecs) {
             closeTimeoutMs = millisecs;
+            requestRepaint();
         }
     }
 
@@ -195,11 +233,59 @@ public class FancyNotifications extends FancyCssLayout {
         super.changeVariables(source, variables);
     }
 
+    /**
+     * Add notification listener
+     * @param listener New listener
+     */
     public void addListener(NotificationsListener listener) {
         listeners.add(listener);
     }
 
+    /**
+     * Remove notification listener
+     * @param listener Removed listener
+     */
     public void removeListeners(NotificationsListener listener) {
         listeners.remove(listener);
+    }
+    
+    /**
+     * Define if notifications should be closed when clicked/tapped. If you
+     * disable clickclose and close timeout is set to 0, then close timeout
+     * is set back to default value.
+     * @param closeWhenClicked true to close notifications when clicked
+     */
+    public void setClickClose (boolean closeWhenClicked) {
+    	if (this.closeWhenClicked != closeWhenClicked) {
+    		this.closeWhenClicked = closeWhenClicked;
+    		
+    		if (closeWhenClicked == false && getCloseTimeout() == 0) {
+    			setCloseTimeout(DEFAULT_CLOSE_TIMEOUT_MS);
+    		}
+    		
+    	}
+    }
+    
+    /**
+     * Will notifications be closed when clicked
+     */
+    public boolean isClickClose() {
+    	return closeWhenClicked;
+    }
+    
+    /**
+     * Set default icon used in notifications
+     * @param icon Default icon resource or null if no default icon
+     */
+    public void setDefaultIcon (Resource icon) {
+    	defaultIcon = icon;
+    }
+    
+    /**
+     * Get default icon used in notifications
+     * @return Default icon resource or null if not defined
+     */
+    public Resource getDefaultIcon() {
+    	return defaultIcon;
     }
 }

@@ -15,32 +15,32 @@
 
   <fileSets>
     <fileSet>
-      <directory>.</directory>
-      <includes>
-        <include>../LICENSE.txt</include>
-      </includes>
-    </fileSet>
-    <fileSet>
       <directory>target</directory>
       <outputDirectory></outputDirectory>
       <includes>
         <include>*.jar</include>
       </includes>
     </fileSet>
+    <!-- already included to javadoc jar
     <fileSet>
-        <directory>doc</directory>
+        <directory>target/apidocs</directory>
         <outputDirectory>docs</outputDirectory>
     </fileSet>
+    -->
   </fileSets>
 
   <files>
     <file>
-      <source>../assembly/MANIFEST.MF</source>
+      <source>assembly/MANIFEST.MF</source>
       <outputDirectory>META-INF</outputDirectory>
       <filtered>true</filtered>
     </file>
     <file>
       <source>../README.txt</source>
+      <filtered>true</filtered>
+    </file>
+        <file>
+      <source>../LICENSE.txt</source>
       <filtered>true</filtered>
     </file>
   </files>

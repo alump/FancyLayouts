@@ -28,6 +28,8 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
+import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.BaseTheme;
@@ -45,7 +47,7 @@ public class FancyLayoutsApplication extends Application {
         setTheme("demo");
 
         Window mainWindow = new Window(
-                "FancyLayouts Demo Application - version pre 0.2");
+                "FancyLayouts Demo Application - version 0.2");
         mainWindow.setContent(buildLayout());
         setMainWindow(mainWindow);
     }
@@ -63,10 +65,14 @@ public class FancyLayoutsApplication extends Application {
         tabs.addTab(new ImageDemo(), "FancyImage");
         tabs.addTab(new PanelDemo(), "FancyPanel");
         tabs.addTab(new CssLayoutDemo(), "FancyLayout");
-        tabs.addTab(new NotificationsDemo(), "FancyNotifications");
-
+        
+        NotificationsDemo notDemo = new NotificationsDemo();
+        tabs.addTab(notDemo, "FancyNotifications");
+        
         notifications = new FancyNotifications();
         topLayout.addComponent(notifications);
+        
+        notDemo.init(notifications);
 
         return topLayout;
     }

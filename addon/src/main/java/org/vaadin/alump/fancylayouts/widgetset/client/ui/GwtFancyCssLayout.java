@@ -49,7 +49,8 @@ public class GwtFancyCssLayout extends SimplePanel {
     protected Map<Element, Widget> widgetMap = new HashMap<Element, Widget>();
     protected Set<Widget> removingMap = new HashSet<Widget>();
 
-    protected boolean marginTransitionEnabled = true;
+    protected boolean horizontalMarginTransitionEnabled = true;
+    protected boolean verticalMarginTransitionEnabled = true;
 
     public GwtFancyCssLayout() {
         addStyleName(CLASS_NAME);
@@ -163,11 +164,13 @@ public class GwtFancyCssLayout extends SimplePanel {
             removingMap.add(child);
             addTransitionEndListener(wrapperElement);
             wrapperElement.getStyle().setOpacity(0.0);
-            if (marginTransitionEnabled) {
+            if (verticalMarginTransitionEnabled) {
                 wrapperElement.getStyle().setMarginTop(
                         -wrapperElement.getOffsetHeight() / 2.0, Unit.PX);
                 wrapperElement.getStyle().setMarginBottom(
                         -wrapperElement.getOffsetHeight() / 2.0, Unit.PX);
+            }
+            if (horizontalMarginTransitionEnabled) {
                 wrapperElement.getStyle().setMarginLeft(
                         -wrapperElement.getOffsetWidth() / 2.0, Unit.PX);
                 wrapperElement.getStyle().setMarginRight(
@@ -175,9 +178,13 @@ public class GwtFancyCssLayout extends SimplePanel {
             }
         }
     }
-
-    public void setMarginTransitionEnabled(boolean enabled) {
-        marginTransitionEnabled = enabled;
+    
+    public void setVerticalMarginTransitionEnabled(boolean enabled) {
+    	verticalMarginTransitionEnabled = enabled;
+    }
+    
+    public void setHorizontalMarginTransitionEnabled(boolean enabled) {
+    	horizontalMarginTransitionEnabled = enabled;
     }
 
     public boolean fancyRemove(Widget widget) {

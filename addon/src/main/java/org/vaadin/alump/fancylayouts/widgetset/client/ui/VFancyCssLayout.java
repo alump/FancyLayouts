@@ -102,7 +102,9 @@ public class VFancyCssLayout extends GwtFancyCssLayout implements Paintable,
         clickEventHandler.handleEventHandlerRegistration(client);
 
         if (uidl.hasAttribute("margin-transition")) {
-            setMarginTransitionEnabled(uidl
+            setVerticalMarginTransitionEnabled(uidl
+                    .getBooleanAttribute("margin-transition"));
+            setHorizontalMarginTransitionEnabled(uidl
                     .getBooleanAttribute("margin-transition"));
         }
 

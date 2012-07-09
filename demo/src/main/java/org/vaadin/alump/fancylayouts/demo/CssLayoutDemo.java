@@ -188,6 +188,8 @@ public class CssLayoutDemo extends VerticalLayout {
         label2.addStyleName("demo-small-label-"
                 + String.valueOf(layoutCounter % 4));
         vLayout.addComponent(label2);
+        
+        hLayout.setDebugId("item-" + layoutCounter);
 
         if (addCssMiddle) {
             layout.addComponent(hLayout, layout.getComponentCount() / 2);

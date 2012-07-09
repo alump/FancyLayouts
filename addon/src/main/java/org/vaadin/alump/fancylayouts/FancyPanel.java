@@ -80,6 +80,10 @@ public class FancyPanel extends AbstractComponentContainer implements
         setCaption(caption);
     }
 
+    /**
+     * Build default content container
+     * @return Default content container
+     */
     protected ComponentContainer createDefaultContent() {
         CssLayout layout = new CssLayout();
         layout.setStyleName("fancypanel-default-layout");

@@ -33,7 +33,7 @@ public class VFancyImage extends GwtFancyImage implements Paintable {
     protected final static String ATTR_IMAGE_INDEX = "image-index";
 
     public VFancyImage() {
-
+    	super();
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {

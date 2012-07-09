@@ -50,6 +50,7 @@ public class ImageDemo extends VerticalLayout {
         addComponent(desc);
 
         final FancyImage image = new FancyImage();
+        image.setDebugId("id-fancy-image");
         image.setWidth("500px");
         image.setHeight("281px");
 

@@ -18,6 +18,7 @@ public class VFancyNotifications extends VFancyCssLayout {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+    	
         super.updateFromUIDL(uidl, client);
 
         if (uidl.hasAttribute("close-timeout")) {
@@ -30,16 +31,24 @@ public class VFancyNotifications extends VFancyCssLayout {
     public void add(Widget widget, int index) {
         super.add(widget, index);
 
-        final Widget removeWidget = widget;
+        if (closeTimeout > 0) {        
+        	final Widget removeWidget = widget;
+        	
+	        Scheduler.get().scheduleFixedPeriod(new RepeatingCommand() {
+	
+	            public boolean execute() {
+	                VFancyNotifications.this.fancyRemove(removeWidget);
+	                return false;
+	            }
+	
+	        }, closeTimeout);
+        }
+    }
 
-        Scheduler.get().scheduleFixedPeriod(new RepeatingCommand() {
-
-            public boolean execute() {
-                VFancyNotifications.this.fancyRemove(removeWidget);
-                return false;
-            }
-
-        }, closeTimeout);
+    // Temporary hack to disable the horizontal slide effect
+    @Override
+    public void setHorizontalMarginTransitionEnabled(boolean enabled) {
+    	super.setHorizontalMarginTransitionEnabled(false);
     }
 
 }

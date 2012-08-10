@@ -4,14 +4,14 @@
   <groupId>org.vaadin.alump.fancylayouts</groupId>
   <artifactId>demo</artifactId>
   <packaging>war</packaging>
-  <version>0.2</version>
+  <version>0.2.1-SNAPSHOT</version>
   <name>FancyLayouts demo</name>
   <description>FancyLayouts Demo Application</description>
   
   <parent>
     <groupId>org.vaadin.alump</groupId>
     <artifactId>fancylayouts</artifactId>
-    <version>0.2</version>
+    <version>0.2.1-SNAPSHOT</version>
   </parent>
   
     <properties>
@@ -26,17 +26,18 @@
         <!-- Must not change this because of the Directory -->
         <Implementation-Title>FancyLayouts</Implementation-Title>
         <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
-        
-        <Vaadin-Addon>addon.jar</Vaadin-Addon>
+
     </properties>
   
     <dependencies>
+        <!--
         <dependency>
             <groupId>org.vaadin.alump.fancylayouts</groupId>
             <artifactId>addon</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
+         -->
 		<dependency>
 		     <groupId>com.vaadin</groupId>
 		     <artifactId>vaadin</artifactId>
@@ -56,16 +57,31 @@
          </dependency>
     </dependencies>
   
-    <build>
-       <resources>
-			<resource>
-			    <directory>src/main/java</directory>
-			</resource>
-			<resource>
-			    <directory>src/main/resources</directory>
-			</resource>
+    <build>      
+        <resources>
+            <resource>
+                <directory>../addon/src/main/resources</directory>
+            </resource>
         </resources>
+        
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>../addon/src/main/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
 			  <groupId>org.apache.maven.plugins</groupId>
 			  <artifactId>maven-compiler-plugin</artifactId>
@@ -76,36 +92,7 @@
 			    <encoding>UTF-8</encoding>
 			  </configuration>
 		  </plugin>
-		  <plugin>
-		    <groupId>org.codehaus.mojo</groupId>
-		    <artifactId>gwt-maven-plugin</artifactId>
-		    <version>2.4.0</version>
-		    <configuration>		    
-		        <webappDirectory>src/main/webapp/VAADIN/widgetsets</webappDirectory>
-                <hostedWebapp>src/main/webapp</hostedWebapp>
-              
-		        <modules>
-			      <module>org.vaadin.alump.fancylayouts.demo.widgetset.FancyLayoutsDemoWidgetset</module>
-			    </modules>
-
-                <extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
-                <runTarget>clean</runTarget>
-                <noServer>true</noServer>
-                <port>8080</port>
-                <draftCompile>true</draftCompile>
-                <soyc>false</soyc>
-
-		    </configuration>
-		    <executions>
-		        <execution>
-					<goals>
-					  <goal>resources</goal>
-					  <goal>compile</goal>
-					</goals>
-		        </execution>
-		    </executions>
-		  </plugin>
-		  
+		  <!--
           <plugin>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-maven-plugin</artifactId>
@@ -123,6 +110,35 @@
 			        </goals>
 			    </execution>
 			</executions>
+          </plugin>
+          -->
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>gwt-maven-plugin</artifactId>
+            <version>2.4.0</version>
+            <configuration>         
+                <webappDirectory>src/main/webapp/VAADIN/widgetsets</webappDirectory>
+              
+                <modules>
+                  <module>org.vaadin.alump.fancylayouts.widgetset.FancyLayoutsWidgetset</module>
+                </modules>
+                
+                <force>true</force>
+                <extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
+                <runTarget>clean</runTarget>
+                <noServer>true</noServer>
+                <port>8080</port>
+                <draftCompile>true</draftCompile>
+                <style>OBF</style>
+            </configuration>
+            <executions>
+                <execution>
+                    <goals>
+                      <goal>resources</goal>
+                      <goal>compile</goal>
+                    </goals>
+                </execution>
+            </executions>
           </plugin>
 		  <plugin>  
             <groupId>org.apache.maven.plugins</groupId>  
@@ -143,15 +159,14 @@
                 <archive>
                     <addMavenDescriptor>false</addMavenDescriptor>
                     <manifest>
-                        <addClasspath>true</addClasspath>
+                        <addClasspath>false</addClasspath>
                         <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                     </manifest>
                     <manifestEntries>
-                        <Vaadin-Package-Version>1</Vaadin-Package-Version>
-                        <Vaadin-Widgetsets>org.vaadin.alump.fancylayouts.demo.widgetset.FancyLayoutsDemoWidgetset</Vaadin-Widgetsets>
-                  </manifestEntries>
+                        <Vaadin-Widgetsets>org.vaadin.alump.fancylayouts.widgetset.FancyLayoutsWidgetset</Vaadin-Widgetsets>
+                    </manifestEntries>    
                 </archive>
-                <webXml>../WebContent/WEB-INF/web.xml</webXml>
+                <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
                 <warName>FancyLayoutsDemo</warName>
             </configuration>  
            </plugin>

@@ -4,14 +4,14 @@
   <groupId>org.vaadin.alump.fancylayouts</groupId>
   <artifactId>addon</artifactId>
   <packaging>jar</packaging>
-  <version>0.2</version>
+  <version>0.2.1-SNAPSHOT</version>
   <name>FancyLayouts addon</name>
   <description>FancyLayouts Vaadin addon</description>
   
   <parent>
     <groupId>org.vaadin.alump</groupId>
     <artifactId>fancylayouts</artifactId>
-    <version>0.2</version>
+    <version>0.2.1-SNAPSHOT</version>
   </parent>
   
   <organization>
@@ -186,25 +186,20 @@
 	          </includes>
 	      </configuration>
       </plugin>
-      <!--
+
       <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>gwt-maven-plugin</artifactId>
           <version>2.4.0</version>
           <configuration>
-              <webappDirectory>${project.build.directory}/${project.build.finalName}/VAADIN/widgetsets</webappDirectory>
-              <deploy>${project.build.directory}/${project.build.finalName}/VAADIN/widgetsets</deploy>
               <modules>
                   <module>org.vaadin.alump.fancylayouts.widgetset.FancyLayoutsWidgetset</module>
               </modules>
               <extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
               <runTarget>xsite</runTarget>
-              <hostedWebapp>${project.build.directory}/${project.build.finalName}</hostedWebapp>
               <noServer>true</noServer>
               <port>8080</port>
-              <soyc>false</soyc>
-              <draftCompile>true</draftCompile>
-              <style>OBF</style>     
+              <validateOnly>true</validateOnly>
           </configuration>
           <executions>
 	          <execution>
@@ -215,7 +210,7 @@
 	          </execution>
           </executions>
       </plugin>
-      -->
+
       <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-assembly-plugin</artifactId>

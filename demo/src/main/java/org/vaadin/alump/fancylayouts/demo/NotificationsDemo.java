@@ -25,7 +25,9 @@ public class NotificationsDemo extends VerticalLayout {
         setSpacing(true);
 
         Label info = new Label(
-                "FancyNotifications is implemented above FancyCssLayout. It offers you to way to have fancy notifications in your web app. This component is still under development!");
+        		"FancyNotifications is example use case of FancyCssLayout. " +
+        		"It's also useful if you want to have desktop style (OSX) " +
+        		"nofications to your web application.");
         addComponent(info);
         
         HorizontalLayout optionLayout = new HorizontalLayout();
@@ -33,6 +35,7 @@ public class NotificationsDemo extends VerticalLayout {
         addComponent (optionLayout);
 
         timeout = new TextField("Close timeout in millisecs");
+        timeout.setDebugId("id-timeout-textfield");
         timeout.setDescription("This value only applies to new notifications made.");
         timeout.addListener(new Property.ValueChangeListener() {
 
@@ -50,6 +53,7 @@ public class NotificationsDemo extends VerticalLayout {
         optionLayout.addComponent(timeout);
         
         CheckBox clickCloseCB = new CheckBox ("Click close notifications");
+        clickCloseCB.setDebugId("id-click-close-checkbox");
         clickCloseCB.setImmediate(true);
         clickCloseCB.setDescription("Close notifications when clicked");
         optionLayout.addComponent(clickCloseCB);
@@ -61,6 +65,7 @@ public class NotificationsDemo extends VerticalLayout {
 		});
         
         CheckBox clickNotificationCB = new CheckBox ("Notify clicks");
+        clickNotificationCB.setDebugId("id-notify-clicks-checkbox");
         clickNotificationCB.setImmediate(true);
         clickNotificationCB.setDescription("Make new notification when notification made by these buttons are clicked.");
         optionLayout.addComponent(clickNotificationCB);
@@ -72,6 +77,7 @@ public class NotificationsDemo extends VerticalLayout {
 		});
         
         CheckBox defaultIconCB = new CheckBox ("Use default icon");
+        defaultIconCB.setDebugId("id-default-icon-checkbox");
         defaultIconCB.setImmediate(true);
         defaultIconCB.setDescription("Use default icon in notifications without defined icon");
         optionLayout.addComponent(defaultIconCB);
@@ -87,10 +93,12 @@ public class NotificationsDemo extends VerticalLayout {
 		});
 
         HorizontalLayout buttonLayout = new HorizontalLayout();
+        buttonLayout.setCaption("Add notifications");
         buttonLayout.setSpacing(true);
         addComponent(buttonLayout);
 
         final Button hello = new Button("Single line");
+        hello.setDebugId("id-single-line-button");
         hello.addListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
@@ -100,6 +108,7 @@ public class NotificationsDemo extends VerticalLayout {
         buttonLayout.addComponent(hello);
 
         final Button lorem = new Button("Two lines");
+        lorem.setDebugId("id-two-lines-button");
         lorem.addListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
@@ -110,6 +119,7 @@ public class NotificationsDemo extends VerticalLayout {
         buttonLayout.addComponent(lorem);
 
         final Button vaadin = new Button("Icon");
+        vaadin.setDebugId("id-icon-button");
         vaadin.addListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
@@ -121,25 +131,55 @@ public class NotificationsDemo extends VerticalLayout {
         buttonLayout.addComponent(vaadin);
 
         final Button styled = new Button("Styled");
+        styled.setDebugId("id-styled-button");
         styled.addListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
             	notifications.showNotification(styled, "I'm special!",
-                        "...I have fancy colors!", null,
+                        "...I have fancy colors and fonts!", null,
                         "demo-special-notification");
             }
         });
         buttonLayout.addComponent(styled);
         
         final Button longText = new Button("Long text");
+        longText.setDebugId("id-long-text-button");
         longText.addListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-            	notifications.showNotification(styled, "Very long title is very long, you know!",
-                        "Also description is really long, nobody knows why, but it's still long!");
+            	notifications.showNotification(longText,
+            			"Very long title is very long. If it were any longer it would not be a title anymore.",
+                        "Also description is really long, nobody knows why, but it's still long! You see? Well, trust me. This is long!");
             }
         });
         buttonLayout.addComponent(longText);
+        
+        final Button messageExample = new Button("Msg example");
+        messageExample.addListener(new Button.ClickListener() {
+
+            public void buttonClick(ClickEvent event) {
+            	notifications.showNotification(messageExample,
+            			"Sami Viitanen",
+            			"Thanks for using FancyLayouts! Hopefully you will " +
+            			"find this add on useful.",
+            			new ThemeResource("images/avatar.png"));
+            }
+        });
+        buttonLayout.addComponent(messageExample);
+        
+        buttonLayout = new HorizontalLayout();
+        buttonLayout.setCaption("Close notifications:");
+        buttonLayout.setSpacing(true);
+        addComponent(buttonLayout);
+        
+        final Button closeSingle = new Button("Single line");
+        closeSingle.addListener(new Button.ClickListener() {
+
+            public void buttonClick(ClickEvent event) {
+            	notifications.closeNotification(hello);
+            }
+        });
+        buttonLayout.addComponent(closeSingle);
 
     }
     
@@ -158,13 +198,13 @@ public class NotificationsDemo extends VerticalLayout {
                     	String msg;
                     	if (id != null && id instanceof Button) {
                     		Button button = (Button) id;
-                    		msg = "Notification " + button.getCaption()
-                                    + " clicked";
+                    		msg = button.getCaption() + " clicked";
                     	} else {
                     		return;
                     	}
 
-                    	NotificationsDemo.this.notifications.showNotification(null, msg);
+                    	NotificationsDemo.this.notifications.showNotification(
+                    			null, "click!", msg);
                     }
                 });
         

@@ -4,14 +4,14 @@
   <groupId>org.vaadin.alump.fancylayouts</groupId>
   <artifactId>demo</artifactId>
   <packaging>war</packaging>
-  <version>0.2</version>
+  <version>0.2-SNAPSHOT</version>
   <name>FancyLayouts demo</name>
   <description>FancyLayouts Demo Application</description>
   
   <parent>
     <groupId>org.vaadin.alump</groupId>
     <artifactId>fancylayouts</artifactId>
-    <version>0.2</version>
+    <version>0.2-SNAPSHOT</version>
   </parent>
   
     <properties>
@@ -19,7 +19,7 @@
 
         <!-- May be overridden by the build system -->
         <license.short.name>apache2</license.short.name>
-        <vaadin.version>6.8.0</vaadin.version>
+        <vaadin.version>6.8.1</vaadin.version>
         <gwt.version>2.4.0</gwt.version>
 
         <Implementation-Version>${project.version}</Implementation-Version>
@@ -34,14 +34,9 @@
         <dependency>
             <groupId>org.vaadin.alump.fancylayouts</groupId>
             <artifactId>addon</artifactId>
-            <version>0.2</version>
+            <version>${project.version}</version>
+            <scope>compile</scope>
         </dependency>
-		<dependency>
-		    <groupId>junit</groupId>
-		    <artifactId>junit</artifactId>
-		    <version>3.8.1</version>
-		    <scope>test</scope>
-		</dependency>
 		<dependency>
 		     <groupId>com.vaadin</groupId>
 		     <artifactId>vaadin</artifactId>
@@ -53,6 +48,12 @@
 		     <version>${gwt.version}</version>
 		     <scope>provided</scope>
 		 </dependency>
+		 <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+         </dependency>
     </dependencies>
   
     <build>
@@ -79,28 +80,33 @@
 		    <groupId>org.codehaus.mojo</groupId>
 		    <artifactId>gwt-maven-plugin</artifactId>
 		    <version>2.4.0</version>
-		    <configuration>
-		        
+		    <configuration>		    
 		        <webappDirectory>src/main/webapp/VAADIN/widgetsets</webappDirectory>
                 <hostedWebapp>src/main/webapp</hostedWebapp>
+              
+		        <modules>
+			      <module>org.vaadin.alump.fancylayouts.demo.widgetset.FancyLayoutsDemoWidgetset</module>
+			    </modules>
 
                 <extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
                 <runTarget>clean</runTarget>
                 <noServer>true</noServer>
                 <port>8080</port>
+                <draftCompile>true</draftCompile>
                 <soyc>false</soyc>
 
 		    </configuration>
 		    <executions>
 		        <execution>
 					<goals>
+					  <goal>resources</goal>
 					  <goal>compile</goal>
-					  <goal>generateAsync</goal>
 					</goals>
 		        </execution>
 		    </executions>
 		  </plugin>
-            <plugin>
+		  
+          <plugin>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-maven-plugin</artifactId>
 			<version>1.0.2</version>
@@ -108,11 +114,9 @@
 			    <execution>
 			        <phase>prepare-package</phase>
 			        <configuration>
-			            <!--
 			            <modules>
 			                <module>org.vaadin.alump.fancylayouts.demo.widgetset.FancyLayoutsDemoWidgetset</module>
 			            </modules>
-			             -->
 			        </configuration>
 			        <goals>
 			            <goal>update-widgetset</goal>
@@ -123,10 +127,21 @@
 		  <plugin>  
             <groupId>org.apache.maven.plugins</groupId>  
             <artifactId>maven-war-plugin</artifactId>  
-            <version>2.1</version>  
-            <configuration>  
-                <warSourceExcludes>VAADIN/gwt-unitCache/**</warSourceExcludes>
+            <version>2.2</version>  
+            <configuration>
+                <webResources>
+                    <resource>
+                        <directory>../WebContent/VAADIN/themes</directory>
+                        <targetPath>VAADIN/themes</targetPath>
+                        <includes>
+                              <include>**/*</include>
+	                    </includes>
+			        </resource>
+                </webResources>
+                <warSourceExcludes>VAADIN/gwt-unitCache/**, VAADIN/widgetsets/WEB-INF/**</warSourceExcludes>
+                <packagingExcludes>%regex[WEB-INF/lib/(?!vaadin|addon).*.jar]</packagingExcludes>
                 <archive>
+                    <addMavenDescriptor>false</addMavenDescriptor>
                     <manifest>
                         <addClasspath>true</addClasspath>
                         <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
@@ -140,6 +155,22 @@
                 <warName>FancyLayoutsDemo</warName>
             </configuration>  
            </plugin>
+           <plugin>
+            <artifactId>maven-clean-plugin</artifactId>
+            <version>2.5</version>
+            <configuration>
+              <filesets>
+                <fileset>
+                  <directory>src/main/webapp/VAADIN</directory>
+                  <includes>
+                    <include>widgetsets/*/**</include>
+                    <include>gwt-unitCache/**</include>
+                  </includes>
+                  <followSymlinks>false</followSymlinks>
+                </fileset>
+              </filesets>
+            </configuration>
+          </plugin>
 		</plugins>
         <finalName>FancyLayoutsDemo</finalName>
     </build>

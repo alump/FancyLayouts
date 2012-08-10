@@ -17,7 +17,7 @@
  -o-transition: opacity 0.34s ease-in, margin 0.34s ease-in;
  margin: 0px;
 }
-.fancy-notifications {
+.fancy-notifs {
  position: absolute;
  right: 0px;
  top: 0px;
@@ -25,57 +25,66 @@
  overflow: hidden;
  z-index: 1000;
 }
-.fancy-notifications .fancy-csslayout-item {
+.fancy-notifs .fancy-csslayout-item {
  display: block;
 }
-.fancy-notifications .fancy-notification {
+.fancy-notifs .fancy-notif {
  position: relative;
  margin: 3px 12px 3px 3px;
  background-color: rgba(0,0,0,0.5);
  color: white;
- border-radius: 15px;
- min-height: 52px;
- width: 240px;
+ border-radius: 10px;
+ min-height: 56px;
+ width: 300px;
  box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.2);
+ cursor: pointer;
 }
-.fancy-notifications .fancy-notification:hover {
+.fancy-notifs .fancy-notif:hover {
  background-color: rgba(0,0,0,0.75);
 }
-.fancy-notifications .demo-special-notification {
- background-color: rgba(128,0,0,0.5) !important;
-}
-.fancy-notifications .demo-special-notification:hover {
- background-color: rgba(128,0,0,0.75) !important;
-}
-.fancy-notifications .fancy-notification-icon {
+.fancy-notifs .fancy-notif-icon {
  position: absolute;
  left: 8px;
- top: 2px;
+ top: 50%;
+ margin-top: -24px;
  max-width: 48px;
  max-height: 48px;
 }
-.fancy-notifications .fancy-notification-title {
+.fancy-notifs .fancy-notif-title {
  position: absolute;
  left: 64px;
  top: 8px;
  color: white;
- text-shadow: 1px 1px rgba(0,0,0,0.5);
+ text-shadow:  rgba(0,0,0,0.5) 1px 1px 2px;
  font-weight: bold;
  font-size: 12px;
- max-width: 166px;
+ max-width: 226px;
  overflow: hidden;
  white-space: nowrap;
  text-overflow: ellipsis;
 }
-.fancy-notifications .fancy-notification-desc {
- position: absolute;
+.fancy-notifs .fancy-notif-noicon .fancy-notif-title {
+ left: 12px;
+ max-width: 278px;
+}
+.fancy-notifs .fancy-notif-desc {
+ position: relative;
  color: white;
- text-shadow: 1px 1px rgba(0,0,0,0.5);
- left: 64px;
- top: 28px;
- font-size: 12px;
- max-width: 166px;
+ text-shadow: rgba(0,0,0,0.5) 1px 1px 2px;
+ margin-left: 64px;
+ margin-top: 28px;
+ margin-bottom: 8px;
+ font-size: 10px;
+ max-width: 226px;
  overflow: hidden;
- white-space: nowrap;
- text-overflow: ellipsis;
+ white-space: normal;
+ max-height: 55px;
+}
+.fancy-notifs .fancy-notif-noicon .fancy-notif-desc {
+ margin-left: 12px;
+ max-width: 278px;
+}
+.fancy-notifs .fancy-notif-notitle .fancy-notif-desc {
+ margin-top: 8px;
+ max-height: 75px;
 }

@@ -21,12 +21,6 @@
         <include>*.jar</include>
       </includes>
     </fileSet>
-    <!-- already included to javadoc jar
-    <fileSet>
-        <directory>target/apidocs</directory>
-        <outputDirectory>docs</outputDirectory>
-    </fileSet>
-    -->
   </fileSets>
 
   <files>

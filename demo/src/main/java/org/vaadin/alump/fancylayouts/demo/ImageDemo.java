@@ -73,6 +73,7 @@ public class ImageDemo extends VerticalLayout {
         setComponentAlignment(image, Alignment.TOP_CENTER);
 
         final Button pic1 = new Button("Pic 1");
+        pic1.setDebugId("id-pic1-button");
         buttonLayout.addComponent(pic1);
         pic1.addListener(new Button.ClickListener() {
 
@@ -84,6 +85,7 @@ public class ImageDemo extends VerticalLayout {
         });
 
         final Button pic2 = new Button("Pic 2");
+        pic2.setDebugId("id-pic2-button");
         buttonLayout.addComponent(pic2);
         pic2.addListener(new Button.ClickListener() {
 
@@ -95,6 +97,7 @@ public class ImageDemo extends VerticalLayout {
         });
 
         final Button pic3 = new Button("Pic 3");
+        pic3.setDebugId("id-pic3-button");
         buttonLayout.addComponent(pic3);
         pic3.addListener(new Button.ClickListener() {
 

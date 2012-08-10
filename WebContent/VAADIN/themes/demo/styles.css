@@ -56,3 +56,18 @@
 	font-size: 10px;
 	color: black;
 }
+.demo-special-notification {
+    background-color: rgba(128,0,0,0.5) !important;
+}
+
+.demo-special-notification:hover {
+    background-color: rgba(128,0,0,0.75) !important;
+}
+
+.demo-special-notification .fancy-notif-title {
+	font-family: cursive;
+}
+
+.demo-special-notification .fancy-notif-desc {
+    font-family: monospace;
+}

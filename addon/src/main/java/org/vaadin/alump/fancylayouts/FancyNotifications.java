@@ -19,6 +19,7 @@
 package org.vaadin.alump.fancylayouts;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -100,13 +101,27 @@ public class FancyNotifications extends FancyCssLayout {
         }
 
     };
+    
+    protected Component getNotification (Object id) {
+        Iterator<Component> iter = this.getComponentIterator();
+        while (iter.hasNext()) {
+        	Component child = iter.next();
+        	if (child instanceof AbstractComponent) {
+        		Object data = ((AbstractComponent) child).getData();
+        		if (data != null && data.equals(id)) {
+        			return child;
+        		}
+        	}
+        }
+        return null;
+    }
 
     /**
-     * Show notification with title text
+     * Show notification with text
      * @param title Title text
      */
-    public void showNotification(Object id, String title) {
-        showNotification(id, title, null, null, null);
+    public void showNotification(Object id, String description) {
+        showNotification(id, null, description, null, null);
     }
 
     /**
@@ -135,7 +150,7 @@ public class FancyNotifications extends FancyCssLayout {
         public NotificationLayout(Object id, String title, String description,
                 Resource icon, String styleName) {
 
-            setStyleName("fancy-notification");
+            setStyleName("fancy-notif");
 
             if (id != null) {
                 setData(id);
@@ -145,22 +160,30 @@ public class FancyNotifications extends FancyCssLayout {
                 addStyleName(styleName);
             }
 
-            Label titleLabel = new Label(title);
-            titleLabel.setStyleName("fancy-notification-title");
-            addComponent(titleLabel);
+            if (title != null) {
+	            Label titleLabel = new Label(title);
+	            titleLabel.setStyleName("fancy-notif-title");
+	            addComponent(titleLabel);
+            } else {
+               	addStyleName("fancy-notif-notitle");
+            }
 
             if (description != null) {
                 Label descLabel = new Label(description);
-                descLabel.setStyleName("fancy-notification-desc");
+                descLabel.setStyleName("fancy-notif-desc");
                 addComponent(descLabel);
+            } else {
+               	addStyleName("fancy-notif-nodesc");
             }
 
             if (icon != null) {
                 Embedded iconImage = new Embedded();
                 iconImage.setType(Embedded.TYPE_IMAGE);
-                iconImage.setStyleName("fancy-notification-icon");
+                iconImage.setStyleName("fancy-notif-icon");
                 iconImage.setSource(icon);
                 addComponent(iconImage);
+            } else {
+            	addStyleName("fancy-notif-noicon");
             }
 
         }
@@ -176,10 +199,10 @@ public class FancyNotifications extends FancyCssLayout {
      */
     public void showNotification(Object id, String title, String description,
             Resource icon, String styleName) {
-
-        if (title == null) {
-            return;
-        }
+    	
+    	if (title == null && description == null) {
+    		throw new IllegalArgumentException("You have to define title or description");
+    	}
         
         if (icon == null) {
         	icon = defaultIcon;
@@ -189,6 +212,17 @@ public class FancyNotifications extends FancyCssLayout {
                 description, icon, styleName);
 
         addComponent(notification);
+    }
+    
+    /**
+     * Close notification with ID
+     * @param id ID of notification
+     */
+    public void closeNotification(Object id) {
+    	Component notif = getNotification (id);
+    	if (notif != null) {
+    		fancyRemoveComponent(notif);
+    	}
     }
 
     /**
@@ -226,8 +260,8 @@ public class FancyNotifications extends FancyCssLayout {
     public void changeVariables(Object source, Map<String, Object> variables) {
 
         // mark notification removed
-        if (variables.containsKey("remove")) {
-        }
+        //if (variables.containsKey("remove")) {
+        //}
 
         // actual layout removal is done by base class
         super.changeVariables(source, variables);

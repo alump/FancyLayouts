@@ -13,7 +13,7 @@ public class VFancyNotifications extends VFancyCssLayout {
     public VFancyNotifications() {
         super();
 
-        this.setStylePrimaryName("fancy-notifications");
+        this.setStylePrimaryName("fancy-notifs");
     }
 
     @Override

@@ -4,14 +4,14 @@
   <groupId>org.vaadin.alump.fancylayouts</groupId>
   <artifactId>demo</artifactId>
   <packaging>war</packaging>
-  <version>0.2-SNAPSHOT</version>
+  <version>0.2</version>
   <name>FancyLayouts demo</name>
   <description>FancyLayouts Demo Application</description>
   
   <parent>
     <groupId>org.vaadin.alump</groupId>
     <artifactId>fancylayouts</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2</version>
   </parent>
   
     <properties>

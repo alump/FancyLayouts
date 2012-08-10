@@ -1,6 +1,7 @@
 Manifest-Version: 1.0
-Vaadin-Package-Version: 1
-Vaadin-Addon: ${Vaadin-Addon}
-Implementation-Vendor: ${Implementation-Vendor}
 Implementation-Title: FancyLayouts
 Implementation-Version: ${Implementation-Version}
+Vaadin-Package-Version: 1
+Vaadin-Widgetsets: org.vaadin.alump.fancylayouts.widgetset.FancyLayoutsWidgetset
+Vaadin-Addon: ${Vaadin-Addon}
+Implementation-Vendor: ${Implementation-Vendor}

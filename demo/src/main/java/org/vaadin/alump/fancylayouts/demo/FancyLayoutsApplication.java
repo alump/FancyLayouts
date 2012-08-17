@@ -47,7 +47,7 @@ public class FancyLayoutsApplication extends Application {
         setTheme("demo");
 
         Window mainWindow = new Window(
-                "FancyLayouts Demo Application - version 0.2");
+                "FancyLayouts Demo Application - version 0.3pre");
         mainWindow.setContent(buildLayout());
         setMainWindow(mainWindow);
     }

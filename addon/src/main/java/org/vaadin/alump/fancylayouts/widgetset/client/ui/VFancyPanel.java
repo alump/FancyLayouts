@@ -20,6 +20,8 @@ package org.vaadin.alump.fancylayouts.widgetset.client.ui;
 
 import java.util.Set;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Container;
@@ -41,6 +43,45 @@ public class VFancyPanel extends GwtFancyPanel implements Paintable, Container {
     protected final static String ATTR_SCROLL_LEFT = "scroll-left";
 
     private final RenderInformation renderInformation = new RenderInformation();
+    
+    public VFancyPanel() {
+    	super.addListener(new ChangeListener() {
+
+			public void contentChanged(Widget newContent) {
+				if (client != null) {
+					client.runDescendentsLayout(VFancyPanel.this);
+				}
+			}
+    		
+    	});
+    }
+    
+    @Override
+	public void setWidth (String width) {
+    	super.setWidth(width);
+    	if (client != null) {
+			client.runDescendentsLayout(this);
+		}
+    }
+    
+    @Override
+	public void setHeight (String height) {
+    	super.setHeight(height);
+    	if (client != null) {
+			client.runDescendentsLayout(this);
+		}
+    }
+    
+    private void delayedContentSizeUpdate() {
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+			public void execute() {
+				VFancyPanel.this.client.runDescendentsLayout(
+						VFancyPanel.this);
+			}
+        	
+        });
+    }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         if (client.updateComponent(this, uidl, false)) {
@@ -63,13 +104,14 @@ public class VFancyPanel extends GwtFancyPanel implements Paintable, Container {
             }
             setContent((Widget) newContent);
             content = newContent;
+            delayedContentSizeUpdate();
         }
         content.updateFromUIDL(layoutUidl, client);
 
         if (uidl.hasAttribute(ATTR_SCROLLABLE)) {
             if (isScrollable() != uidl.getBooleanAttribute(ATTR_SCROLLABLE)) {
                 setScrollable(uidl.getBooleanAttribute(ATTR_SCROLLABLE));
-                client.requestLayoutPhase();
+                delayedContentSizeUpdate();
             }
         }
 
@@ -106,7 +148,9 @@ public class VFancyPanel extends GwtFancyPanel implements Paintable, Container {
     }
 
     public boolean requestLayout(Set<Paintable> children) {
+    	
         client.handleComponentRelativeSize((Widget) content);
+        
         if (height != null && height != "" && width != null && width != "") {
             return true;
         }
@@ -114,21 +158,14 @@ public class VFancyPanel extends GwtFancyPanel implements Paintable, Container {
         return !renderInformation.updateSize(getElement());
     }
 
-    public RenderSpace getAllocatedSpace(Widget child) {
+	public RenderSpace getAllocatedSpace(Widget child) {
+		
         int w = 0;
         int h = 0;
 
         if (width != null && !width.equals("")) {
-            if (isScrollable()) {
-                if (child.getElement().getOffsetWidth() < getContentElement()
-                        .getOffsetWidth()) {
-                    w = getContentElement().getOffsetWidth();
-                } else {
-                    w = child.getElement().getOffsetWidth();
-                }
-            } else {
-                w = getContentElement().getOffsetWidth();
-            }
+        	w = getContentElement().getOffsetWidth();
+
             if (w < 0) {
                 w = 0;
             }
@@ -136,7 +173,7 @@ public class VFancyPanel extends GwtFancyPanel implements Paintable, Container {
 
         if (height != null && !height.equals("")) {
             if (isScrollable()) {
-                h = child.getElement().getOffsetHeight();
+                h = 0;
             } else {
                 h = getContentElement().getOffsetHeight();
             }

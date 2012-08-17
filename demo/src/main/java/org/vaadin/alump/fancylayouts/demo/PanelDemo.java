@@ -24,6 +24,7 @@ import org.vaadin.alump.fancylayouts.FancyTransition;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.terminal.ExternalResource;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
@@ -150,10 +151,11 @@ public class PanelDemo extends VerticalLayout {
     private ComponentContainer createPanelContentA() {
 
         VerticalLayout layout = new VerticalLayout();
+        layout.setWidth("100%");
+        layout.setMargin(true);
         layout.setSpacing(true);
 
         Label label = new Label(LOREM_STR);
-        label.setWidth("300px");
         layout.addComponent(label);
 
         Embedded image = new Embedded();
@@ -174,8 +176,8 @@ public class PanelDemo extends VerticalLayout {
     private ComponentContainer createPanelContentB() {
 
         VerticalLayout layout = new VerticalLayout();
-        layout.setSizeUndefined();
         layout.setWidth("100%");
+        layout.setMargin(true);
         layout.setSpacing(true);
 
         Label label = new Label(BECON_STR);
@@ -187,6 +189,7 @@ public class PanelDemo extends VerticalLayout {
         image.setWidth("300px");
         image.setHeight("187px");
         layout.addComponent(image);
+        layout.setComponentAlignment(image, Alignment.MIDDLE_CENTER);
 
         Label label2 = new Label(BECON_STR);
         layout.addComponent(label2);
@@ -201,6 +204,8 @@ public class PanelDemo extends VerticalLayout {
      */
     private ComponentContainer createPanelContentC() {
         VerticalLayout layout = new VerticalLayout();
+        layout.setWidth("100%");
+        layout.setMargin(true);
         layout.setSpacing(true);
 
         Table table = new Table();

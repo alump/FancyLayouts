@@ -7,7 +7,9 @@
         <wb-resource deploy-path="/WEB-INF/lib" source-path="/libs"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/addon/src/main/resources"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/demo/src/main/resources"/>
+        <wb-resource deploy-path="/" source-path="/demo/src"/>
+        <wb-resource deploy-path="/" source-path="/addon/src"/>
         <property name="context-root" value="FancyLayouts"/>
-        <property name="java-output-path" value="/FancyLayouts/build/classes"/>
+        <property name="java-output-path" value="/FancyLayouts/bin"/>
     </wb-module>
 </project-modules>

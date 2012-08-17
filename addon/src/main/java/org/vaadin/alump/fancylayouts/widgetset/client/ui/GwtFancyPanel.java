@@ -18,6 +18,9 @@
 
 package org.vaadin.alump.fancylayouts.widgetset.client.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.vaadin.alump.fancylayouts.widgetset.client.ui.model.BrowserMode;
 
 import com.google.gwt.dom.client.Document;
@@ -51,6 +54,12 @@ public class GwtFancyPanel extends SimplePanel {
     private Boolean scrollEnabled;
     private String overflowXBeforeHide;
     private String overflowYBeforeHide;
+    
+    private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    
+    public interface ChangeListener {
+    	public void contentChanged(Widget newContent);
+    }
 
     public GwtFancyPanel() {
 
@@ -77,6 +86,14 @@ public class GwtFancyPanel extends SimplePanel {
         transitionsEnabled = browserMode.hasTransitionEndEvent();
 
         setScrollable(false);
+    }
+    
+    public void addListener (ChangeListener listener) {
+    	listeners.add (listener);
+    }
+    
+    public void removeListener (ChangeListener listener) {
+    	listeners.remove (listener);
     }
 
     private boolean addTransitionEndListener(Element element) {
@@ -129,6 +146,10 @@ public class GwtFancyPanel extends SimplePanel {
         getContentElement().getStyle().setOpacity(1.0);
 
         setFadeScrollHide(false);
+        
+        for (ChangeListener listener : listeners) {
+        	listener.contentChanged(contentWidget);
+        }
     }
 
     private void setContentWithTransition(Widget content) {

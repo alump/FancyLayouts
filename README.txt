@@ -15,27 +15,29 @@ Simple Maven tutorials:
 
 ***** How to compile add on jar package for your project *****
 
-> cd addon
+> cd fancylayouts-addon
 > mvn package
 
 add on can be found at: addon/target/FancyLayouts-<version>.jar
 zip package used at Vaadin directory can be found at:
 addon/target/FancyLayouts-<version>.zip
 
+***** How to install fancylayouts to your Maven repository *****
+
 To install addon to your local repository, run:
 
+> cd fancylayouts-addon
 > mvn install
-
 
 
 ***** How to run test application *****
 
 First compile and install addon (if not already installed)
-> cd addon
+> cd fancylayouts-addon
 > mvn install
 
 Then compile demo widgetset and start HTTP server
-> cd ../demo
+> cd ../fancylayouts-demo
 > mvn gwt:compile
 > mvn jetty:run
 
@@ -46,11 +48,11 @@ Demo application is running at http://localhost:8080/fancylayouts
 ***** How to compile test application WAR *****
 
 First compile and install addon (if not already installed)
-> cd addon
+> cd fancylayouts-addon
 > mvn install
 
 Then construct demo package (this should automatically compile widgetset)
-> cd ../demo
+> cd ../fancylayouts-demo
 > mvn package
 
 War package can be now found at demo/target/FancyLayoutsDemo.war

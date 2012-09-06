@@ -41,6 +41,8 @@ public class VFancyPanel extends GwtFancyPanel implements Paintable, Container {
     protected final static String ATTR_SCROLLABLE = "scrollable";
     protected final static String ATTR_SCROLL_TOP = "scroll-top";
     protected final static String ATTR_SCROLL_LEFT = "scroll-left";
+    
+    private boolean delayedContentSizeUpdate = false;
 
     private final RenderInformation renderInformation = new RenderInformation();
     
@@ -48,9 +50,7 @@ public class VFancyPanel extends GwtFancyPanel implements Paintable, Container {
     	super.addListener(new ChangeListener() {
 
 			public void contentChanged(Widget newContent) {
-				if (client != null) {
-					client.runDescendentsLayout(VFancyPanel.this);
-				}
+				delayedContentSizeUpdate();
 			}
     		
     	});
@@ -59,25 +59,28 @@ public class VFancyPanel extends GwtFancyPanel implements Paintable, Container {
     @Override
 	public void setWidth (String width) {
     	super.setWidth(width);
-    	if (client != null) {
-			client.runDescendentsLayout(this);
-		}
+    	delayedContentSizeUpdate();
     }
     
     @Override
 	public void setHeight (String height) {
     	super.setHeight(height);
-    	if (client != null) {
-			client.runDescendentsLayout(this);
-		}
+    	delayedContentSizeUpdate();
     }
     
-    private void delayedContentSizeUpdate() {
+    private void delayedContentSizeUpdate() { 
+    	if (delayedContentSizeUpdate) {
+    		return;
+    	}
+    	delayedContentSizeUpdate = true;
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 
 			public void execute() {
-				VFancyPanel.this.client.runDescendentsLayout(
-						VFancyPanel.this);
+				if (VFancyPanel.this.client != null) {
+					VFancyPanel.this.client.runDescendentsLayout(
+							VFancyPanel.this);
+				}
+				delayedContentSizeUpdate = false;
 			}
         	
         });

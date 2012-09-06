@@ -2,7 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.vaadin.alump.fancylayouts</groupId>
-  <artifactId>demo</artifactId>
+  <artifactId>fancylayouts-demo</artifactId>
   <packaging>war</packaging>
   <name>FancyLayouts demo</name>
   <description>FancyLayouts Demo Application</description>
@@ -31,7 +31,7 @@
     <dependencies>
         <dependency>
             <groupId>org.vaadin.alump.fancylayouts</groupId>
-            <artifactId>addon</artifactId>
+            <artifactId>fancylayouts-addon</artifactId>
             <version>${project.version}</version>
         </dependency>
 		<dependency>
@@ -54,12 +54,6 @@
     </dependencies>
   
     <build>      
-        <resources>
-            <resource>
-                <directory>../addon/src/main/resources</directory>
-            </resource>
-        </resources>
-        
         <plugins>
             <plugin>
 			  <groupId>org.apache.maven.plugins</groupId>
@@ -71,7 +65,6 @@
 			    <encoding>UTF-8</encoding>
 			  </configuration>
 		  </plugin>
-		  <!--
           <plugin>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-maven-plugin</artifactId>
@@ -79,18 +72,12 @@
 			<executions>
 			    <execution>
 			        <phase>prepare-package</phase>
-			        <configuration>
-			            <modules>
-			                <module>org.vaadin.alump.fancylayouts.demo.widgetset.FancyLayoutsDemoWidgetset</module>
-			            </modules>
-			        </configuration>
 			        <goals>
 			            <goal>update-widgetset</goal>
 			        </goals>
 			    </execution>
 			</executions>
           </plugin>
-          -->
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>gwt-maven-plugin</artifactId>
@@ -100,7 +87,7 @@
                 <hostedWebapp>src/main/webapp/VAADIN/widgetsets</hostedWebapp>
               
                 <modules>
-                  <module>org.vaadin.alump.fancylayouts.widgetset.FancyLayoutsWidgetset</module>
+                  <module>org.vaadin.alump.fancylayouts.demo.widgetset.FancyLayoutsDemoWidgetset</module>
                 </modules>
                 
                 <force>true</force>
@@ -137,7 +124,7 @@
 			        </resource>
                 </webResources>
                 <warSourceExcludes>VAADIN/gwt-unitCache/**, VAADIN/widgetsets/WEB-INF/**</warSourceExcludes>
-                <packagingExcludes>%regex[WEB-INF/lib/(?!vaadin|addon).*.jar]</packagingExcludes>
+                <!--  <packagingExcludes>%regex[WEB-INF/lib/(?!vaadin|addon).*.jar]</packagingExcludes> -->
                 <archive>
                     <addMavenDescriptor>false</addMavenDescriptor>
                     <manifest>

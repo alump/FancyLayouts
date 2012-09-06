@@ -49,9 +49,8 @@ First compile and install addon (if not already installed)
 > cd addon
 > mvn install
 
-Then compile demo widgetset and construct war package
+Then construct demo package (this should automatically compile widgetset)
 > cd ../demo
-> mvn gwt:compile
 > mvn package
 
 War package can be now found at demo/target/FancyLayoutsDemo.war

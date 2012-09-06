@@ -9,8 +9,8 @@
     <name>FancyLayouts Maven project</name>
     
     <modules>
-        <module>addon</module>
-        <module>demo</module>
+        <module>fancylayouts-addon</module>
+        <module>fancylayouts-demo</module>
     </modules>
     
     <properties>

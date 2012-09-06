@@ -20,7 +20,7 @@
             <description>
             Application widgetset</description>
             <param-name>widgetset</param-name>
-            <param-value>org.vaadin.alump.fancylayouts.widgetset.FancyLayoutsWidgetset</param-value>
+            <param-value>org.vaadin.alump.fancylayouts.demo.widgetset.FancyLayoutsDemoWidgetset</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>

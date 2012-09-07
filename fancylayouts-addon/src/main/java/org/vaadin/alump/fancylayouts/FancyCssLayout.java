@@ -19,20 +19,21 @@
 package org.vaadin.alump.fancylayouts;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+
+import org.vaadin.alump.fancylayouts.widgetset.client.connect.FancyCssLayoutClientRpc;
+import org.vaadin.alump.fancylayouts.widgetset.client.connect.FancyCssLayoutServerRpc;
+import org.vaadin.alump.fancylayouts.widgetset.client.shared.FancyCssLayoutState;
 
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Paintable;
-import com.vaadin.terminal.gwt.client.EventId;
+import com.vaadin.shared.Connector;
+import com.vaadin.shared.EventId;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -43,15 +44,39 @@ import com.vaadin.ui.ComponentContainer;
  * are added with addComponent() those will be added with transition.
  */
 @SuppressWarnings("serial")
-@com.vaadin.ui.ClientWidget(org.vaadin.alump.fancylayouts.widgetset.client.ui.VFancyCssLayout.class)
 public class FancyCssLayout extends AbstractLayout implements
         LayoutClickNotifier, ComponentContainer.ComponentAttachListener,
         ComponentContainer.ComponentDetachListener, FancyAnimator {
+	
+	protected List<Component> components = new ArrayList<Component>();
+	protected Set<Component> fancyRemoveComponents = new HashSet<Component>();
+    
+    private FancyCssLayoutServerRpc rpc = new FancyCssLayoutServerRpc() {
+		@Override
+		public void remove(Connector child) {
+			Component removable = (Component) child;
+            removeComponent(removable);
+		}
 
-    protected List<Component> components = new ArrayList<Component>();
-    protected Set<Component> fancyRemoveComponents = new HashSet<Component>();
-    private boolean marginTransition = true;
-    private static final String CLICK_EVENT = EventId.LAYOUT_CLICK;
+		@Override
+		public void layoutClick(MouseEventDetails mouseDetails,
+				Connector clickedConnector) {			
+		}
+    };
+    
+    public FancyCssLayout() {
+    	registerRpc(rpc);
+    }
+    
+    @Override
+    protected FancyCssLayoutState createState() {
+    	return new FancyCssLayoutState();
+    }
+    
+    @Override
+    protected FancyCssLayoutState getState() {
+    	return (FancyCssLayoutState) super.getState();
+    }
 
     /**
      * Replace given component with new. This will not use fancy remove.
@@ -62,7 +87,6 @@ public class FancyCssLayout extends AbstractLayout implements
             components.set(index, newComponent);
             super.removeComponent(oldComponent);
             super.addComponent(newComponent);
-            requestRepaint();
         }
     }
 
@@ -74,26 +98,10 @@ public class FancyCssLayout extends AbstractLayout implements
         return components.iterator();
     }
 
-    /**
-     * Add layout click listener. Event will be raised when layout is clicked.
-     */
-    public void addListener(LayoutClickListener listener) {
-        addListener(CLICK_EVENT, LayoutClickEvent.class, listener,
-                LayoutClickListener.clickMethod);
-    }
-
-    /**
-     * Remove layout click listener.
-     */
-    public void removeListener(LayoutClickListener listener) {
-        removeListener(CLICK_EVENT, LayoutClickEvent.class, listener);
-    }
-
     @Override
     public void addComponent(Component c) {
         super.addComponent(c);
         components.add(c);
-        requestRepaint();
     }
 
     /**
@@ -104,7 +112,6 @@ public class FancyCssLayout extends AbstractLayout implements
     public void addComponent(Component c, int index) {
         super.addComponent(c);
         components.add(index, c);
-        requestRepaint();
     }
 
     @Override
@@ -115,7 +122,6 @@ public class FancyCssLayout extends AbstractLayout implements
         components.remove(c);
         fancyRemoveComponents.remove(c);
         super.removeComponent(c);
-        requestRepaint();
     }
 
     /**
@@ -131,9 +137,9 @@ public class FancyCssLayout extends AbstractLayout implements
         if (fancyRemoveComponents.contains(c)) {
             return;
         }
-
+        
         fancyRemoveComponents.add(c);
-        requestRepaint();
+        getRpcProxy(FancyCssLayoutClientRpc.class).fancyRemove(c);
     }
 
     /**
@@ -142,51 +148,6 @@ public class FancyCssLayout extends AbstractLayout implements
      */
     public int getComponentCount() {
         return components.size();
-    }
-
-    @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-        super.paintContent(target);
-        HashMap<Paintable, String> componentCss = null;
-        // Adds all items in all the locations
-        for (Component c : components) {
-            // Paint child component UIDL
-            c.paint(target);
-            String componentCssString = getCss(c);
-            if (componentCssString != null) {
-                if (componentCss == null) {
-                    componentCss = new HashMap<Paintable, String>();
-                }
-                componentCss.put(c, componentCssString);
-            }
-        }
-        if (componentCss != null) {
-            target.addAttribute("css", componentCss);
-        }
-
-        target.addAttribute("margin-transition", marginTransition);
-
-        if (!fancyRemoveComponents.isEmpty()) {
-            int i = 0;
-            Iterator<Component> iter = fancyRemoveComponents.iterator();
-            while (iter.hasNext()) {
-                target.addAttribute("fancy-remove-" + i, iter.next());
-                ++i;
-            }
-            fancyRemoveComponents.clear();
-        }
-    }
-
-    @Override
-    public void changeVariables(Object source, Map<String, Object> variables) {
-
-        super.changeVariables(source, variables);
-
-        if (variables.containsKey("remove")) {
-
-            Component removable = (Component) variables.get("remove");
-            removeComponent(removable);
-        }
     }
 
     protected String getCss(Component c) {
@@ -215,11 +176,8 @@ public class FancyCssLayout extends AbstractLayout implements
         case FADE:
             return true;
         case SLIDE:
-            if (marginTransition != enabled) {
-                marginTransition = enabled;
-                requestRepaint();
-            }
-            return marginTransition;
+        	getState().marginTransition = enabled;
+            return getState().marginTransition;
         default:
             return false;
         }
@@ -233,7 +191,7 @@ public class FancyCssLayout extends AbstractLayout implements
         case FADE:
             return true;
         case SLIDE:
-            return marginTransition;
+            return getState().marginTransition;
         default:
             return false;
         }
@@ -246,5 +204,31 @@ public class FancyCssLayout extends AbstractLayout implements
     public void setSlideEnabled(boolean enabled) {
         setTransitionEnabled(FancyTransition.SLIDE, enabled);
     }
+
+	@Override
+	public void addLayoutClickListener(LayoutClickListener listener) {
+        addListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
+        		LayoutClickEvent.class, listener,
+        		LayoutClickListener.clickMethod);
+	}
+
+	@Override
+	public void removeLayoutClickListener(LayoutClickListener listener) {
+        removeListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
+        		LayoutClickEvent.class, listener);
+	}
+
+	@Override
+	@Deprecated
+	public void addListener(LayoutClickListener listener) {
+		addLayoutClickListener(listener);
+		
+	}
+
+	@Override
+	@Deprecated
+	public void removeListener(LayoutClickListener listener) {
+		removeLayoutClickListener(listener);
+	}
 
 }

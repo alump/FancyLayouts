@@ -25,9 +25,7 @@ import java.util.Map;
 
 import com.vaadin.event.LayoutEvents;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Resource;
+import com.vaadin.server.Resource;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
@@ -38,7 +36,6 @@ import com.vaadin.ui.Label;
  * Easy way to add notification bubbles to your web application.
  */
 @SuppressWarnings("serial")
-@com.vaadin.ui.ClientWidget(org.vaadin.alump.fancylayouts.widgetset.client.ui.VFancyNotifications.class)
 public class FancyNotifications extends FancyCssLayout {
 
 	/**
@@ -66,7 +63,7 @@ public class FancyNotifications extends FancyCssLayout {
      * Construct new FancyNotifications
      */
     public FancyNotifications() {
-        super.addListener(layoutClickListener);
+        super.addLayoutClickListener(layoutClickListener);
     }
 
     protected LayoutEvents.LayoutClickListener layoutClickListener = new LayoutEvents.LayoutClickListener() {
@@ -245,26 +242,7 @@ public class FancyNotifications extends FancyCssLayout {
     	
         if (closeTimeoutMs != millisecs) {
             closeTimeoutMs = millisecs;
-            requestRepaint();
         }
-    }
-
-    @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-        super.paintContent(target);
-
-        target.addAttribute("close-timeout", closeTimeoutMs);
-    }
-
-    @Override
-    public void changeVariables(Object source, Map<String, Object> variables) {
-
-        // mark notification removed
-        //if (variables.containsKey("remove")) {
-        //}
-
-        // actual layout removal is done by base class
-        super.changeVariables(source, variables);
     }
 
     /**

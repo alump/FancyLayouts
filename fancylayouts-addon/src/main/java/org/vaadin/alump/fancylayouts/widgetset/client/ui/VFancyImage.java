@@ -18,6 +18,7 @@
 
 package org.vaadin.alump.fancylayouts.widgetset.client.ui;
 
+/*
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -80,3 +81,4 @@ public class VFancyImage extends GwtFancyImage implements Paintable {
     }
 
 }
+*/

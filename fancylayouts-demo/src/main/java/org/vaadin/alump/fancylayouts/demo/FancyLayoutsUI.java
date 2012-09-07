@@ -20,8 +20,9 @@ package org.vaadin.alump.fancylayouts.demo;
 
 import org.vaadin.alump.fancylayouts.FancyNotifications;
 
-import com.vaadin.Application;
-import com.vaadin.terminal.ExternalResource;
+import com.vaadin.annotations.Theme;
+import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -30,6 +31,7 @@ import com.vaadin.ui.Link;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.BaseTheme;
@@ -37,20 +39,10 @@ import com.vaadin.ui.themes.BaseTheme;
 /**
  * Demo application using FancyLayouts components
  */
-public class FancyLayoutsApplication extends Application {
+@Theme("demo")
+public class FancyLayoutsUI extends UI {
 
     FancyNotifications notifications;
-
-    @Override
-    public void init() {
-
-        setTheme("demo");
-
-        Window mainWindow = new Window(
-                "FancyLayouts Demo Application - version 0.3pre");
-        mainWindow.setContent(buildLayout());
-        setMainWindow(mainWindow);
-    }
 
     private ComponentContainer buildLayout() {
 
@@ -98,6 +90,7 @@ public class FancyLayoutsApplication extends Application {
         desc.addStyleName("demo-desc");
         layout.addComponent(desc);
         layout.setExpandRatio(desc, 1.0f);
+        
 
         Link link = new Link(
                 "Source code of this demo application",
@@ -114,5 +107,11 @@ public class FancyLayoutsApplication extends Application {
     public FancyNotifications getNotifications() {
         return notifications;
     }
+
+	@Override
+	protected void init(WrappedRequest request) {
+		this.setContent(buildLayout());
+		
+	}
 
 }

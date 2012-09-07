@@ -18,12 +18,10 @@
 
 package org.vaadin.alump.fancylayouts;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.vaadin.alump.fancylayouts.widgetset.client.shared.FancyImageState;
 
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Resource;
+import com.vaadin.server.ResourceReference;
+import com.vaadin.server.Resource;
 import com.vaadin.ui.AbstractComponent;
 
 /**
@@ -32,29 +30,16 @@ import com.vaadin.ui.AbstractComponent;
  * changed. It also adds slideshow mode.
  */
 @SuppressWarnings("serial")
-@com.vaadin.ui.ClientWidget(org.vaadin.alump.fancylayouts.widgetset.client.ui.VFancyImage.class)
 public class FancyImage extends AbstractComponent {
-
-    private final List<Resource> images = new ArrayList<Resource>();
-    private boolean autoBrowseEnabled = false;
-    private int autoBrowseTimeout = 3000;
-    private int showImageIndex = 0;
-
+    
     @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-
-        for (int i = 0; i < images.size(); ++i) {
-            String attr = "image-" + String.valueOf(i);
-            target.addAttribute(attr, images.get(i));
-        }
-
-        target.addAttribute("autobrowse", autoBrowseEnabled);
-
-        if (autoBrowseEnabled) {
-            target.addAttribute("autobrowse-timeout", autoBrowseTimeout);
-        } else {
-            target.addAttribute("image-index", showImageIndex);
-        }
+    protected FancyImageState createState() {
+      return new FancyImageState();
+    }
+    
+    @Override
+    protected FancyImageState getState() {
+      return (FancyImageState) super.getState();
     }
 
     /**
@@ -62,8 +47,8 @@ public class FancyImage extends AbstractComponent {
      * @param resource New image resource
      */
     public void addResource(Resource resource) {
-        images.add(resource);
-        requestRepaint();
+    	ResourceReference ref = ResourceReference.create(resource, this, null);
+        getState().images.add(ref);
     }
 
     /**
@@ -71,16 +56,14 @@ public class FancyImage extends AbstractComponent {
      * @param resource Image shown
      */
     public void showResource(Resource resource) {
-        int index = images.indexOf(resource);
+    	ResourceReference ref = ResourceReference.create(resource, this, null);
+        int index = getState().images.indexOf(ref);
         if (index < 0) {
             addResource(resource);
-            index = images.size() - 1;
+            index = getState().images.size() - 1;
         }
 
-        if (showImageIndex != index) {
-            showImageIndex = index;
-            requestRepaint();
-        }
+        getState().imageIndex = index;
     }
 
     /**
@@ -88,9 +71,8 @@ public class FancyImage extends AbstractComponent {
      * @param resource Image removed
      */
     public void removeResource(Resource resource) {
-        if (images.remove(resource)) {
-            requestRepaint();
-        }
+    	ResourceReference ref = ResourceReference.create(resource, this, null);
+        getState().images.remove(ref);
     }
 
     /**
@@ -98,10 +80,7 @@ public class FancyImage extends AbstractComponent {
      * @param enabled true to enable slide show, false to disable
      */
     public void setSlideShowEnabled(boolean enabled) {
-        if (autoBrowseEnabled != enabled) {
-            autoBrowseEnabled = enabled;
-            requestRepaint();
-        }
+    	getState().autoBrowse = enabled;
     }
 
     /**
@@ -109,10 +88,7 @@ public class FancyImage extends AbstractComponent {
      * @param millis Time in millisecs (larger than 0)
      */
     public void setSlideShowTimeout(int millis) {
-        if (autoBrowseTimeout != millis && millis > 0) {
-            autoBrowseTimeout = millis;
-            requestRepaint();
-        }
+    	getState().timeoutMs = millis;
     }
 
     /**
@@ -120,7 +96,7 @@ public class FancyImage extends AbstractComponent {
      * @return Time in millisecs
      */
     public int getSlideShowTimeout() {
-        return autoBrowseTimeout;
+        return getState().timeoutMs;
     }
 
 }

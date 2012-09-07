@@ -18,6 +18,7 @@
 
 package org.vaadin.alump.fancylayouts.widgetset.client.ui;
 
+/*
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -201,3 +202,4 @@ public class VFancyCssLayout extends GwtFancyCssLayout implements Paintable,
     }
 
 }
+*/

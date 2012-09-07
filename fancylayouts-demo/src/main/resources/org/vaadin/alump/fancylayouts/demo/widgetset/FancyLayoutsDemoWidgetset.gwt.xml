@@ -3,5 +3,5 @@
 <module>
     <inherits name="org.vaadin.alump.fancylayouts.widgetset.FancyLayoutsWidgetset" />
 
-    <inherits name="com.vaadin.terminal.gwt.DefaultWidgetSet" />
+
 </module>

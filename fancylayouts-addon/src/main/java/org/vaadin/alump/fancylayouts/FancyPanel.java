@@ -21,11 +21,11 @@ package org.vaadin.alump.fancylayouts;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.vaadin.alump.fancylayouts.widgetset.client.shared.FancyPanelState;
+
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ActionManager;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
 import com.vaadin.ui.AbstractComponentContainer;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -36,7 +36,6 @@ import com.vaadin.ui.CssLayout;
  * it is changed.
  */
 @SuppressWarnings("serial")
-@com.vaadin.ui.ClientWidget(org.vaadin.alump.fancylayouts.widgetset.client.ui.VFancyPanel.class)
 public class FancyPanel extends AbstractComponentContainer implements
         ComponentContainer.ComponentAttachListener,
         ComponentContainer.ComponentDetachListener, Action.Notifier,
@@ -44,8 +43,6 @@ public class FancyPanel extends AbstractComponentContainer implements
 
     protected ComponentContainer content;
     protected ActionManager actionManager;
-    private boolean transitionsDisabled = false;
-    private boolean scrollable = false;
 
     public FancyPanel() {
         super();
@@ -79,6 +76,16 @@ public class FancyPanel extends AbstractComponentContainer implements
         this(content);
         setCaption(caption);
     }
+    
+    @Override
+    protected FancyPanelState createState() {
+      return new FancyPanelState();
+    }
+    
+    @Override
+    protected FancyPanelState getState() {
+      return (FancyPanelState) super.getState();
+    }
 
     /**
      * Build default content container
@@ -87,7 +94,6 @@ public class FancyPanel extends AbstractComponentContainer implements
     protected ComponentContainer createDefaultContent() {
         CssLayout layout = new CssLayout();
         layout.setStyleName("fancypanel-default-layout");
-        layout.setMargin(true);
         layout.setSizeFull();
         return layout;
     }
@@ -127,8 +133,6 @@ public class FancyPanel extends AbstractComponentContainer implements
 
         content.addListener((ComponentContainer.ComponentAttachListener) this);
         content.addListener((ComponentContainer.ComponentDetachListener) this);
-
-        requestRepaint();
     }
 
     @Override
@@ -148,7 +152,7 @@ public class FancyPanel extends AbstractComponentContainer implements
 
     protected ActionManager getActionManager() {
         if (actionManager == null) {
-            actionManager = new ActionManager(this);
+            //actionManager = new ActionManager(this);
         }
         return actionManager;
     }
@@ -165,10 +169,6 @@ public class FancyPanel extends AbstractComponentContainer implements
 
     public void replaceComponent(Component oldComponent, Component newComponent) {
         content.replaceComponent(oldComponent, newComponent);
-    }
-
-    public Iterator<Component> getComponentIterator() {
-        return content.getComponentIterator();
     }
 
     public <T extends Action & com.vaadin.event.Action.Listener> void addAction(
@@ -200,9 +200,8 @@ public class FancyPanel extends AbstractComponentContainer implements
      * @param scrollable true to make panel scrollable
      */
     public void setScrollable(boolean scrollable) {
-        if (this.scrollable != scrollable) {
-            this.scrollable = scrollable;
-            requestRepaint();
+        if (getState().scrollable != scrollable) {
+        	getState().scrollable = scrollable;
         }
     }
 
@@ -211,35 +210,11 @@ public class FancyPanel extends AbstractComponentContainer implements
      * @return true if scrollable
      */
     public boolean isScrollable() {
-        return scrollable;
-    }
-
-    @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-        content.paint(target);
-
-        target.addAttribute("transitions", !transitionsDisabled);
-        target.addAttribute("scrollable", scrollable);
-
-        if (actionManager != null) {
-            actionManager.paintActions(null, target);
-        }
-    }
-
-    @Override
-    public void changeVariables(Object source, Map<String, Object> variables) {
-
-        super.changeVariables(source, variables);
-
-        // Actions
-        if (actionManager != null) {
-            actionManager.handleActions(variables, this);
-        }
+        return getState().scrollable;
     }
 
     @Override
     public void attach() {
-        requestRepaint();
         if (content != null) {
             content.attach();
         }
@@ -252,22 +227,11 @@ public class FancyPanel extends AbstractComponentContainer implements
         }
     }
 
-    @Override
-    public void requestRepaintAll() {
-        requestRepaint();
-        if (getContent() != null) {
-            getContent().requestRepaintAll();
-        }
-    }
-
     public boolean setTransitionEnabled(FancyTransition trans, boolean enabled) {
         switch (trans) {
         case FADE:
-            if (transitionsDisabled == enabled) {
-                transitionsDisabled = !enabled;
-                requestRepaint();
-            }
-            return !transitionsDisabled;
+        	getState().useTransitions = enabled;
+            return !getState().useTransitions;
         default:
             return false;
         }
@@ -276,7 +240,7 @@ public class FancyPanel extends AbstractComponentContainer implements
     public boolean isTransitionEnabled(FancyTransition trans) {
         switch (trans) {
         case FADE:
-            return !transitionsDisabled;
+            return !getState().useTransitions;
         default:
             return false;
         }
@@ -289,5 +253,16 @@ public class FancyPanel extends AbstractComponentContainer implements
     public void setFadeTransitionEnabled(boolean enabled) {
         setTransitionEnabled(FancyTransition.FADE, enabled);
     }
+
+	@Override
+	public int getComponentCount() {
+		return getContent().getComponentCount();
+	}
+
+	@Override
+	@Deprecated
+	public Iterator<Component> getComponentIterator() {
+		return getContent().getComponentIterator();
+	}
 
 }

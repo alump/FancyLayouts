@@ -9,12 +9,12 @@
     </context-param>
     <servlet>
         <servlet-name>FancyLayouts Demo Application</servlet-name>
-        <servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
+        <servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
         <init-param>
             <description>
             Vaadin application class to start</description>
             <param-name>application</param-name>
-            <param-value>org.vaadin.alump.fancylayouts.demo.FancyLayoutsApplication</param-value>
+            <param-value>org.vaadin.alump.fancylayouts.demo.FancyLayoutsUI</param-value>
         </init-param>
         <init-param>
             <description>

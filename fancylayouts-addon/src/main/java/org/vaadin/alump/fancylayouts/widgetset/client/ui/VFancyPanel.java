@@ -18,6 +18,7 @@
 
 package org.vaadin.alump.fancylayouts.widgetset.client.ui;
 
+/*
 import java.util.Set;
 
 import com.google.gwt.core.client.Scheduler;
@@ -189,3 +190,4 @@ public class VFancyPanel extends GwtFancyPanel implements Paintable, Container {
     }
 
 }
+*/

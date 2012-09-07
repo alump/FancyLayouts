@@ -1,5 +1,6 @@
 package org.vaadin.alump.fancylayouts.widgetset.client.ui;
 
+/*
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.user.client.ui.Widget;
@@ -52,3 +53,5 @@ public class VFancyNotifications extends VFancyCssLayout {
     }
 
 }
+
+*/

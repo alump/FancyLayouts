@@ -19,11 +19,11 @@ public class VFancyNotifications extends VFancyCssLayout {
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
     	
-        super.updateFromUIDL(uidl, client);
-
-        if (uidl.hasAttribute("close-timeout")) {
+    	if (uidl.hasAttribute("close-timeout")) {
             closeTimeout = uidl.getIntAttribute("close-timeout");
         }
+    	
+        super.updateFromUIDL(uidl, client);
 
     }
 

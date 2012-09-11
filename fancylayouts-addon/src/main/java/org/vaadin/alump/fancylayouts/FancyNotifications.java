@@ -72,11 +72,7 @@ public class FancyNotifications extends FancyCssLayout {
     protected LayoutEvents.LayoutClickListener layoutClickListener = new LayoutEvents.LayoutClickListener() {
 
         public void layoutClick(LayoutClickEvent event) {
-
-            if (listeners.isEmpty()) {
-                return;
-            }
-
+        
             Component component = event.getChildComponent();
             while (component != null && component != FancyNotifications.this) {
                 if (component instanceof NotificationLayout) {

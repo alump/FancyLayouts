@@ -56,7 +56,6 @@ public class CssLayoutDemo extends VerticalLayout {
 
         Label todo = new Label(
                 "FancyCssLayout adds transitions when you add or remove components from it.");
-        todo.setContentMode(Label.CONTENT_XHTML);
         addComponent(todo);
 
         HorizontalLayout hLayout = new HorizontalLayout();

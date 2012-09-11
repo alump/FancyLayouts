@@ -19,7 +19,7 @@
         <!-- May be overridden by the build system -->
         <license.short.name>apache2</license.short.name>
         <vaadin.version>7.0-SNAPSHOT</vaadin.version>
-        <gwt.version>2.5.0-rc1</gwt.version>
+        <vaadin.plugin.version>7.0-SNAPSHOT</vaadin.plugin.version>
 
         <Implementation-Version>${project.version}</Implementation-Version>
         <!-- Must not change this because of the Directory -->
@@ -28,25 +28,35 @@
 
     </properties>
     
-     <distributionManagement>
-        <repository>
-            <id>vaadin-staging</id>
-            <name>Vaadin release staging repository</name>
-            <url>http://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-        <snapshotRepository>
-            <id>vaadin-snapshots</id>
-            <name>Vaadin snapshot repository</name>
-            <url>${snapshot.repository.url}</url>
-        </snapshotRepository>
-    </distributionManagement>
-    
     <repositories>
         <repository>
-            <id>vaadin-snapshots</id>
-            <url>${snapshot.repository.url}</url>
+            <id>vaadin-addons</id>
+            <url>http://maven.vaadin.com/vaadin-addons</url>
         </repository>
-    </repositories>
+        <repository>
+            <id>vaadin-snapshots</id>
+            <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                   <enabled>true</enabled>
+            </snapshots>
+        </repository>
+     </repositories>
+     
+     <pluginRepositories>
+        <pluginRepository>
+            <id>vaadin-snapshots</id>
+            <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
   
     <dependencies>
         <dependency>
@@ -54,29 +64,28 @@
             <artifactId>fancylayouts-addon</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+	        <groupId>com.vaadin</groupId>
+	        <artifactId>vaadin-server</artifactId>
+	        <version>${vaadin.version}</version>
+		</dependency>
+        <dependency>
+           <groupId>com.vaadin</groupId>
+           <artifactId>vaadin-themes-compiled</artifactId>
+           <version>${vaadin.version}</version>
+        </dependency>
 		<dependency>
-		     <groupId>com.vaadin</groupId>
-		     <artifactId>vaadin</artifactId>
-		     <version>${vaadin.version}</version>
-		 </dependency>
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <version>${gwt.version}</version>
-            <scope>provided</scope>
+		   <groupId>javax.servlet</groupId>
+		   <artifactId>servlet-api</artifactId>
+		   <version>2.5</version>
+		   <scope>provided</scope>
+		</dependency>
+		<dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>1.0.0.GA</version>
+            <classifier>sources</classifier>
         </dependency>
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-dev</artifactId>
-            <version>${gwt.version}</version>
-            <scope>provided</scope>
-        </dependency>
-		 <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
-            <scope>provided</scope>
-         </dependency>
     </dependencies>
   
     <build>      
@@ -86,15 +95,15 @@
 			  <artifactId>maven-compiler-plugin</artifactId>
 			  <version>2.5.1</version>
 			  <configuration>
-			    <source>1.5</source>
-			    <target>1.5</target>
+			    <source>1.6</source>
+			    <target>1.6</target>
 			    <encoding>UTF-8</encoding>
 			  </configuration>
 		  </plugin>
           <plugin>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-maven-plugin</artifactId>
-			<version>1.0.2</version>
+			<version>${vaadin.plugin.version}</version>
 			<executions>
 			    <execution>
 			        <phase>prepare-package</phase>
@@ -105,9 +114,15 @@
 			</executions>
           </plugin>
           <plugin>
+            <!-- 
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>gwt-maven-plugin</artifactId>
             <version>2.5.0-rc1</version>
+            -->
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-maven-plugin</artifactId>
+            <version>${vaadin.plugin.version}</version>
+            
             <configuration>
                 <webappDirectory>src/main/webapp/VAADIN/widgetsets</webappDirectory>
                 <hostedWebapp>src/main/webapp/VAADIN/widgetsets</hostedWebapp>
@@ -210,16 +225,18 @@
         						<pluginExecution>
         							<pluginExecutionFilter>
         								<groupId>
-        									org.codehaus.mojo
+        									com.vaadin
         								</groupId>
         								<artifactId>
-        									gwt-maven-plugin
+        									vaadin-maven-plugin
         								</artifactId>
         								<versionRange>
-        									[2.4.0,)
+        									[7.0-SNAPSHOT,)
         								</versionRange>
         								<goals>
         									<goal>resources</goal>
+        									<goal>update-widgetset</goal>
+        									<goal>compile</goal>
         								</goals>
         							</pluginExecutionFilter>
         							<action>

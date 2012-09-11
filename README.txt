@@ -38,7 +38,7 @@ First compile and install addon (if not already installed)
 
 Then compile demo widgetset and start HTTP server
 > cd ../fancylayouts-demo
-> mvn gwt:compile
+> mvn vaadin:compile
 > mvn jetty:run
 
 Demo application is running at http://localhost:8080/fancylayouts

@@ -37,7 +37,7 @@
 	    <!-- May be overridden by the build system -->
 	    <license.short.name>apache2</license.short.name>
 	    <vaadin.version>7.0-SNAPSHOT</vaadin.version>
-	    <gwt.version>2.5.0-rc1</gwt.version>
+	    <vaadin.plugin.version>7.0-SNAPSHOT</vaadin.plugin.version>
 	    
 	    <snapshot.repository.url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</snapshot.repository.url>
 	
@@ -49,27 +49,47 @@
 	    
 	</properties>
   
-    <distributionManagement>
+    <repositories>
         <repository>
-            <id>vaadin-staging</id>
-            <name>Vaadin release staging repository</name>
-            <url>http://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>vaadin-addons</id>
+            <url>http://maven.vaadin.com/vaadin-addons</url>
         </repository>
-        <snapshotRepository>
+        <repository>
             <id>vaadin-snapshots</id>
-            <name>Vaadin snapshot repository</name>
-            <url>${snapshot.repository.url}</url>
-        </snapshotRepository>
-    </distributionManagement>
-    
-	<repositories>
-	    <repository>
-	        <id>vaadin-snapshots</id>
-	        <url>${snapshot.repository.url}</url>
-	    </repository>
-	</repositories>
+            <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                   <enabled>true</enabled>
+            </snapshots>
+        </repository>
+     </repositories>
+     
+     <pluginRepositories>
+        <pluginRepository>
+            <id>vaadin-snapshots</id>
+            <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
   
   <dependencies>
+    <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-server</artifactId>
+        <version>${vaadin.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-client</artifactId>
+        <version>${vaadin.version}</version>
+    </dependency>
     <dependency>
 	    <groupId>junit</groupId>
 	    <artifactId>junit</artifactId>
@@ -77,22 +97,11 @@
 	    <scope>test</scope>
     </dependency>
     <dependency>
-         <groupId>com.vaadin</groupId>
-         <artifactId>vaadin</artifactId>
-         <version>${vaadin.version}</version>
-     </dependency>
-     <dependency>
-         <groupId>com.google.gwt</groupId>
-         <artifactId>gwt-user</artifactId>
-         <version>${gwt.version}</version>
-         <scope>provided</scope>
-     </dependency>
-     <dependency>
-         <groupId>com.google.gwt</groupId>
-         <artifactId>gwt-dev</artifactId>
-         <version>${gwt.version}</version>
-         <scope>provided</scope>
-     </dependency>
+        <groupId>javax.validation</groupId>
+        <artifactId>validation-api</artifactId>
+        <version>1.0.0.GA</version>
+        <classifier>sources</classifier>
+    </dependency>
   </dependencies>
   
   <build>
@@ -173,11 +182,11 @@
 	          </includes>
 	      </configuration>
       </plugin>
-
+      <!--
       <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>gwt-maven-plugin</artifactId>
-          <version>2.5.0-rc1</version>
+          <groupId>com.vaadin</groupId>
+          <artifactId>vaadin-maven-plugin</artifactId>
+          <version>${vaadin.plugin.version}</version>
           <configuration>
               <modules>
                   <module>org.vaadin.alump.fancylayouts.widgetset.FancyLayoutsWidgetset</module>
@@ -192,12 +201,12 @@
           <executions>
 	          <execution>
 	              <goals>
-	                  <goal>resources</goal>
 	                  <goal>compile</goal>
 	              </goals>
 	          </execution>
           </executions>
       </plugin>
+      -->
 
       <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -233,15 +242,17 @@
     					<pluginExecutions>
     						<pluginExecution>
     							<pluginExecutionFilter>
-    								<groupId>org.codehaus.mojo</groupId>
+    								<groupId>com.vaadin</groupId>
     								<artifactId>
-    									gwt-maven-plugin
+    									vaadin-maven-plugin
     								</artifactId>
     								<versionRange>
-    									[2.3.0-1,)
+    									[7.0-SNAPSHOT,)
     								</versionRange>
     								<goals>
     									<goal>resources</goal>
+    									<goal>update-widgetset</goal>
+    									<goal>compile</goal>
     								</goals>
     							</pluginExecutionFilter>
     							<action>

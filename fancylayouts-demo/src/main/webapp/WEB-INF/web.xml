@@ -12,8 +12,8 @@
         <servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
         <init-param>
             <description>
-            Vaadin application class to start</description>
-            <param-name>application</param-name>
+            Vaadin UI class to start</description>
+            <param-name>UI</param-name>
             <param-value>org.vaadin.alump.fancylayouts.demo.FancyLayoutsUI</param-value>
         </init-param>
         <init-param>

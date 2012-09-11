@@ -254,13 +254,13 @@ public class FancyPanel extends AbstractComponentContainer implements
         setTransitionEnabled(FancyTransition.FADE, enabled);
     }
 
-	@Override
+    @Override
 	public int getComponentCount() {
 		return getContent().getComponentCount();
 	}
 
-	@Override
 	@Deprecated
+	@Override
 	public Iterator<Component> getComponentIterator() {
 		return getContent().getComponentIterator();
 	}

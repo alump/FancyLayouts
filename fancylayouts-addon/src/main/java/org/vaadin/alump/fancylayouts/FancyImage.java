@@ -18,7 +18,8 @@
 
 package org.vaadin.alump.fancylayouts;
 
-import org.vaadin.alump.fancylayouts.widgetset.client.shared.FancyImageState;
+import org.vaadin.alump.fancylayouts.gwt.client.connect.FancyImageClientRpc;
+import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyImageState;
 
 import com.vaadin.server.ResourceReference;
 import com.vaadin.server.Resource;
@@ -57,13 +58,11 @@ public class FancyImage extends AbstractComponent {
      */
     public void showResource(Resource resource) {
     	ResourceReference ref = ResourceReference.create(resource, this, null);
-        int index = getState().images.indexOf(ref);
-        if (index < 0) {
-            addResource(resource);
-            index = getState().images.size() - 1;
-        }
+    	if (!getState().images.contains(ref)) {
+    		addResource(resource);
+    	}
 
-        getState().imageIndex = index;
+    	getRpcProxy(FancyImageClientRpc.class).showImage(ref);
     }
 
     /**

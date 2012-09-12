@@ -21,7 +21,9 @@ package org.vaadin.alump.fancylayouts;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+
+import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyCssLayoutState;
+import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyNotificationsState;
 
 import com.vaadin.event.LayoutEvents;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
@@ -38,12 +40,6 @@ import com.vaadin.ui.Label;
 @SuppressWarnings("serial")
 public class FancyNotifications extends FancyCssLayout {
 
-	/**
-	 * Default automatic close timeout in milliseconds.
-	 */
-	public static final int DEFAULT_CLOSE_TIMEOUT_MS = 10000;
-	
-    private int closeTimeoutMs = DEFAULT_CLOSE_TIMEOUT_MS;
     protected List<NotificationsListener> listeners = new ArrayList<NotificationsListener>();
     protected boolean closeWhenClicked = false;
     protected Resource defaultIcon = null;
@@ -98,6 +94,16 @@ public class FancyNotifications extends FancyCssLayout {
         }
 
     };
+    
+    @Override
+    protected FancyNotificationsState createState() {
+    	return new FancyNotificationsState();
+    }
+    
+    @Override
+    protected FancyNotificationsState getState() {
+    	return (FancyNotificationsState) super.getState();
+    }
     
     protected Component getNotification (Object id) {
         Iterator<Component> iter = this.getComponentIterator();
@@ -227,7 +233,7 @@ public class FancyNotifications extends FancyCssLayout {
      * @return Closing time in milliseconds.
      */
     public int getCloseTimeout() {
-        return closeTimeoutMs;
+        return getState().closeTimeoutMs;
     }
 
     /**
@@ -240,9 +246,7 @@ public class FancyNotifications extends FancyCssLayout {
     		return;
     	}
     	
-        if (closeTimeoutMs != millisecs) {
-            closeTimeoutMs = millisecs;
-        }
+    	getState().closeTimeoutMs = millisecs;
     }
 
     /**
@@ -272,7 +276,7 @@ public class FancyNotifications extends FancyCssLayout {
     		this.closeWhenClicked = closeWhenClicked;
     		
     		if (closeWhenClicked == false && getCloseTimeout() == 0) {
-    			setCloseTimeout(DEFAULT_CLOSE_TIMEOUT_MS);
+    			setCloseTimeout(3000);
     		}
     		
     	}

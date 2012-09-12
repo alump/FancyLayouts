@@ -1,5 +1,5 @@
 /**
- * FancyImageState.java (FancyLayouts)
+ * FancyCssLayoutClientRpc.java (FancyLayouts)
  * 
  * Copyright 2012 Vaadin Ltd, Sami Viitanen <alump@vaadin.org>
  *
@@ -16,20 +16,16 @@
  * limitations under the License.
  */
 
-package org.vaadin.alump.fancylayouts.widgetset.client.shared;
+package org.vaadin.alump.fancylayouts.gwt.client.connect;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.vaadin.shared.Connector;
+import com.vaadin.shared.communication.ClientRpc;
 
-import com.vaadin.shared.ComponentState;
-import com.vaadin.shared.communication.URLReference;
-
-public class FancyImageState extends ComponentState {
-	public int timeoutMs;
-	public boolean autoBrowse;
-	public int imageIndex;
-	
-	public List<URLReference> images = new ArrayList<URLReference>();
-
-	
+public interface FancyCssLayoutClientRpc extends ClientRpc {
+	/**
+	 * Ask to start fancy remove of given child. Will return with remove request
+	 * to ServerRpc when fancy remove is done.
+	 * @param child Child removed
+	 */
+	public void fancyRemove (Connector child);
 }

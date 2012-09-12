@@ -19,9 +19,8 @@
 package org.vaadin.alump.fancylayouts;
 
 import java.util.Iterator;
-import java.util.Map;
 
-import org.vaadin.alump.fancylayouts.widgetset.client.shared.FancyPanelState;
+import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyPanelState;
 
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;

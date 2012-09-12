@@ -100,6 +100,11 @@
         <groupId>javax.validation</groupId>
         <artifactId>validation-api</artifactId>
         <version>1.0.0.GA</version>
+    </dependency>
+    <dependency>
+        <groupId>javax.validation</groupId>
+        <artifactId>validation-api</artifactId>
+        <version>1.0.0.GA</version>
         <classifier>sources</classifier>
     </dependency>
   </dependencies>
@@ -109,9 +114,6 @@
         <resource>
             <directory>src/main/java</directory>
         </resource>
-        <resource>
-            <directory>src/main/resources</directory>
-        </resource>
     </resources>
     <plugins>
       <plugin>
@@ -119,8 +121,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.5.1</version>
         <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
+          <source>1.6</source>
+          <target>1.6</target>
           <encoding>UTF-8</encoding>
         </configuration>
       </plugin>
@@ -172,7 +174,7 @@
 	                  <Vaadin-Package-Version>1</Vaadin-Package-Version>
 	
 	                  <!-- Comma-separated list of widgetsets in the package -->
-	                  <Vaadin-Widgetsets>org.vaadin.alump.fancylayouts.widgetset.FancyLayoutsWidgetset</Vaadin-Widgetsets>
+	                  <Vaadin-Widgetsets>org.vaadin.alump.fancylayouts.gwt.FancyLayoutsWidgetset</Vaadin-Widgetsets>
 	              </manifestEntries>
 	          </archive>
 	          <!-- exclude other META-INF data under build directory -->
@@ -182,14 +184,14 @@
 	          </includes>
 	      </configuration>
       </plugin>
-      <!--
+
       <plugin>
           <groupId>com.vaadin</groupId>
           <artifactId>vaadin-maven-plugin</artifactId>
           <version>${vaadin.plugin.version}</version>
           <configuration>
               <modules>
-                  <module>org.vaadin.alump.fancylayouts.widgetset.FancyLayoutsWidgetset</module>
+                  <module>org.vaadin.alump.fancylayouts.gwt.FancyLayoutsWidgetset</module>
               </modules>
               <extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
               <runTarget>xsite</runTarget>
@@ -198,15 +200,7 @@
               <validateOnly>true</validateOnly>
               <strict>true</strict>
           </configuration>
-          <executions>
-	          <execution>
-	              <goals>
-	                  <goal>compile</goal>
-	              </goals>
-	          </execution>
-          </executions>
       </plugin>
-      -->
 
       <plugin>
           <groupId>org.apache.maven.plugins</groupId>

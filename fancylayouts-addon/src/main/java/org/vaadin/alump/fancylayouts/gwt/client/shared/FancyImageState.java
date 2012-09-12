@@ -1,5 +1,5 @@
 /**
- * FancyNotificationsState.java (FancyLayouts)
+ * FancyImageState.java (FancyLayouts)
  * 
  * Copyright 2012 Vaadin Ltd, Sami Viitanen <alump@vaadin.org>
  *
@@ -16,9 +16,21 @@
  * limitations under the License.
  */
 
-package org.vaadin.alump.fancylayouts.widgetset.client.shared;
+package org.vaadin.alump.fancylayouts.gwt.client.shared;
 
+import java.util.ArrayList;
+import java.util.List;
 
-public class FancyNotificationsState extends FancyCssLayoutState {
+import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.communication.URLReference;
+
+@SuppressWarnings("serial")
+public class FancyImageState extends ComponentState {
+	
+	public int timeoutMs = 2000;
+	
+	public boolean autoBrowse = false;
+	
+	public List<URLReference> images = new ArrayList<URLReference>();
 
 }

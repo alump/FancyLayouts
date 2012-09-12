@@ -1,5 +1,5 @@
 /**
- * FancyCssLayoutState.java (FancyLayouts)
+ * FancyCssLayoutServerRpc.java (FancyLayouts)
  * 
  * Copyright 2012 Vaadin Ltd, Sami Viitanen <alump@vaadin.org>
  *
@@ -16,20 +16,16 @@
  * limitations under the License.
  */
 
-package org.vaadin.alump.fancylayouts.widgetset.client.shared;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+package org.vaadin.alump.fancylayouts.gwt.client.connect;
 
 import com.vaadin.shared.Connector;
-import com.vaadin.shared.ui.AbstractLayoutState;
-import com.vaadin.shared.ui.image.ImageState;
-import com.vaadin.ui.Component;
+import com.vaadin.shared.communication.ServerRpc;
+import com.vaadin.shared.ui.LayoutClickRpc;
 
-public class FancyCssLayoutState extends AbstractLayoutState {
-	
-	public boolean marginTransition;
-
+public interface FancyCssLayoutServerRpc extends LayoutClickRpc, ServerRpc {
+	/**
+	 * Client side asked to final removal of child
+	 * @param child Child removed
+	 */
+	public void remove(Connector child);
 }

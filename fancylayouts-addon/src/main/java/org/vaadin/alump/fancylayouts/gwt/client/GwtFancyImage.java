@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.vaadin.alump.fancylayouts.widgetset.client.ui;
+package org.vaadin.alump.fancylayouts.gwt.client;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -136,6 +136,14 @@ public class GwtFancyImage extends Widget {
                 break;
             }
         }
+    }
+    
+    public void showImage(String url) {
+    	for (ImageElement image : images) {
+    		if (image.getSrc().endsWith(url)) {
+    			showImage(images.indexOf(image));
+    		}
+    	}
     }
 
     public void showImage(int index) {

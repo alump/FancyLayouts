@@ -1,5 +1,5 @@
 /**
- * FancyPanelConnector.java (FancyLayouts)
+ * FancyNotificationsState.java (FancyLayouts)
  * 
  * Copyright 2012 Vaadin Ltd, Sami Viitanen <alump@vaadin.org>
  *
@@ -16,11 +16,9 @@
  * limitations under the License.
  */
 
-package org.vaadin.alump.fancylayouts.widgetset.client.connect;
+package org.vaadin.alump.fancylayouts.gwt.client.shared;
 
-import com.vaadin.shared.ui.Connect;
-
-@Connect(org.vaadin.alump.fancylayouts.FancyPanel.class)
-public class FancyPanelConnector {
-
+@SuppressWarnings("serial")
+public class FancyNotificationsState extends FancyCssLayoutState {
+	public int closeTimeoutMs = 10000;
 }

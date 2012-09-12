@@ -101,24 +101,6 @@
 			  </configuration>
 		  </plugin>
           <plugin>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-maven-plugin</artifactId>
-			<version>${vaadin.plugin.version}</version>
-			<executions>
-			    <execution>
-			        <phase>prepare-package</phase>
-			        <goals>
-			            <goal>update-widgetset</goal>
-			        </goals>
-			    </execution>
-			</executions>
-          </plugin>
-          <plugin>
-            <!-- 
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>gwt-maven-plugin</artifactId>
-            <version>2.5.0-rc1</version>
-            -->
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-maven-plugin</artifactId>
             <version>${vaadin.plugin.version}</version>
@@ -142,14 +124,6 @@
                 <strict>true</strict>
                 <compileReport>false</compileReport>
             </configuration>
-            <executions>
-                <execution>
-                    <goals>
-                      <goal>resources</goal>
-                      <goal>compile</goal>
-                    </goals>
-                </execution>
-            </executions>
           </plugin>
 		  <plugin>  
             <groupId>org.apache.maven.plugins</groupId>  

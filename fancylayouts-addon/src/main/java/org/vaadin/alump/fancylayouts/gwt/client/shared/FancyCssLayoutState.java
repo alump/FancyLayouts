@@ -1,5 +1,5 @@
 /**
- * FancyCssLayoutConnector.java (FancyLayouts)
+ * FancyCssLayoutState.java (FancyLayouts)
  * 
  * Copyright 2012 Vaadin Ltd, Sami Viitanen <alump@vaadin.org>
  *
@@ -16,11 +16,13 @@
  * limitations under the License.
  */
 
-package org.vaadin.alump.fancylayouts.widgetset.client.connect;
+package org.vaadin.alump.fancylayouts.gwt.client.shared;
 
-import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.AbstractLayoutState;
 
-@Connect(org.vaadin.alump.fancylayouts.FancyCssLayout.class)
-public class FancyCssLayoutConnector {
+@SuppressWarnings("serial")
+public class FancyCssLayoutState extends AbstractLayoutState {
+	
+	public boolean marginTransition;
 
 }

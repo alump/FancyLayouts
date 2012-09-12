@@ -24,9 +24,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.vaadin.alump.fancylayouts.widgetset.client.connect.FancyCssLayoutClientRpc;
-import org.vaadin.alump.fancylayouts.widgetset.client.connect.FancyCssLayoutServerRpc;
-import org.vaadin.alump.fancylayouts.widgetset.client.shared.FancyCssLayoutState;
+import org.vaadin.alump.fancylayouts.gwt.client.connect.*;
+import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyCssLayoutState;
 
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;

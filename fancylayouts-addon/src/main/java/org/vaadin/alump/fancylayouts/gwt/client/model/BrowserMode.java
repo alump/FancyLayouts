@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.vaadin.alump.fancylayouts.widgetset.client.ui.model;
+package org.vaadin.alump.fancylayouts.gwt.client.model;
 
 /**
  * BrowserMode is used to store and identify browser and browser specific

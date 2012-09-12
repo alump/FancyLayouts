@@ -16,12 +16,12 @@
  * limitations under the License.
  */
 
-package org.vaadin.alump.fancylayouts.widgetset.client.ui;
+package org.vaadin.alump.fancylayouts.gwt.client;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.vaadin.alump.fancylayouts.widgetset.client.ui.model.BrowserMode;
+import org.vaadin.alump.fancylayouts.gwt.client.model.BrowserMode;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -117,7 +117,7 @@ public class GwtFancyPanel extends SimplePanel {
     /*-{
          var that = this;
          element.addEventListener(eventName, function(event){
-         that.@org.vaadin.alump.fancylayouts.widgetset.client.ui.GwtFancyPanel::onTransitionEnd(Ljava/lang/Object;)(element);
+         that.@org.vaadin.alump.fancylayouts.gwt.client.GwtFancyPanel::onTransitionEnd(Ljava/lang/Object;)(element);
          },false);
          element.hasTransitionEndListener = true;
     }-*/;

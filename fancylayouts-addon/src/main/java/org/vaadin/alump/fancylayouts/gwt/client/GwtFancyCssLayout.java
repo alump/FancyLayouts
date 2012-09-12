@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.vaadin.alump.fancylayouts.widgetset.client.ui;
+package org.vaadin.alump.fancylayouts.gwt.client;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.vaadin.alump.fancylayouts.widgetset.client.ui.model.BrowserMode;
+import org.vaadin.alump.fancylayouts.gwt.client.model.BrowserMode;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
@@ -65,6 +65,17 @@ public class GwtFancyCssLayout extends SimplePanel {
             browserMode = BrowserMode.resolve();
         }
         transitionsEnabled = !(browserMode == BrowserMode.DEFAULT);
+    }
+    
+    public void addOrMove(Widget widget, int index) {
+    	if (hasChild(widget)) {
+    		if (children.indexOf(widget) == index) {
+    			return;
+    		}
+    		remove(widget);
+    	}
+    	
+    	add(widget, index);
     }
 
     public void add(Widget widget, int index) {
@@ -127,7 +138,7 @@ public class GwtFancyCssLayout extends SimplePanel {
     /*-{
          var that = this;
          element.addEventListener(eventName, function(event){
-         that.@org.vaadin.alump.fancylayouts.widgetset.client.ui.GwtFancyCssLayout::onTransitionEnd(Ljava/lang/Object;)(element);
+         that.@org.vaadin.alump.fancylayouts.gwt.client.GwtFancyCssLayout::onTransitionEnd(Ljava/lang/Object;)(element);
          },false);
          element.hasTransitionEndListener = true;
     }-*/;

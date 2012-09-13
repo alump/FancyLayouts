@@ -22,6 +22,6 @@ import com.vaadin.shared.ComponentState;
 
 @SuppressWarnings("serial")
 public class FancyPanelState extends ComponentState {
-	public boolean useTransitions;
-	public boolean scrollable;
+	public boolean useTransitions = true;
+	public boolean scrollable = false;
 }

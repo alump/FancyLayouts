@@ -31,9 +31,24 @@ import com.vaadin.shared.ui.Connect;
 @Connect(org.vaadin.alump.fancylayouts.FancyPanel.class)
 public class FancyPanelConnector extends AbstractComponentContainerConnector {
 	
+	private FancyPanelClientRpc clientRpc = new FancyPanelClientRpc() {
+
+		@Override
+		public void scrollTop(int top) {
+			getWidget().setScrollTop(top);
+		}
+
+		@Override
+		public void scrollLeft(int left) {
+			getWidget().setScrollLeft(left);
+		}
+		
+	};
+	
 	@Override
 	public void init() {
 		super.init();
+		registerRpc(FancyPanelClientRpc.class, clientRpc);
 	}
 	
 	@Override
@@ -62,15 +77,17 @@ public class FancyPanelConnector extends AbstractComponentContainerConnector {
 		super.onStateChanged(stateChangeEvent);
 		
 		getWidget().setScrollable(getState().scrollable);
+		getWidget().disableTransitions(getState().useTransitions == false);
 	}
 	
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
         super.onConnectorHierarchyChange(event);
         
-        for (ComponentConnector child : getChildComponents()) {
-        	getWidget().setContent(child.getWidget());
-        }
+        //if (!getChildComponents().isEmpty()) {
+        //	getWidget().setContent(getChildComponents().get(0).getWidget());
+        //}
+
     }
 
 }

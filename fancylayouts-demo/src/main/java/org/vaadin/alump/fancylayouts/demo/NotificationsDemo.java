@@ -13,6 +13,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
+@SuppressWarnings("serial")
 public class NotificationsDemo extends VerticalLayout {
 	
 	private FancyNotifications notifications;
@@ -35,9 +36,8 @@ public class NotificationsDemo extends VerticalLayout {
         addComponent (optionLayout);
 
         timeout = new TextField("Close timeout in millisecs");
-        timeout.setDebugId("id-timeout-textfield");
         timeout.setDescription("This value only applies to new notifications made.");
-        timeout.addListener(new Property.ValueChangeListener() {
+        timeout.addValueChangeListener(new Property.ValueChangeListener() {
 
             public void valueChange(ValueChangeEvent event) {
                 try {
@@ -53,11 +53,10 @@ public class NotificationsDemo extends VerticalLayout {
         optionLayout.addComponent(timeout);
         
         CheckBox clickCloseCB = new CheckBox ("Click close notifications");
-        clickCloseCB.setDebugId("id-click-close-checkbox");
         clickCloseCB.setImmediate(true);
         clickCloseCB.setDescription("Close notifications when clicked");
         optionLayout.addComponent(clickCloseCB);
-        clickCloseCB.addListener(new Property.ValueChangeListener() {
+        clickCloseCB.addValueChangeListener(new Property.ValueChangeListener() {
 			
 			public void valueChange(ValueChangeEvent event) {
 				notifications.setClickClose((Boolean) event.getProperty().getValue());
@@ -65,11 +64,10 @@ public class NotificationsDemo extends VerticalLayout {
 		});
         
         CheckBox clickNotificationCB = new CheckBox ("Notify clicks");
-        clickNotificationCB.setDebugId("id-notify-clicks-checkbox");
         clickNotificationCB.setImmediate(true);
         clickNotificationCB.setDescription("Make new notification when notification made by these buttons are clicked.");
         optionLayout.addComponent(clickNotificationCB);
-        clickNotificationCB.addListener(new Property.ValueChangeListener() {
+        clickNotificationCB.addValueChangeListener(new Property.ValueChangeListener() {
 			
 			public void valueChange(ValueChangeEvent event) {
 				clickNotifications = (Boolean) event.getProperty().getValue();
@@ -77,11 +75,10 @@ public class NotificationsDemo extends VerticalLayout {
 		});
         
         CheckBox defaultIconCB = new CheckBox ("Use default icon");
-        defaultIconCB.setDebugId("id-default-icon-checkbox");
         defaultIconCB.setImmediate(true);
         defaultIconCB.setDescription("Use default icon in notifications without defined icon");
         optionLayout.addComponent(defaultIconCB);
-        defaultIconCB.addListener(new Property.ValueChangeListener() {
+        defaultIconCB.addValueChangeListener(new Property.ValueChangeListener() {
 			
 			public void valueChange(ValueChangeEvent event) {
 				if ((Boolean) event.getProperty().getValue()) {
@@ -98,8 +95,7 @@ public class NotificationsDemo extends VerticalLayout {
         addComponent(buttonLayout);
 
         final Button hello = new Button("Single line");
-        hello.setDebugId("id-single-line-button");
-        hello.addListener(new Button.ClickListener() {
+        hello.addClickListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
             	notifications.showNotification(hello, "Hello World!");
@@ -108,8 +104,7 @@ public class NotificationsDemo extends VerticalLayout {
         buttonLayout.addComponent(hello);
 
         final Button lorem = new Button("Two lines");
-        lorem.setDebugId("id-two-lines-button");
-        lorem.addListener(new Button.ClickListener() {
+        lorem.addClickListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
             	notifications.showNotification(lorem, "Lorem ipsum",
@@ -119,8 +114,7 @@ public class NotificationsDemo extends VerticalLayout {
         buttonLayout.addComponent(lorem);
 
         final Button vaadin = new Button("Icon");
-        vaadin.setDebugId("id-icon-button");
-        vaadin.addListener(new Button.ClickListener() {
+        vaadin.addClickListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
             	notifications.showNotification(vaadin, "Vaadin",
@@ -131,8 +125,7 @@ public class NotificationsDemo extends VerticalLayout {
         buttonLayout.addComponent(vaadin);
 
         final Button styled = new Button("Styled");
-        styled.setDebugId("id-styled-button");
-        styled.addListener(new Button.ClickListener() {
+        styled.addClickListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
             	notifications.showNotification(styled, "I'm special!",
@@ -143,8 +136,7 @@ public class NotificationsDemo extends VerticalLayout {
         buttonLayout.addComponent(styled);
         
         final Button longText = new Button("Long text");
-        longText.setDebugId("id-long-text-button");
-        longText.addListener(new Button.ClickListener() {
+        longText.addClickListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
             	notifications.showNotification(longText,
@@ -155,7 +147,7 @@ public class NotificationsDemo extends VerticalLayout {
         buttonLayout.addComponent(longText);
         
         final Button messageExample = new Button("Msg example");
-        messageExample.addListener(new Button.ClickListener() {
+        messageExample.addClickListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
             	notifications.showNotification(messageExample,
@@ -173,7 +165,7 @@ public class NotificationsDemo extends VerticalLayout {
         addComponent(buttonLayout);
         
         final Button closeSingle = new Button("Single line");
-        closeSingle.addListener(new Button.ClickListener() {
+        closeSingle.addClickListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
             	notifications.closeNotification(hello);

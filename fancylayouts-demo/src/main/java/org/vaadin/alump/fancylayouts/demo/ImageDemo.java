@@ -38,6 +38,7 @@ import com.vaadin.ui.VerticalLayout;
 /**
  * Demo using FancyPanel
  */
+@SuppressWarnings("serial")
 public class ImageDemo extends VerticalLayout {
 
     public ImageDemo() {
@@ -50,7 +51,6 @@ public class ImageDemo extends VerticalLayout {
         addComponent(desc);
 
         final FancyImage image = new FancyImage();
-        image.setDebugId("id-fancy-image");
         image.setWidth("500px");
         image.setHeight("281px");
 
@@ -73,9 +73,8 @@ public class ImageDemo extends VerticalLayout {
         setComponentAlignment(image, Alignment.TOP_CENTER);
 
         final Button pic1 = new Button("Pic 1");
-        pic1.setDebugId("id-pic1-button");
         buttonLayout.addComponent(pic1);
-        pic1.addListener(new Button.ClickListener() {
+        pic1.addClickListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
                 // Ask to show image 0
@@ -85,9 +84,8 @@ public class ImageDemo extends VerticalLayout {
         });
 
         final Button pic2 = new Button("Pic 2");
-        pic2.setDebugId("id-pic2-button");
         buttonLayout.addComponent(pic2);
-        pic2.addListener(new Button.ClickListener() {
+        pic2.addClickListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
                 // Ask to show image 1
@@ -97,9 +95,8 @@ public class ImageDemo extends VerticalLayout {
         });
 
         final Button pic3 = new Button("Pic 3");
-        pic3.setDebugId("id-pic3-button");
         buttonLayout.addComponent(pic3);
-        pic3.addListener(new Button.ClickListener() {
+        pic3.addClickListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
                 // Ask to show image 2
@@ -116,7 +113,7 @@ public class ImageDemo extends VerticalLayout {
         timeout.setValue(String.valueOf(image.getSlideShowTimeout()));
         timeout.setDescription("millisecs");
         buttonLayout.addComponent(timeout);
-        timeout.addListener(new TextChangeListener() {
+        timeout.addTextChangeListener(new TextChangeListener() {
 
             public void textChange(TextChangeEvent event) {
                 try {
@@ -129,7 +126,7 @@ public class ImageDemo extends VerticalLayout {
 
         });
 
-        auto.addListener(new Property.ValueChangeListener() {
+        auto.addValueChangeListener(new Property.ValueChangeListener() {
 
             public void valueChange(ValueChangeEvent event) {
                 Boolean value = (Boolean) event.getProperty().getValue();

@@ -23,6 +23,6 @@ import com.vaadin.shared.ui.AbstractLayoutState;
 @SuppressWarnings("serial")
 public class FancyCssLayoutState extends AbstractLayoutState {
 	
-	public boolean marginTransition;
+	public boolean marginTransition = true;
 
 }

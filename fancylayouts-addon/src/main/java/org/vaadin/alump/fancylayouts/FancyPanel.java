@@ -121,17 +121,19 @@ public class FancyPanel extends AbstractComponentContainer implements
 
         if (this.content != null) {
             this.content.setParent(null);
-            this.content
-                    .removeListener((ComponentContainer.ComponentAttachListener) this);
-            this.content
-                    .removeListener((ComponentContainer.ComponentDetachListener) this);
+            this.content.removeComponentAttachListener(
+            		(ComponentContainer.ComponentAttachListener) this);
+            this.content.removeComponentDetachListener(
+                    (ComponentContainer.ComponentDetachListener) this);
         }
 
         content.setParent(this);
         this.content = content;
 
-        content.addListener((ComponentContainer.ComponentAttachListener) this);
-        content.addListener((ComponentContainer.ComponentDetachListener) this);
+        content.addComponentAttachListener(
+        		(ComponentContainer.ComponentAttachListener) this);
+        content.addComponentDetachListener(
+        		(ComponentContainer.ComponentDetachListener) this);
     }
 
     @Override

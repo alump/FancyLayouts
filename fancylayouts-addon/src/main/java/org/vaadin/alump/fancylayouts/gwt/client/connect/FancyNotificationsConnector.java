@@ -18,6 +18,7 @@
 
 package org.vaadin.alump.fancylayouts.gwt.client.connect;
 
+import org.vaadin.alump.fancylayouts.gwt.client.GwtFancyTimedCssLayout;
 import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyNotificationsState;
 
 import com.vaadin.client.communication.StateChangeEvent;
@@ -38,8 +39,30 @@ public class FancyNotificationsConnector extends FancyCssLayoutConnector {
 	}
 	
 	@Override
+	public GwtFancyTimedCssLayout createWidget() {
+		GwtFancyTimedCssLayout widget = new GwtFancyTimedCssLayout() {
+		    @Override
+		    public void setHorizontalMarginTransitionEnabled(boolean enabled) {
+		    	super.setHorizontalMarginTransitionEnabled(false);
+		    }
+		};
+		widget.setStylePrimaryName("fancy-notifs");
+		attachFancyRemover(widget);
+		return widget;
+	}
+	
+	@Override
+	public GwtFancyTimedCssLayout getWidget() {
+		return (GwtFancyTimedCssLayout)super.getWidget();
+	}
+	
+	
+	@Override
 	public void onStateChanged(StateChangeEvent stateChangeEvent) {
+		getWidget().setAutomaticRemoveTimeout(getState().closeTimeoutMs);
+		
 		super.onStateChanged(stateChangeEvent);
 	}
+	
 
 }

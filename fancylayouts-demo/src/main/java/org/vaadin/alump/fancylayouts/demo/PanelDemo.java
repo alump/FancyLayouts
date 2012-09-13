@@ -38,6 +38,7 @@ import com.vaadin.ui.VerticalLayout;
 /**
  * Demo using FancyPanel
  */
+@SuppressWarnings("serial")
 public class PanelDemo extends VerticalLayout {
 
     public PanelDemo() {
@@ -84,7 +85,7 @@ public class PanelDemo extends VerticalLayout {
         addComponent(panel);
         setExpandRatio(panel, 1.0f);
 
-        contA.addListener(new Button.ClickListener() {
+        contA.addClickListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
                 // Create dynamically new content to panel
@@ -93,7 +94,7 @@ public class PanelDemo extends VerticalLayout {
             }
         });
 
-        contB.addListener(new Button.ClickListener() {
+        contB.addClickListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
                 // Create dynamically new content to panel
@@ -101,7 +102,7 @@ public class PanelDemo extends VerticalLayout {
             }
         });
 
-        contC.addListener(new Button.ClickListener() {
+        contC.addClickListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
                 // Create dynamically new content to panel
@@ -109,7 +110,7 @@ public class PanelDemo extends VerticalLayout {
             }
         });
 
-        scrollable.addListener(new Property.ValueChangeListener() {
+        scrollable.addValueChangeListener(new Property.ValueChangeListener() {
 
             public void valueChange(ValueChangeEvent event) {
                 boolean enable = (Boolean) event.getProperty().getValue();
@@ -118,7 +119,7 @@ public class PanelDemo extends VerticalLayout {
             }
         });
 
-        transitions.addListener(new Property.ValueChangeListener() {
+        transitions.addValueChangeListener(new Property.ValueChangeListener() {
 
             public void valueChange(ValueChangeEvent event) {
                 boolean enable = (Boolean) event.getProperty().getValue();

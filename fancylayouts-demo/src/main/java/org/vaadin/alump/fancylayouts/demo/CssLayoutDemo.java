@@ -39,6 +39,7 @@ import com.vaadin.ui.VerticalLayout;
 /**
  * Demo using FancyCssLayout
  */
+@SuppressWarnings("serial")
 public class CssLayoutDemo extends VerticalLayout {
 
     private int layoutCounter = 0;
@@ -56,7 +57,6 @@ public class CssLayoutDemo extends VerticalLayout {
 
         Label todo = new Label(
                 "FancyCssLayout adds transitions when you add or remove components from it.");
-        todo.setContentMode(Label.CONTENT_XHTML);
         addComponent(todo);
 
         HorizontalLayout hLayout = new HorizontalLayout();
@@ -93,14 +93,14 @@ public class CssLayoutDemo extends VerticalLayout {
             addCssLayoutContent(cssLayout);
         }
 
-        addContent.addListener(new Button.ClickListener() {
+        addContent.addClickListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
                 addCssLayoutContent(cssLayout);
             }
         });
 
-        middleCbox.addListener(new Property.ValueChangeListener() {
+        middleCbox.addValueChangeListener(new Property.ValueChangeListener() {
 
             public void valueChange(ValueChangeEvent event) {
                 addCssMiddle = (Boolean) event.getProperty().getValue();
@@ -108,7 +108,7 @@ public class CssLayoutDemo extends VerticalLayout {
 
         });
 
-        marginCbox.addListener(new Property.ValueChangeListener() {
+        marginCbox.addValueChangeListener(new Property.ValueChangeListener() {
 
             public void valueChange(ValueChangeEvent event) {
                 cssLayout.setSlideEnabled((Boolean) event.getProperty()
@@ -117,7 +117,7 @@ public class CssLayoutDemo extends VerticalLayout {
 
         });
 
-        styleCbox.addListener(new Property.ValueChangeListener() {
+        styleCbox.addValueChangeListener(new Property.ValueChangeListener() {
 
             public void valueChange(ValueChangeEvent event) {
                 boolean value = (Boolean) event.getProperty().getValue();
@@ -135,7 +135,7 @@ public class CssLayoutDemo extends VerticalLayout {
 
         });
 
-        cssLayout.addListener(new LayoutClickListener() {
+        cssLayout.addLayoutClickListener(new LayoutClickListener() {
 
             public void layoutClick(LayoutClickEvent event) {
                 ++clickCounter;
@@ -154,7 +154,7 @@ public class CssLayoutDemo extends VerticalLayout {
                 + ")";
     }
 
-    private void addCssLayoutContent(final FancyCssLayout layout) {
+	private void addCssLayoutContent(final FancyCssLayout layout) {
         final HorizontalLayout hLayout = new HorizontalLayout();
         hLayout.addStyleName("demo-removable-layout");
 
@@ -166,7 +166,7 @@ public class CssLayoutDemo extends VerticalLayout {
         hLayout.setWidth("100%");
         Button remove = new Button("✖");
         remove.addStyleName("remove-button");
-        remove.addListener(new Button.ClickListener() {
+        remove.addClickListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
                 layout.fancyRemoveComponent(hLayout);
@@ -188,8 +188,6 @@ public class CssLayoutDemo extends VerticalLayout {
         label2.addStyleName("demo-small-label-"
                 + String.valueOf(layoutCounter % 4));
         vLayout.addComponent(label2);
-        
-        hLayout.setDebugId("item-" + layoutCounter);
 
         if (addCssMiddle) {
             layout.addComponent(hLayout, layout.getComponentCount() / 2);

@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyCssLayoutState;
 import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyNotificationsState;
 
 import com.vaadin.event.LayoutEvents;
@@ -31,7 +30,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.Embedded;
+import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 
 /**
@@ -180,11 +179,10 @@ public class FancyNotifications extends FancyCssLayout {
             }
 
             if (icon != null) {
-                Embedded iconImage = new Embedded();
-                iconImage.setType(Embedded.TYPE_IMAGE);
-                iconImage.setStyleName("fancy-notif-icon");
-                iconImage.setSource(icon);
-                addComponent(iconImage);
+            	Image image = new Image();
+            	image.setStyleName("fancy-notif-icon");
+            	image.setSource(icon);
+                addComponent(image);
             } else {
             	addStyleName("fancy-notif-noicon");
             }
@@ -204,7 +202,8 @@ public class FancyNotifications extends FancyCssLayout {
             Resource icon, String styleName) {
     	
     	if (title == null && description == null) {
-    		throw new IllegalArgumentException("You have to define title or description");
+    		throw new IllegalArgumentException(
+    				"You have to define title or description");
     	}
         
         if (icon == null) {
@@ -242,10 +241,10 @@ public class FancyNotifications extends FancyCssLayout {
      * is only accepted if close by clicking is enabled).
      */
     public void setCloseTimeout(int millisecs) {
-    	if (millisecs < 0 || (millisecs < 1 && !closeWhenClicked)) {
-    		return;
+    	if (millisecs < 0) {
+    		throw new IllegalArgumentException ("Negative time not accepted");
     	}
-    	
+    	    	
     	getState().closeTimeoutMs = millisecs;
     }
 

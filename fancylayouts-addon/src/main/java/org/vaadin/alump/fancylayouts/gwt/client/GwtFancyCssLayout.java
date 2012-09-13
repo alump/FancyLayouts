@@ -51,6 +51,12 @@ public class GwtFancyCssLayout extends SimplePanel {
 
     protected boolean horizontalMarginTransitionEnabled = true;
     protected boolean verticalMarginTransitionEnabled = true;
+    
+    protected FancyRemover fancyRemover = null;
+    
+    public interface FancyRemover {
+    	public void remove(Widget widget);
+    }
 
     public GwtFancyCssLayout() {
         addStyleName(CLASS_NAME);
@@ -211,6 +217,10 @@ public class GwtFancyCssLayout extends SimplePanel {
 
         return true;
     }
+    
+    public void setFancyRemover (FancyRemover remover) {
+    	fancyRemover = remover;
+    }
 
     /**
      * To be overwritten if additional actions has to be performed. For example
@@ -218,7 +228,11 @@ public class GwtFancyCssLayout extends SimplePanel {
      * @param widget Child widget removed
      */
     protected void performFancyRemove(Widget widget) {
-        remove(widget);
+    	if (fancyRemover == null) {
+    		remove(widget);
+    	} else {
+    		fancyRemover.remove(widget);
+    	}
     }
 
     @Override

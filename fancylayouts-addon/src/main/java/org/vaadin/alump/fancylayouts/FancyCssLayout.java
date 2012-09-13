@@ -149,10 +149,6 @@ public class FancyCssLayout extends AbstractLayout implements
         return components.size();
     }
 
-    protected String getCss(Component c) {
-        return null;
-    }
-
     public void componentDetachedFromContainer(ComponentDetachEvent event) {
         Component component = event.getDetachedComponent();
         if (components.contains(component)) {

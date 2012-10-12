@@ -91,11 +91,18 @@
         <version>${vaadin.version}</version>
     </dependency>
     <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-client-compiler</artifactId>
+        <version>${vaadin.version}</version>
+        <scope>provided</scope>
+    </dependency>
+    <dependency>
 	    <groupId>junit</groupId>
 	    <artifactId>junit</artifactId>
 	    <version>3.8.1</version>
 	    <scope>test</scope>
     </dependency>
+    <!--
     <dependency>
         <groupId>javax.validation</groupId>
         <artifactId>validation-api</artifactId>
@@ -107,6 +114,7 @@
         <version>1.0.0.GA</version>
         <classifier>sources</classifier>
     </dependency>
+    -->
   </dependencies>
   
   <build>

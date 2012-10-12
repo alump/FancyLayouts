@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.vaadin.alump.fancylayouts.gwt.client.model.BrowserMode;
+import org.vaadin.alump.fancylayouts.gwt.client.model.FancyRemover;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
@@ -53,10 +54,6 @@ public class GwtFancyCssLayout extends SimplePanel {
     protected boolean verticalMarginTransitionEnabled = true;
     
     protected FancyRemover fancyRemover = null;
-    
-    public interface FancyRemover {
-    	public void remove(Widget widget);
-    }
 
     public GwtFancyCssLayout() {
         addStyleName(CLASS_NAME);

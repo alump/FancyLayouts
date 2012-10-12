@@ -18,10 +18,12 @@
 
 package org.vaadin.alump.fancylayouts.gwt.client;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.vaadin.alump.fancylayouts.gwt.client.model.BrowserMode;
+import org.vaadin.alump.fancylayouts.gwt.client.model.FadeOutListener;
+import org.vaadin.alump.fancylayouts.gwt.client.model.FancyRemover;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -37,7 +39,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class GwtFancyPanel extends SimplePanel {
 
     private Widget contentWidget = null;
-    private Widget oldContentWidget = null;
+    private Set<Widget> contentWidgets = new HashSet<Widget>();
 
     public static final String CLASS_NAME = "fancy-panel";
 
@@ -55,11 +57,7 @@ public class GwtFancyPanel extends SimplePanel {
     private String overflowXBeforeHide;
     private String overflowYBeforeHide;
     
-    private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
-    
-    public interface ChangeListener {
-    	public void contentChanged(Widget newContent);
-    }
+    protected FadeOutListener fadeOutListener;
 
     public GwtFancyPanel() {
 
@@ -88,12 +86,8 @@ public class GwtFancyPanel extends SimplePanel {
         setScrollable(false);
     }
     
-    public void addListener (ChangeListener listener) {
-    	listeners.add (listener);
-    }
-    
-    public void removeListener (ChangeListener listener) {
-    	listeners.remove (listener);
+    public void setFadeOutListener(FadeOutListener listener) {
+    	fadeOutListener = listener;
     }
 
     private boolean addTransitionEndListener(Element element) {
@@ -140,56 +134,95 @@ public class GwtFancyPanel extends SimplePanel {
     }
 
     private void onFadeOutEnded() {
-        contentPanel.remove(oldContentWidget);
-        oldContentWidget = null;
-        contentWidget.getElement().getStyle().setOpacity(1.0);
+
+    	for (Widget old : contentWidgets) {
+    		if (old == contentWidget) {
+    			continue;
+    		}
+	        if (fadeOutListener != null) {
+	        	old.setVisible(false);
+	        	fadeOutListener.fadeOut(old);
+	        } else {
+	        	remove(old);
+	        }
+    	}
+    	
+    	// Start opacity for new content
         getContentElement().getStyle().setOpacity(1.0);
-
+        contentWidget.getElement().getStyle().setOpacity(1.0);
         setFadeScrollHide(false);
-        
-        for (ChangeListener listener : listeners) {
-        	listener.contentChanged(contentWidget);
-        }
     }
+    
+    @Override
+    public void add (Widget widget) {
+    	if (contentWidgets.contains(widget)) {
+    		return;
+    	}
+    	contentWidgets.add(widget);
+    	contentPanel.add(widget);
+    	widget.setVisible(false);
+    }
+    
+    @Override
+    public boolean remove (Widget widget) {
+    	if (!contentPanel.remove(widget)) {
+    		return false;
+    	}
+    	
+    	if (contentWidgets.contains(widget)) {
+    		contentWidgets.remove(widget);
+    	}
+    	
+    	if (contentWidget == widget) {
+    		contentWidget = null;
+    	}
+    	
+    	return true;
+    }
+    
+    protected boolean isFadeOutUsed() {
+    	return isVisible() && transitionsEnabled;
+    }
+    
+    private void setContentWithTransition(Widget content) {    	
 
-    private void setContentWithTransition(Widget content) {
-        oldContentWidget = contentWidget;
         contentWidget = content;
-
         setFadeScrollHide(true);
-
-        contentPanel.add(content);
 
         if (!getContentElement().getStyle().getOpacity().equals("0")
                 && addTransitionEndListener(getContentElement())) {
-            content.getElement().getStyle().setOpacity(0.0);
             getContentElement().getStyle().setOpacity(0.0);
+            contentWidget.getElement().getStyle().setOpacity(0.0);
         } else {
-            // Workaround if for some reason browser goes off sync
-            for (int i = contentPanel.getWidgetCount() - 1; i >= 0; --i) {
-                Widget child = contentPanel.getWidget(i);
-                if (child != contentWidget && child != oldContentWidget) {
-                    contentPanel.remove(i);
-                }
-            }
-            onFadeOutEnded();
+    		contentWidget.setVisible(true);
         }
+    }
+    
+    protected void setContentWithoutTransition(Widget content) {
+		if (fadeOutListener != null) {
+    		contentWidget.setVisible(false);
+			fadeOutListener.fadeOut(contentWidget);
+		} else {
+			remove(contentWidget);
+		}
+		contentWidget = content;
+		contentWidget.setVisible(true);
     }
 
     public void setContent(Widget content) {
         if (content == contentWidget) {
             return;
         }
-
-        if (contentWidget != null && this.isVisible() && transitionsEnabled) {
-            setContentWithTransition(content);
-        } else {
-            if (contentWidget != null) {
-                contentPanel.remove(contentWidget);
-            }
-            contentWidget = content;
-            contentPanel.add(contentWidget);
+        
+        if (!contentWidgets.contains(content)) {
+        	add(content);
         }
+        	
+        if (contentWidget != null && isFadeOutUsed()) {
+        	setContentWithTransition(content);
+        } else {
+        	setContentWithoutTransition(content);
+        }  
     }
 
     public void disableTransitions(boolean disable) {
@@ -200,13 +233,11 @@ public class GwtFancyPanel extends SimplePanel {
             if (transitionsEnabled == false && contentWidget != null) {
                 getContentElement().getStyle().setOpacity(1.0);
                 contentWidget.getElement().getStyle().setOpacity(1.0);
-                if (oldContentWidget != null) {
-                    contentPanel.remove(oldContentWidget);
-                    oldContentWidget = null;
-                }
             }
         }
     }
+    
+    
 
     protected Element getContentElement() {
         return contentPanel.getElement();
@@ -309,6 +340,10 @@ public class GwtFancyPanel extends SimplePanel {
 
     @Override
     public void setHeight(String height) {
+        if (this.height.endsWith(height)) {
+            return;
+        }
+    	
         this.height = height;
         super.setHeight(height);
     }

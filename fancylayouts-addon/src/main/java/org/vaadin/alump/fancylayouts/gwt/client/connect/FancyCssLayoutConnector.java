@@ -20,6 +20,7 @@ package org.vaadin.alump.fancylayouts.gwt.client.connect;
 
 
 import org.vaadin.alump.fancylayouts.gwt.client.GwtFancyCssLayout;
+import org.vaadin.alump.fancylayouts.gwt.client.model.FancyRemover;
 import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyCssLayoutState;
 
 import com.google.gwt.dom.client.Element;
@@ -83,7 +84,7 @@ public class FancyCssLayoutConnector extends AbstractComponentContainerConnector
 	}
 	
 	protected void attachFancyRemover(GwtFancyCssLayout widget) {
-		widget.setFancyRemover(new GwtFancyCssLayout.FancyRemover() {
+		widget.setFancyRemover(new FancyRemover() {
 
 			@Override
 			public void remove(Widget widget) {
@@ -110,7 +111,7 @@ public class FancyCssLayoutConnector extends AbstractComponentContainerConnector
 	
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
-        super.onConnectorHierarchyChange(event);
+        //super.onConnectorHierarchyChange(event);
         
         clickEventHandler.handleEventHandlerRegistration();
         

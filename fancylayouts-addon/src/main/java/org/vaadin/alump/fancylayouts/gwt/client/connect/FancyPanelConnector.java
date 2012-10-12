@@ -19,12 +19,19 @@
 package org.vaadin.alump.fancylayouts.gwt.client.connect;
 
 import org.vaadin.alump.fancylayouts.gwt.client.GwtFancyPanel;
+import org.vaadin.alump.fancylayouts.gwt.client.model.FadeOutListener;
+import org.vaadin.alump.fancylayouts.gwt.client.model.FancyRemover;
 import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyPanelState;
 
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
+import com.vaadin.client.Util;
+import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentContainerConnector;
+import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.Connect;
 
 @SuppressWarnings("serial")
@@ -45,15 +52,21 @@ public class FancyPanelConnector extends AbstractComponentContainerConnector {
 		
 	};
 	
+	protected final FancyPanelServerRpc panelServerRpc =
+			RpcProxy.create(FancyPanelServerRpc.class, this);
+	
+	protected final FadeOutListener fancyRemover = new FadeOutListener() {
+		@Override
+		public void fadeOut(Widget widget) {
+			panelServerRpc.hidden(findConnectorWithElement(
+					widget.getElement()));
+		}
+	};
+	
 	@Override
 	public void init() {
 		super.init();
 		registerRpc(FancyPanelClientRpc.class, clientRpc);
-	}
-	
-	@Override
-	public GwtFancyPanel createWidget() {
-		return new GwtFancyPanel();
 	}
 	
 	@Override
@@ -77,17 +90,35 @@ public class FancyPanelConnector extends AbstractComponentContainerConnector {
 		super.onStateChanged(stateChangeEvent);
 		
 		getWidget().setScrollable(getState().scrollable);
-		getWidget().disableTransitions(getState().useTransitions == false);
+		getWidget().disableTransitions(!getState().useTransitions);
+		getWidget().setFadeOutListener(fancyRemover);
+		
+		if (getState().currentComponent != null) {
+			ComponentConnector cc = (ComponentConnector)getState().currentComponent;
+			getWidget().setContent(cc.getWidget());
+		}
+		
 	}
 	
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
-        super.onConnectorHierarchyChange(event);
+        //super.onConnectorHierarchyChange(event);
         
-        //if (!getChildComponents().isEmpty()) {
-        //	getWidget().setContent(getChildComponents().get(0).getWidget());
-        //}
+        for (ComponentConnector child : event.getOldChildren()) {
+            if (child.getParent() != this) {
+            	getWidget().remove(child.getWidget());
+            }
+        }
+        
+        for (ComponentConnector child : getChildComponents()) {
+       		getWidget().add(child.getWidget());
+        }
 
+    }
+    
+    protected ComponentConnector findConnectorWithElement(Element element) {
+        return Util.getConnectorForElement(getConnection(), (Widget)getWidget(),
+        		(com.google.gwt.user.client.Element) element);
     }
 
 }

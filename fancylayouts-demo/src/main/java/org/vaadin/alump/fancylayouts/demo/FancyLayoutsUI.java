@@ -21,7 +21,7 @@ package org.vaadin.alump.fancylayouts.demo;
 import org.vaadin.alump.fancylayouts.FancyNotifications;
 
 import com.vaadin.annotations.Theme;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComponentContainer;
@@ -93,7 +93,7 @@ public class FancyLayoutsUI extends UI {
         Link link = new Link(
                 "Source code of this demo application",
                 new ExternalResource(
-                        "https://github.com/alump/FancyLayouts/blob/master/src/org/vaadin/alump/fancylayouts/demo/FancyLayoutsApplication.java"));
+                        "https://github.com/alump/FancyLayouts/blob/master/fancylayouts-demo/src/main/java/org/vaadin/alump/fancylayouts/demo/FancyLayoutsUI.java"));
         layout.addComponent(link);
 
         Button sourceLink = new Button();
@@ -107,7 +107,7 @@ public class FancyLayoutsUI extends UI {
     }
 
 	@Override
-	protected void init(WrappedRequest request) {
+	protected void init(VaadinRequest request) {
 		this.setContent(buildLayout());
 		
 	}

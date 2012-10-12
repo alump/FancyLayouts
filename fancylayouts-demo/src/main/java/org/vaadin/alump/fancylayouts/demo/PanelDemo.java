@@ -46,7 +46,7 @@ public class PanelDemo extends VerticalLayout {
         setSizeFull();
         setSpacing(true);
 
-        final FancyPanel panel = new FancyPanel();
+        final FancyPanel panel = new FancyPanel(createPanelContentStart());
 
         Label desc = new Label(
                 "FancyPanel is panel that offer scrolling and transition when "
@@ -78,10 +78,7 @@ public class PanelDemo extends VerticalLayout {
         transitions.setImmediate(true);
         buttonLayout.addComponent(transitions);
 
-        // Set start content
-        panel.setContent(createPanelContentStart());
         panel.setSizeFull();
-
         addComponent(panel);
         setExpandRatio(panel, 1.0f);
 
@@ -89,7 +86,7 @@ public class PanelDemo extends VerticalLayout {
 
             public void buttonClick(ClickEvent event) {
                 // Create dynamically new content to panel
-                panel.setContent(createPanelContentA());
+                panel.showComponent(createPanelContentA());
 
             }
         });
@@ -98,7 +95,7 @@ public class PanelDemo extends VerticalLayout {
 
             public void buttonClick(ClickEvent event) {
                 // Create dynamically new content to panel
-                panel.setContent(createPanelContentB());
+                panel.showComponent(createPanelContentB());
             }
         });
 
@@ -106,7 +103,7 @@ public class PanelDemo extends VerticalLayout {
 
             public void buttonClick(ClickEvent event) {
                 // Create dynamically new content to panel
-                panel.setContent(createPanelContentC());
+                panel.showComponent(createPanelContentC());
             }
         });
 

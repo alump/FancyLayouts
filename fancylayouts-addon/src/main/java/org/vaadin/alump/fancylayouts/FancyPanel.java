@@ -18,54 +18,87 @@
 
 package org.vaadin.alump.fancylayouts;
 
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
+import org.vaadin.alump.fancylayouts.gwt.client.connect.FancyCssLayoutClientRpc;
+import org.vaadin.alump.fancylayouts.gwt.client.connect.FancyPanelClientRpc;
+import org.vaadin.alump.fancylayouts.gwt.client.connect.FancyPanelServerRpc;
 import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyPanelState;
 
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ActionManager;
+import com.vaadin.shared.Connector;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.ui.AbstractComponentContainer;
+import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Panel;
 
 /**
  * FancyPanel works like Vaadin Panel but it adds transition when content inside
  * it is changed.
  */
 @SuppressWarnings("serial")
-public class FancyPanel extends AbstractComponentContainer implements
+public class FancyPanel extends AbstractLayout implements
         ComponentContainer.ComponentAttachListener,
         ComponentContainer.ComponentDetachListener, Action.Notifier,
         FancyAnimator {
 
-    protected ComponentContainer content;
+    protected Set<Component> components = new HashSet<Component>();
     protected ActionManager actionManager;
+    protected int scrollTop = 0;
+    protected int scrollLeft = 0;
+    
+    protected FancyPanelServerRpc serverRpc = new FancyPanelServerRpc() {
 
-    public FancyPanel() {
-        super();
-        setContent(null);
-    }
+		@Override
+		public void scrollTop(int top) {
+			scrollTop = top;
+		}
+
+		@Override
+		public void scrollLeft(int left) {
+			scrollLeft = left;
+		}
+
+		@Override
+		public void hidden(Connector child) {
+			/*
+			Component component = (Component)child;
+			if (contents.contains(component)) {
+				if (getContent() == component) {
+					setContent(null, true);
+				} else {
+					FancyPanel.super.removeComponent(component);
+				}
+				contents.remove(component);
+			}
+			*/
+		}
+
+		@Override
+		public void layoutClick(MouseEventDetails mouseDetails,
+				Connector clickedConnector) {
+			// TODO Auto-generated method stub
+			
+		}
+    	
+    };
 
     /**
      * Create new panel with given content
      * @param content Content used inside panel
      */
-    public FancyPanel(ComponentContainer content) {
+    public FancyPanel(Component content) {
         super();
-        setContent(content);
+        showComponent(content);
     }
-
-    /**
-     * Create new panel with given caption
-     * @param caption Caption of panel
-     */
-    public FancyPanel(String caption) {
-        this();
-        setCaption(caption);
-    }
-
+    
     /**
      * Create new panel with content and caption
      * @param content Content of panel
@@ -75,7 +108,7 @@ public class FancyPanel extends AbstractComponentContainer implements
         this(content);
         setCaption(caption);
     }
-    
+
     @Override
     protected FancyPanelState createState() {
       return new FancyPanelState();
@@ -98,57 +131,75 @@ public class FancyPanel extends AbstractComponentContainer implements
     }
 
     /**
-     * Get current content of panel
-     * @return Current content of panel
+     * Get currently visible component
+     * @return Currently visible component
      */
-    public ComponentContainer getContent() {
-        return content;
+    public Component getCurrentComponent() {
+        return (ComponentContainer) getState().currentComponent;
     }
 
     /**
-     * Set content of panel
-     * @param content New content to panel
+     * Show given component in panel. Will add to panel if not added yet.
+     * @param component Component shown in panel.
+     */    
+    public void showComponent(Component component) {
+    	
+    	if (component == null) {
+    		component = createDefaultContent();
+    	}
+    	
+    	addComponent (component);
+    	
+    	if (getCurrentComponent() != component) {
+	        getState().currentComponent = component; 
+	        markAsDirty();
+    	}
+    }
+    
+    @Override
+	public void beforeClientResponse(boolean initial) {
+    	if (getState().currentComponent == null) {
+    		if (this.getComponentCount() == 0) {
+    			showComponent(null);
+    		} else {
+    			showComponent(components.iterator().next());
+    		}
+    	}
+    	
+		super.beforeClientResponse(initial);
+	}
+
+    @Override
+    /**
+     * Add child to current content (use setContent to add direct child to this
+     * instance)
      */
-    public void setContent(ComponentContainer content) {
-
-        if (content == null) {
-            content = createDefaultContent();
-        }
-
-        if (content == this.content) {
-            return;
-        }
-
-        if (this.content != null) {
-            this.content.setParent(null);
-            this.content.removeComponentAttachListener(
-            		(ComponentContainer.ComponentAttachListener) this);
-            this.content.removeComponentDetachListener(
-                    (ComponentContainer.ComponentDetachListener) this);
-        }
-
-        content.setParent(this);
-        this.content = content;
-
-        content.addComponentAttachListener(
-        		(ComponentContainer.ComponentAttachListener) this);
-        content.addComponentDetachListener(
-        		(ComponentContainer.ComponentDetachListener) this);
-    }
-
-    @Override
     public void addComponent(Component c) {
-        content.addComponent(c);
+    	if (!components.contains(c)) {
+    		super.addComponent(c);
+    		components.add(c);
+    	}
     }
 
     @Override
+    /**
+     * Removes all components
+     */
     public void removeAllComponents() {
-        content.removeAllComponents();
+    	super.removeAllComponents();
+    	components.clear();
+    	getState().currentComponent = null;
     }
 
     @Override
     public void removeComponent(Component c) {
-        content.removeComponent(c);
+    	if (components.contains(c)) {
+    		components.remove(c);
+    		super.removeComponent(c);
+    		if (getCurrentComponent() == c) {
+    			getState().currentComponent = null;
+    		}
+    	}
     }
 
     protected ActionManager getActionManager() {
@@ -169,7 +220,15 @@ public class FancyPanel extends AbstractComponentContainer implements
     }
 
     public void replaceComponent(Component oldComponent, Component newComponent) {
-        content.replaceComponent(oldComponent, newComponent);
+    	
+    	boolean showNew = (getCurrentComponent() == oldComponent);
+    	removeComponent (oldComponent);
+
+    	if (showNew) {
+    		showComponent(newComponent);
+    	} else {
+    		addComponent(newComponent);
+    	}
     }
 
     public <T extends Action & com.vaadin.event.Action.Listener> void addAction(
@@ -184,26 +243,12 @@ public class FancyPanel extends AbstractComponentContainer implements
         }
     }
 
-    public void componentDetachedFromContainer(ComponentDetachEvent event) {
-        if (event.getContainer() == content) {
-            fireComponentDetachEvent(event.getDetachedComponent());
-        }
-    }
-
-    public void componentAttachedToContainer(ComponentAttachEvent event) {
-        if (event.getContainer() == content) {
-            fireComponentAttachEvent(event.getAttachedComponent());
-        }
-    }
-
     /**
      * Set FancyPanel scrollable
      * @param scrollable true to make panel scrollable
      */
     public void setScrollable(boolean scrollable) {
-        if (getState().scrollable != scrollable) {
-        	getState().scrollable = scrollable;
-        }
+      	getState().scrollable = scrollable;
     }
 
     /**
@@ -212,20 +257,6 @@ public class FancyPanel extends AbstractComponentContainer implements
      */
     public boolean isScrollable() {
         return getState().scrollable;
-    }
-
-    @Override
-    public void attach() {
-        if (content != null) {
-            content.attach();
-        }
-    }
-
-    @Override
-    public void detach() {
-        if (content != null) {
-            content.detach();
-        }
     }
 
     public boolean setTransitionEnabled(FancyTransition trans, boolean enabled) {
@@ -257,13 +288,41 @@ public class FancyPanel extends AbstractComponentContainer implements
 
     @Override
 	public int getComponentCount() {
-		return getContent().getComponentCount();
+		return components.size();
 	}
 
-	@Deprecated
 	@Override
+	@Deprecated
 	public Iterator<Component> getComponentIterator() {
-		return getContent().getComponentIterator();
+		return components.iterator();
+	}
+
+	@Override
+	public void componentDetachedFromContainer(ComponentDetachEvent event) {
+        Component component = event.getDetachedComponent();
+        if (components.contains(component)) {
+            fireComponentDetachEvent(component);
+        }
+	}
+
+	@Override
+	public void componentAttachedToContainer(ComponentAttachEvent event) {
+        Component component = event.getAttachedComponent();
+        if (components.contains(component)) {
+            fireComponentAttachEvent(component);
+        }
+	}
+	
+	/**
+	 * If components are automatically removed when replaced
+	 * @param remove true to have auto remove enabled
+	 */
+	public void setAutoRemove (boolean remove) {
+		getState().autoRemove = remove;
+	}
+	
+	public boolean isAutoRemove() {
+		return getState().autoRemove;
 	}
 
 }

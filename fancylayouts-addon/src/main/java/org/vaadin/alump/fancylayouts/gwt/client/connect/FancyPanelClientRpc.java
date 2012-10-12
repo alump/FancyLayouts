@@ -1,5 +1,6 @@
 package org.vaadin.alump.fancylayouts.gwt.client.connect;
 
+import com.vaadin.shared.Connector;
 import com.vaadin.shared.communication.ClientRpc;
 
 public interface FancyPanelClientRpc extends ClientRpc {

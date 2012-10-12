@@ -18,10 +18,13 @@
 
 package org.vaadin.alump.fancylayouts.gwt.client.shared;
 
-import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.Connector;
+import com.vaadin.shared.ui.AbstractLayoutState;
 
 @SuppressWarnings("serial")
-public class FancyPanelState extends ComponentState {
+public class FancyPanelState extends AbstractLayoutState {
 	public boolean useTransitions = true;
 	public boolean scrollable = false;
+	public Connector currentComponent = null;
+	public boolean autoRemove = true;
 }

@@ -19,6 +19,7 @@
 package org.vaadin.alump.fancylayouts.demo;
 
 import org.vaadin.alump.fancylayouts.FancyImage;
+import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyImageState.Transition;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -108,6 +109,10 @@ public class ImageDemo extends VerticalLayout {
         CheckBox auto = new CheckBox("Slide show");
         auto.setImmediate(true);
         buttonLayout.addComponent(auto);
+        
+        CheckBox rotate = new CheckBox("Rotate");
+        rotate.setImmediate(true);
+        buttonLayout.addComponent(rotate);
 
         TextField timeout = new TextField();
         timeout.setValue(String.valueOf(image.getSlideShowTimeout()));
@@ -135,6 +140,14 @@ public class ImageDemo extends VerticalLayout {
                 pic1.setEnabled(!value);
                 pic2.setEnabled(!value);
                 pic3.setEnabled(!value);
+            }
+        });
+        
+        rotate.addValueChangeListener(new Property.ValueChangeListener() {
+
+            public void valueChange(ValueChangeEvent event) {
+                Boolean value = (Boolean) event.getProperty().getValue();
+                image.setTransition(value.booleanValue() ? Transition.FADE_AND_ROTATE : Transition.FADE);
             }
         });
 

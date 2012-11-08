@@ -28,6 +28,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
@@ -40,6 +41,10 @@ import com.vaadin.ui.VerticalLayout;
  */
 @SuppressWarnings("serial")
 public class PanelDemo extends VerticalLayout {
+	
+	protected Component panelA;
+	protected Component panelB;
+	protected Component panelC;
 
     public PanelDemo() {
         setMargin(true);
@@ -85,8 +90,10 @@ public class PanelDemo extends VerticalLayout {
         contA.addClickListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-                // Create dynamically new content to panel
-                panel.showComponent(createPanelContentA());
+            	if (panelA == null) {
+            		panelA = createPanelContentA();
+            	}
+                panel.showComponent(panelA);
 
             }
         });
@@ -94,16 +101,20 @@ public class PanelDemo extends VerticalLayout {
         contB.addClickListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-                // Create dynamically new content to panel
-                panel.showComponent(createPanelContentB());
+            	if (panelB == null) {
+            		panelB = createPanelContentB();
+            	}
+                panel.showComponent(panelB);
             }
         });
 
         contC.addClickListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-                // Create dynamically new content to panel
-                panel.showComponent(createPanelContentC());
+            	if (panelC == null) {
+            		panelC = createPanelContentC();
+            	}
+                panel.showComponent(panelC);
             }
         });
 
@@ -207,6 +218,7 @@ public class PanelDemo extends VerticalLayout {
         layout.setSpacing(true);
 
         Table table = new Table();
+        table.setWidth("400px");
         table.addContainerProperty("Name", String.class, "");
         table.addContainerProperty("Phone Number", String.class, "");
         table.addItem(new Object[] { "Matti Meikäläinen", "555 234 2344" },

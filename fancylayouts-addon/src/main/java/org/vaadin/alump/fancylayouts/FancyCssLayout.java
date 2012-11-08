@@ -24,7 +24,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.vaadin.alump.fancylayouts.gwt.client.connect.*;
+import org.vaadin.alump.fancylayouts.gwt.client.connect.FancyCssLayoutClientRpc;
+import org.vaadin.alump.fancylayouts.gwt.client.connect.FancyCssLayoutServerRpc;
 import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyCssLayoutState;
 
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
@@ -46,40 +47,36 @@ import com.vaadin.ui.ComponentContainer;
 public class FancyCssLayout extends AbstractLayout implements
         LayoutClickNotifier, ComponentContainer.ComponentAttachListener,
         ComponentContainer.ComponentDetachListener, FancyAnimator {
-	
-	protected List<Component> components = new ArrayList<Component>();
-	protected Set<Component> fancyRemoveComponents = new HashSet<Component>();
-    
-    private FancyCssLayoutServerRpc rpc = new FancyCssLayoutServerRpc() {
-		@Override
-		public void remove(Connector child) {
-			Component removable = (Component) child;
-            removeComponent(removable);
-		}
 
-		@Override
-		public void layoutClick(MouseEventDetails mouseDetails,
-				Connector clickedConnector) {			
-		}
+    protected List<Component> components = new ArrayList<Component>();
+    protected Set<Component> fancyRemoveComponents = new HashSet<Component>();
+
+    private final FancyCssLayoutServerRpc rpc = new FancyCssLayoutServerRpc() {
+        @Override
+        public void remove(Connector child) {
+            Component removable = (Component) child;
+            removeComponent(removable);
+        }
+
+        @Override
+        public void layoutClick(MouseEventDetails mouseDetails,
+                Connector clickedConnector) {
+        }
     };
-    
+
     public FancyCssLayout() {
-    	registerRpc(rpc);
+        registerRpc(rpc);
     }
-    
-    @Override
-    protected FancyCssLayoutState createState() {
-    	return new FancyCssLayoutState();
-    }
-    
+
     @Override
     protected FancyCssLayoutState getState() {
-    	return (FancyCssLayoutState) super.getState();
+        return (FancyCssLayoutState) super.getState();
     }
 
     /**
      * Replace given component with new. This will not use fancy remove.
      */
+    @Override
     public void replaceComponent(Component oldComponent, Component newComponent) {
         if (components.contains(oldComponent)) {
             int index = components.indexOf(oldComponent);
@@ -89,28 +86,35 @@ public class FancyCssLayout extends AbstractLayout implements
         }
     }
 
-    /**
-     * Get component iterator
-     * @return Component iterator
-     */
-    public Iterator<Component> getComponentIterator() {
-        return components.iterator();
-    }
-
     @Override
     public void addComponent(Component c) {
-        super.addComponent(c);
         components.add(c);
+        try {
+            super.addComponent(c);
+            markAsDirty();
+        } catch (IllegalArgumentException e) {
+            components.remove(c);
+            throw e;
+        }
     }
 
     /**
      * Add widget to specific index
-     * @param c Component added
-     * @param index Index where component is added
+     * 
+     * @param c
+     *            Component added
+     * @param index
+     *            Index where component is added
      */
     public void addComponent(Component c, int index) {
-        super.addComponent(c);
         components.add(index, c);
+        try {
+            super.addComponent(c);
+            markAsDirty();
+        } catch (IllegalArgumentException e) {
+            components.remove(c);
+            throw e;
+        }
     }
 
     @Override
@@ -121,13 +125,16 @@ public class FancyCssLayout extends AbstractLayout implements
         components.remove(c);
         fancyRemoveComponents.remove(c);
         super.removeComponent(c);
+        markAsDirty();
     }
 
     /**
      * Like removeComponent but will add transition to removal. Notice that
-     * there will be delay on removal when this is used. So it's most likely
-     * is not safe to relocate Component to new layout instantly.
-     * @param c Component added
+     * there will be delay on removal when this is used. So it's most likely is
+     * not safe to relocate Component to new layout instantly.
+     * 
+     * @param c
+     *            Component added
      */
     public void fancyRemoveComponent(Component c) {
         if (!components.contains(c)) {
@@ -136,19 +143,22 @@ public class FancyCssLayout extends AbstractLayout implements
         if (fancyRemoveComponents.contains(c)) {
             return;
         }
-        
+
         fancyRemoveComponents.add(c);
         getRpcProxy(FancyCssLayoutClientRpc.class).fancyRemove(c);
     }
 
     /**
      * Get number of components
+     * 
      * @return Number of components
      */
+    @Override
     public int getComponentCount() {
         return components.size();
     }
 
+    @Override
     public void componentDetachedFromContainer(ComponentDetachEvent event) {
         Component component = event.getDetachedComponent();
         if (components.contains(component)) {
@@ -156,6 +166,7 @@ public class FancyCssLayout extends AbstractLayout implements
         }
     }
 
+    @Override
     public void componentAttachedToContainer(ComponentAttachEvent event) {
         Component component = event.getAttachedComponent();
         if (components.contains(component)) {
@@ -166,12 +177,13 @@ public class FancyCssLayout extends AbstractLayout implements
     /**
      * Use setSlideEnabled
      */
+    @Override
     public boolean setTransitionEnabled(FancyTransition trans, boolean enabled) {
         switch (trans) {
         case FADE:
             return true;
         case SLIDE:
-        	getState().marginTransition = enabled;
+            getState().marginTransition = enabled;
             return getState().marginTransition;
         default:
             return false;
@@ -181,6 +193,7 @@ public class FancyCssLayout extends AbstractLayout implements
     /**
      * Check if different type of transitions are enabled.
      */
+    @Override
     public boolean isTransitionEnabled(FancyTransition trans) {
         switch (trans) {
         case FADE:
@@ -194,36 +207,43 @@ public class FancyCssLayout extends AbstractLayout implements
 
     /**
      * Enabled slide away effect when component is removed with fancyremove.
-     * @param enabled true to enable, false to disable.
+     * 
+     * @param enabled
+     *            true to enable, false to disable.
      */
     public void setSlideEnabled(boolean enabled) {
         setTransitionEnabled(FancyTransition.SLIDE, enabled);
     }
 
-	@Override
-	public void addLayoutClickListener(LayoutClickListener listener) {
+    @Override
+    public void addLayoutClickListener(LayoutClickListener listener) {
         addListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
-        		LayoutClickEvent.class, listener,
-        		LayoutClickListener.clickMethod);
-	}
+                LayoutClickEvent.class, listener,
+                LayoutClickListener.clickMethod);
+    }
 
-	@Override
-	public void removeLayoutClickListener(LayoutClickListener listener) {
+    @Override
+    public void removeLayoutClickListener(LayoutClickListener listener) {
         removeListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
-        		LayoutClickEvent.class, listener);
-	}
+                LayoutClickEvent.class, listener);
+    }
 
-	@Override
-	@Deprecated
-	public void addListener(LayoutClickListener listener) {
-		addLayoutClickListener(listener);
-		
-	}
+    @Override
+    @Deprecated
+    public void addListener(LayoutClickListener listener) {
+        addLayoutClickListener(listener);
 
-	@Override
-	@Deprecated
-	public void removeListener(LayoutClickListener listener) {
-		removeLayoutClickListener(listener);
-	}
+    }
+
+    @Override
+    @Deprecated
+    public void removeListener(LayoutClickListener listener) {
+        removeLayoutClickListener(listener);
+    }
+
+    @Override
+    public Iterator<Component> iterator() {
+        return components.iterator();
+    }
 
 }

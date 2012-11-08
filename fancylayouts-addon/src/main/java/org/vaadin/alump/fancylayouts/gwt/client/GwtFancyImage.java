@@ -21,6 +21,8 @@ package org.vaadin.alump.fancylayouts.gwt.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.vaadin.alump.fancylayouts.gwt.client.model.BrowserMode;
+
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.ImageElement;
@@ -35,7 +37,15 @@ public class GwtFancyImage extends Widget {
     private Timer autoBrowseTimer;
     private int autoBrowseTimeoutMs = 3000;
 
+    protected final static String ROTATE_VALUE_VISIBLE = "rotateX(0deg)";
+    protected final static String ROTATE_VALUE_HIDDEN = "rotateX(180deg)";
+    protected final static String ROTATE_VALUE_DISABLED = "none";
+
+    protected static BrowserMode browserMode;
+
     public final static String CLASS_NAME = "fancy-image";
+
+    private boolean rotateImages = false;
 
     public GwtFancyImage() {
         DivElement root = Document.get().createDivElement();
@@ -115,6 +125,7 @@ public class GwtFancyImage extends Widget {
             showImage(0);
         }
 
+        applyTransitionStyleNames(image);
         return images.size();
     }
 
@@ -137,13 +148,14 @@ public class GwtFancyImage extends Widget {
             }
         }
     }
-    
+
     public void showImage(String url) {
-    	for (ImageElement image : images) {
-    		if (image.getSrc().endsWith(url)) {
-    			showImage(images.indexOf(image));
-    		}
-    	}
+        for (ImageElement image : images) {
+            if (image.getSrc().endsWith(url)) {
+                showImage(images.indexOf(image));
+                break;
+            }
+        }
     }
 
     public void showImage(int index) {
@@ -157,15 +169,18 @@ public class GwtFancyImage extends Widget {
         }
 
         if (index != currentIndex) {
-            images.get(currentIndex).getStyle().setOpacity(0.0);
-            images.get(index).getStyle().setOpacity(1.0);
-            // setDisplay(currentIndex, index);
+            ImageElement prevImage = images.get(currentIndex);
+            ImageElement currentImage = images.get(index);
+
             currentIndex = index;
+
+            applyTransitionStyleNames(prevImage);
+            applyTransitionStyleNames(currentImage);
         } else {
-            images.get(currentIndex).getStyle().setOpacity(1.0);
-            // images.get(currentIndex).getStyle()
-            // .setDisplay(Display.INLINE_BLOCK);
+            ImageElement currentImage = images.get(currentIndex);
+            applyTransitionStyleNames(currentImage);
         }
+
     }
 
     private void showNextImage() {
@@ -175,5 +190,48 @@ public class GwtFancyImage extends Widget {
         }
 
         showImage(nextIndex);
+    }
+
+    public void setRotateImages(boolean rotate) {
+        rotateImages = rotate;
+
+        for (ImageElement element : images) {
+            applyTransitionStyleNames(element);
+        }
+    }
+
+    protected static BrowserMode getBrowserMode() {
+        if (browserMode == null) {
+            browserMode = BrowserMode.resolve();
+        }
+
+        return browserMode;
+    }
+
+    protected void applyTransitionStyleNames(ImageElement element) {
+
+        boolean isCurrent = currentIndex == images.indexOf(element);
+
+        if (rotateImages) {
+            element.addClassName("rotate-image");
+            if (isCurrent) {
+                element.getStyle().setProperty(getBrowserMode().getTransform(),
+                        ROTATE_VALUE_VISIBLE);
+            } else {
+                element.getStyle().setProperty(getBrowserMode().getTransform(),
+                        ROTATE_VALUE_HIDDEN);
+            }
+        } else {
+            element.removeClassName("rotate-image");
+            element.getStyle().setProperty(getBrowserMode().getTransform(),
+                    ROTATE_VALUE_DISABLED);
+        }
+
+        if (isCurrent) {
+            element.getStyle().setOpacity(1.0);
+        } else {
+            element.getStyle().setOpacity(0.0);
+        }
+
     }
 }

@@ -5,7 +5,9 @@ import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.LayoutClickRpc;
 
 public interface FancyPanelServerRpc extends LayoutClickRpc, ServerRpc {
-	public void scrollTop(int top);
-	public void scrollLeft(int left);
-	public void hidden(Connector child);
+    public void scrollTop(int top);
+
+    public void scrollLeft(int left);
+
+    public void hidden(Connector child);
 }

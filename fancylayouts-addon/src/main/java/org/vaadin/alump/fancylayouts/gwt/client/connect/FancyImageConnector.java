@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.vaadin.alump.fancylayouts.gwt.client.GwtFancyImage;
 import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyImageState;
+import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyImageState.Transition;
 
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
@@ -31,47 +32,50 @@ import com.vaadin.shared.ui.Connect;
 @SuppressWarnings("serial")
 @Connect(org.vaadin.alump.fancylayouts.FancyImage.class)
 public class FancyImageConnector extends AbstractComponentConnector {
-	
-	private FancyImageClientRpc rpc = new FancyImageClientRpc() {
-		@Override
-		public void showImage(URLReference image) {
-			getWidget().showImage(image.getURL());
-		}
-	};
-	
-	@Override
-	public void init() {
-		super.init();
-		registerRpc(FancyImageClientRpc.class, rpc);
-	}
-	
-	@Override
-	public GwtFancyImage createWidget() {
-		return new GwtFancyImage();
-	}
-	
-	@Override
-	public GwtFancyImage getWidget() {
-		return (GwtFancyImage)super.getWidget();
-	}
-	
-	@Override
-	public FancyImageState getState() {
-		return (FancyImageState)super.getState();
-	}
-	
-	@Override
-	public void onStateChanged(StateChangeEvent stateChangeEvent) {
-		super.onStateChanged(stateChangeEvent);
-		
-		List<URLReference> urls = getState().images;
-		getWidget().trimImages(urls.size());
-		for (int i = 0; i < urls.size(); ++i) {
-			getWidget().setImage(urls.get(i).getURL(), i);
-		}
-		
-		getWidget().setAutoBrowseTimeout(getState().timeoutMs);
-		getWidget().setAutoBrowseEnabled(getState().autoBrowse);
-	}
+
+    private final FancyImageClientRpc rpc = new FancyImageClientRpc() {
+        @Override
+        public void showImage(URLReference image) {
+            getWidget().showImage(image.getURL());
+        }
+    };
+
+    @Override
+    public void init() {
+        super.init();
+        registerRpc(FancyImageClientRpc.class, rpc);
+    }
+
+    @Override
+    public GwtFancyImage createWidget() {
+        return new GwtFancyImage();
+    }
+
+    @Override
+    public GwtFancyImage getWidget() {
+        return (GwtFancyImage) super.getWidget();
+    }
+
+    @Override
+    public FancyImageState getState() {
+        return (FancyImageState) super.getState();
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+
+        List<URLReference> urls = getState().images;
+        getWidget().trimImages(urls.size());
+
+        for (int i = 0; i < urls.size(); ++i) {
+            getWidget().setImage(urls.get(i).getURL(), i);
+        }
+
+        getWidget().setAutoBrowseTimeout(getState().timeoutMs);
+        getWidget().setAutoBrowseEnabled(getState().autoBrowse);
+        getWidget().setRotateImages(
+                getState().transition == Transition.FADE_AND_ROTATE);
+    }
 
 }

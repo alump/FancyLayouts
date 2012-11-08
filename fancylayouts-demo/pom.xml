@@ -1,236 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.vaadin.alump.fancylayouts</groupId>
-  <artifactId>fancylayouts-demo</artifactId>
-  <packaging>war</packaging>
-  <name>FancyLayouts demo</name>
-  <description>FancyLayouts Demo Application</description>
-  
-  <parent>
-    <groupId>org.vaadin.alump</groupId>
-    <artifactId>fancylayouts</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-  </parent>
-  
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.vaadin.alump.fancylayouts</groupId>
+	<artifactId>fancylayouts-demo</artifactId>
+	<packaging>war</packaging>
+	<name>FancyLayouts demo</name>
+	<description>FancyLayouts Demo Application</description>
 
-        <!-- May be overridden by the build system -->
-        <license.short.name>apache2</license.short.name>
-        <vaadin.version>7.0-SNAPSHOT</vaadin.version>
-        <vaadin.plugin.version>7.0-SNAPSHOT</vaadin.plugin.version>
+	<parent>
+		<groupId>org.vaadin.alump</groupId>
+		<artifactId>fancylayouts</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
 
-        <Implementation-Version>${project.version}</Implementation-Version>
-        <!-- Must not change this because of the Directory -->
-        <Implementation-Title>FancyLayouts</Implementation-Title>
-        <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    </properties>
-    
-    <repositories>
-        <repository>
-            <id>vaadin-addons</id>
-            <url>http://maven.vaadin.com/vaadin-addons</url>
-        </repository>
-        <repository>
-            <id>vaadin-snapshots</id>
-            <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                   <enabled>true</enabled>
-            </snapshots>
-        </repository>
-     </repositories>
-     
-     <pluginRepositories>
-        <pluginRepository>
-            <id>vaadin-snapshots</id>
-            <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
-  
-    <dependencies>
-        <dependency>
-            <groupId>org.vaadin.alump.fancylayouts</groupId>
-            <artifactId>fancylayouts-addon</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-	        <groupId>com.vaadin</groupId>
-	        <artifactId>vaadin-server</artifactId>
-	        <version>${vaadin.version}</version>
-		</dependency>
-        <dependency>
-           <groupId>com.vaadin</groupId>
-           <artifactId>vaadin-themes-compiled</artifactId>
-           <version>${vaadin.version}</version>
-        </dependency>
-        <dependency>
-	       <groupId>com.vaadin</groupId>
-	       <artifactId>vaadin-client-compiler</artifactId>
-	       <version>${vaadin.version}</version>
-	       <scope>provided</scope>
-        </dependency>
+		<!-- May be overridden by the build system -->
+		<license.short.name>apache2</license.short.name>
+		<vaadin.version>7.0-SNAPSHOT</vaadin.version>
+		<vaadin.plugin.version>7.0-SNAPSHOT</vaadin.plugin.version>
+
+		<Implementation-Version>${project.version}</Implementation-Version>
+		<!-- Must not change this because of the Directory -->
+		<Implementation-Title>FancyLayouts</Implementation-Title>
+		<Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
+
+	</properties>
+
+	<repositories>
+		<repository>
+			<id>vaadin-addons</id>
+			<url>http://maven.vaadin.com/vaadin-addons</url>
+		</repository>
+		<repository>
+			<id>vaadin-snapshots</id>
+			<url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>vaadin-snapshots</id>
+			<url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<dependencies>
 		<dependency>
-		   <groupId>javax.servlet</groupId>
-		   <artifactId>servlet-api</artifactId>
-		   <version>2.5</version>
-		   <scope>provided</scope>
+			<groupId>org.vaadin.alump.fancylayouts</groupId>
+			<artifactId>fancylayouts-addon</artifactId>
+			<version>${project.version}</version>
 		</dependency>
-		<!-- 
 		<dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>1.0.0.GA</version>
-            <classifier>sources</classifier>
-        </dependency>
-        -->
-    </dependencies>
-  
-    <build>      
-        <plugins>
-            <plugin>
-			  <groupId>org.apache.maven.plugins</groupId>
-			  <artifactId>maven-compiler-plugin</artifactId>
-			  <version>2.5.1</version>
-			  <configuration>
-			    <source>1.6</source>
-			    <target>1.6</target>
-			    <encoding>UTF-8</encoding>
-			  </configuration>
-		  </plugin>
-          <plugin>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-maven-plugin</artifactId>
-            <version>${vaadin.plugin.version}</version>
-            
-            <configuration>
-                <webappDirectory>src/main/webapp/VAADIN/widgetsets</webappDirectory>
-                <hostedWebapp>src/main/webapp/VAADIN/widgetsets</hostedWebapp>
-              
-                <modules>
-                  <module>org.vaadin.alump.fancylayouts.demo.widgetset.FancyLayoutsDemoWidgetset</module>
-                </modules>
-                
-                <force>true</force>
-                <extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
-                <noServer>true</noServer>
-                <runTarget>http://localhost:8080/fancylayouts</runTarget>                
-                <port>8080</port>
-                <draftCompile>true</draftCompile>
-                <style>OBF</style>
-                <force>true</force>
-                <strict>true</strict>
-                <compileReport>false</compileReport>
-            </configuration>
-          </plugin>
-		  <plugin>  
-            <groupId>org.apache.maven.plugins</groupId>  
-            <artifactId>maven-war-plugin</artifactId>  
-            <version>2.2</version>  
-            <configuration>
-                <webResources>
-                    <resource>
-                        <directory>src/main/webapp/VAADIN/themes</directory>
-                        <targetPath>VAADIN/themes</targetPath>
-                        <includes>
-                              <include>**/*</include>
-	                    </includes>
-			        </resource>
-                </webResources>
-                <warSourceExcludes>VAADIN/gwt-unitCache/**, VAADIN/widgetsets/WEB-INF/**</warSourceExcludes>
-                <archive>
-                    <addMavenDescriptor>false</addMavenDescriptor>
-                    <manifest>
-                        <addClasspath>false</addClasspath>
-                        <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                    </manifest>
-                    <manifestEntries>
-                        <Vaadin-Widgetsets>org.vaadin.alump.fancylayouts.widgetset.FancyLayoutsWidgetset</Vaadin-Widgetsets>
-                    </manifestEntries>    
-                </archive>
-                <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
-                <warName>FancyLayoutsDemo</warName>
-            </configuration>  
-           </plugin>
-           <plugin>
-            <artifactId>maven-clean-plugin</artifactId>
-            <version>2.5</version>
-            <configuration>
-              <filesets>
-                <fileset>
-                  <directory>src/main/webapp/VAADIN</directory>
-                  <includes>
-                    <include>widgetsets/*/**</include>
-                    <include>gwt-unitCache/**</include>
-                  </includes>
-                  <followSymlinks>false</followSymlinks>
-                </fileset>
-              </filesets>
-            </configuration>
-          </plugin>
-          <plugin>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>maven-jetty-plugin</artifactId>
-                <version>6.1.24</version>
-                <configuration>
-                    <stopPort>9966</stopPort>
-                    <stopKey>fancylayouts</stopKey>
-                    <scanIntervalSeconds>0</scanIntervalSeconds>
-                    <!-- make sure Jetty also finds the widgetset -->
-                    <webAppConfig>
-                        <contextPath>/fancylayouts</contextPath>
-                    </webAppConfig>
-                </configuration>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-server</artifactId>
+			<version>${vaadin.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-themes-compiled</artifactId>
+			<version>${vaadin.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-client-compiler</artifactId>
+			<version>${vaadin.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- <dependency> <groupId>javax.validation</groupId> <artifactId>validation-api</artifactId> 
+			<version>1.0.0.GA</version> <classifier>sources</classifier> </dependency> -->
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.5.1</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>com.vaadin</groupId>
+				<artifactId>vaadin-maven-plugin</artifactId>
+				<version>${vaadin.plugin.version}</version>
+
+				<configuration>
+					<webappDirectory>src/main/webapp/VAADIN/widgetsets</webappDirectory>
+					<hostedWebapp>src/main/webapp/VAADIN/widgetsets</hostedWebapp>
+
+					<modules>
+						<module>org.vaadin.alump.fancylayouts.demo.widgetset.FancyLayoutsDemoWidgetset</module>
+					</modules>
+
+					<force>true</force>
+					<extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
+					<noServer>true</noServer>
+					<runTarget>http://localhost:8080/fancylayouts</runTarget>
+					<port>8080</port>
+					<draftCompile>true</draftCompile>
+					<!-- <style>OBF</style> -->
+					<style>PRETTY</style>
+					<force>true</force>
+					<strict>true</strict>
+					<compileReport>false</compileReport>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<webResources>
+						<resource>
+							<directory>src/main/webapp/VAADIN/themes</directory>
+							<targetPath>VAADIN/themes</targetPath>
+							<includes>
+								<include>**/*</include>
+							</includes>
+						</resource>
+					</webResources>
+					<warSourceExcludes>VAADIN/gwt-unitCache/**,
+						VAADIN/widgetsets/WEB-INF/**</warSourceExcludes>
+					<archive>
+						<addMavenDescriptor>false</addMavenDescriptor>
+						<manifest>
+							<addClasspath>false</addClasspath>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+						<manifestEntries>
+							<Vaadin-Widgetsets>org.vaadin.alump.fancylayouts.widgetset.FancyLayoutsWidgetset</Vaadin-Widgetsets>
+						</manifestEntries>
+					</archive>
+					<webXml>src/main/webapp/WEB-INF/web.xml</webXml>
+					<warName>FancyLayoutsDemo</warName>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>src/main/webapp/VAADIN</directory>
+							<includes>
+								<include>widgetsets/*/**</include>
+								<include>gwt-unitCache/**</include>
+							</includes>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+			
+			<!-- Jetty is used for development testing -->
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>maven-jetty-plugin</artifactId>
+				<version>6.1.24</version>
+				<configuration>
+					<stopPort>9966</stopPort>
+					<stopKey>fancylayouts</stopKey>
+					<scanIntervalSeconds>0</scanIntervalSeconds>
+					<!-- make sure Jetty also finds the widgetset -->
+					<webAppConfig>
+						<contextPath>/fancylayouts</contextPath>
+					</webAppConfig>
+				</configuration>
+			</plugin>
+			
+			<!-- This is used to autodeploy demo to Tomcat in CI -->
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.0</version>
+				<configuration>
+                    <url>http://localhost:8080/manager</url>
+                    <server>mytomcat</server>
+                    <path>/FancyLayoutsDemo</path>
+				</configuration>
+			</plugin>
+			
 		</plugins>
-        <finalName>FancyLayoutsDemo</finalName>
-        <pluginManagement>
-        	<plugins>
-        		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-        		<plugin>
-        			<groupId>org.eclipse.m2e</groupId>
-        			<artifactId>lifecycle-mapping</artifactId>
-        			<version>1.0.0</version>
-        			<configuration>
-        				<lifecycleMappingMetadata>
-        					<pluginExecutions>
-        						<pluginExecution>
-        							<pluginExecutionFilter>
-        								<groupId>
-        									com.vaadin
-        								</groupId>
-        								<artifactId>
-        									vaadin-maven-plugin
-        								</artifactId>
-        								<versionRange>
-        									[7.0-SNAPSHOT,)
-        								</versionRange>
-        								<goals>
-        									<goal>resources</goal>
-        									<goal>update-widgetset</goal>
-        									<goal>compile</goal>
-        								</goals>
-        							</pluginExecutionFilter>
-        							<action>
-        								<ignore></ignore>
-        							</action>
-        						</pluginExecution>
-        					</pluginExecutions>
-        				</lifecycleMappingMetadata>
-        			</configuration>
-        		</plugin>
-        	</plugins>
-        </pluginManagement>
-    </build>
-    
+		
+		<finalName>FancyLayoutsDemo</finalName>
+		
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											com.vaadin
+										</groupId>
+										<artifactId>
+											vaadin-maven-plugin
+										</artifactId>
+										<versionRange>
+											[7.0-SNAPSHOT,)
+										</versionRange>
+										<goals>
+											<goal>resources</goal>
+											<goal>update-widgetset</goal>
+											<goal>compile</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
 </project>

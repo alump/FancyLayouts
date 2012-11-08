@@ -18,11 +18,14 @@
 
 package org.vaadin.alump.fancylayouts;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.vaadin.alump.fancylayouts.gwt.client.connect.FancyImageClientRpc;
 import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyImageState;
 
-import com.vaadin.server.ResourceReference;
 import com.vaadin.server.Resource;
+import com.vaadin.server.ResourceReference;
 import com.vaadin.ui.AbstractComponent;
 
 /**
@@ -32,70 +35,97 @@ import com.vaadin.ui.AbstractComponent;
  */
 @SuppressWarnings("serial")
 public class FancyImage extends AbstractComponent {
-    
-    @Override
-    protected FancyImageState createState() {
-      return new FancyImageState();
-    }
-    
+
+    protected List<Resource> resources = new LinkedList<Resource>();
+
     @Override
     protected FancyImageState getState() {
-      return (FancyImageState) super.getState();
+        return (FancyImageState) super.getState();
     }
 
     /**
      * Add new image resource
-     * @param resource New image resource
+     * 
+     * @param resource
+     *            New image resource
      */
     public void addResource(Resource resource) {
-    	ResourceReference ref = ResourceReference.create(resource, this, null);
+        if (resources.contains(resource)) {
+            return;
+        }
+
+        resources.add(resource);
+        ResourceReference ref = ResourceReference.create(resource, this, null);
         getState().images.add(ref);
     }
 
     /**
      * Show given image (and add it if not added)
-     * @param resource Image shown
+     * 
+     * @param resource
+     *            Image shown
      */
     public void showResource(Resource resource) {
-    	ResourceReference ref = ResourceReference.create(resource, this, null);
-    	if (!getState().images.contains(ref)) {
-    		addResource(resource);
-    	}
 
-    	getRpcProxy(FancyImageClientRpc.class).showImage(ref);
+        if (!resources.contains(resource)) {
+            addResource(resource);
+        }
+
+        int index = resources.indexOf(resource);
+
+        getRpcProxy(FancyImageClientRpc.class).showImage(
+                getState().images.get(index));
     }
 
     /**
      * Remove given image
-     * @param resource Image removed
+     * 
+     * @param resource
+     *            Image removed
      */
     public void removeResource(Resource resource) {
-    	ResourceReference ref = ResourceReference.create(resource, this, null);
-        getState().images.remove(ref);
+
+        int index = resources.indexOf(resource);
+        if (index >= 0) {
+            getState().images.remove(index);
+        }
     }
 
     /**
      * Enable slide show mode
-     * @param enabled true to enable slide show, false to disable
+     * 
+     * @param enabled
+     *            true to enable slide show, false to disable
      */
     public void setSlideShowEnabled(boolean enabled) {
-    	getState().autoBrowse = enabled;
+        getState().autoBrowse = enabled;
     }
 
     /**
      * Set how long each image is shown in slide show mode
-     * @param millis Time in millisecs (larger than 0)
+     * 
+     * @param millis
+     *            Time in millisecs (larger than 0)
      */
     public void setSlideShowTimeout(int millis) {
-    	getState().timeoutMs = millis;
+        getState().timeoutMs = millis;
     }
 
     /**
      * Get how long each image is shown in slide show mode
+     * 
      * @return Time in millisecs
      */
     public int getSlideShowTimeout() {
         return getState().timeoutMs;
+    }
+
+    public FancyImageState.Transition getTransition() {
+        return getState().transition;
+    }
+
+    public void setTransition(FancyImageState.Transition transition) {
+        getState().transition = transition;
     }
 
 }

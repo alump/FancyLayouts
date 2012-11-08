@@ -47,10 +47,12 @@ public class FancyNotifications extends FancyCssLayout {
      * Interface for notification listeners
      */
     public interface NotificationsListener {
-    	/**
-    	 * Called when notification is clicked (if it has non null id)
-    	 * @param id ID of notification
-    	 */
+        /**
+         * Called when notification is clicked (if it has non null id)
+         * 
+         * @param id
+         *            ID of notification
+         */
         public void notificationClicked(Object id);
     }
 
@@ -63,6 +65,7 @@ public class FancyNotifications extends FancyCssLayout {
 
     protected LayoutEvents.LayoutClickListener layoutClickListener = new LayoutEvents.LayoutClickListener() {
 
+        @Override
         public void layoutClick(LayoutClickEvent event) {
 
             if (listeners.isEmpty()) {
@@ -86,41 +89,38 @@ public class FancyNotifications extends FancyCssLayout {
                     }
                 }
                 if (closeWhenClicked) {
-                	fancyRemoveComponent (component);
+                    fancyRemoveComponent(component);
                 }
             }
 
         }
 
     };
-    
-    @Override
-    protected FancyNotificationsState createState() {
-    	return new FancyNotificationsState();
-    }
-    
+
     @Override
     protected FancyNotificationsState getState() {
-    	return (FancyNotificationsState) super.getState();
+        return (FancyNotificationsState) super.getState();
     }
-    
-    protected Component getNotification (Object id) {
+
+    protected Component getNotification(Object id) {
         Iterator<Component> iter = this.getComponentIterator();
         while (iter.hasNext()) {
-        	Component child = iter.next();
-        	if (child instanceof AbstractComponent) {
-        		Object data = ((AbstractComponent) child).getData();
-        		if (data != null && data.equals(id)) {
-        			return child;
-        		}
-        	}
+            Component child = iter.next();
+            if (child instanceof AbstractComponent) {
+                Object data = ((AbstractComponent) child).getData();
+                if (data != null && data.equals(id)) {
+                    return child;
+                }
+            }
         }
         return null;
     }
 
     /**
      * Show notification with text
-     * @param title Title text
+     * 
+     * @param title
+     *            Title text
      */
     public void showNotification(Object id, String description) {
         showNotification(id, null, description, null, null);
@@ -128,9 +128,13 @@ public class FancyNotifications extends FancyCssLayout {
 
     /**
      * Show notification with title and description texts
-     * @param id ID of notification, given back in events
-     * @param title Title text
-     * @param description Description text
+     * 
+     * @param id
+     *            ID of notification, given back in events
+     * @param title
+     *            Title text
+     * @param description
+     *            Description text
      */
     public void showNotification(Object id, String title, String description) {
         showNotification(id, title, description, null, null);
@@ -138,10 +142,15 @@ public class FancyNotifications extends FancyCssLayout {
 
     /**
      * Show notification with title and description texts and an icon
-     * @param id ID of notification, given back in events
-     * @param title Title text
-     * @param description Description text
-     * @param icon Icon used in notification
+     * 
+     * @param id
+     *            ID of notification, given back in events
+     * @param title
+     *            Title text
+     * @param description
+     *            Description text
+     * @param icon
+     *            Icon used in notification
      */
     public void showNotification(Object id, String title, String description,
             Resource icon) {
@@ -163,11 +172,11 @@ public class FancyNotifications extends FancyCssLayout {
             }
 
             if (title != null) {
-	            Label titleLabel = new Label(title);
-	            titleLabel.setStyleName("fancy-notif-title");
-	            addComponent(titleLabel);
+                Label titleLabel = new Label(title);
+                titleLabel.setStyleName("fancy-notif-title");
+                addComponent(titleLabel);
             } else {
-               	addStyleName("fancy-notif-notitle");
+                addStyleName("fancy-notif-notitle");
             }
 
             if (description != null) {
@@ -175,16 +184,16 @@ public class FancyNotifications extends FancyCssLayout {
                 descLabel.setStyleName("fancy-notif-desc");
                 addComponent(descLabel);
             } else {
-               	addStyleName("fancy-notif-nodesc");
+                addStyleName("fancy-notif-nodesc");
             }
 
             if (icon != null) {
-            	Image image = new Image();
-            	image.setStyleName("fancy-notif-icon");
-            	image.setSource(icon);
+                Image image = new Image();
+                image.setStyleName("fancy-notif-icon");
+                image.setSource(icon);
                 addComponent(image);
             } else {
-            	addStyleName("fancy-notif-noicon");
+                addStyleName("fancy-notif-noicon");
             }
 
         }
@@ -192,22 +201,28 @@ public class FancyNotifications extends FancyCssLayout {
 
     /**
      * Show notification with given options
-     * @param id ID of notification, given back in events
-     * @param title Title text
-     * @param description Description text (null if not needed)
-     * @param icon Icon (null if not needed)
-     * @param styleName Style name for this notification (null if not needed)
+     * 
+     * @param id
+     *            ID of notification, given back in events
+     * @param title
+     *            Title text
+     * @param description
+     *            Description text (null if not needed)
+     * @param icon
+     *            Icon (null if not needed)
+     * @param styleName
+     *            Style name for this notification (null if not needed)
      */
     public void showNotification(Object id, String title, String description,
             Resource icon, String styleName) {
-    	
-    	if (title == null && description == null) {
-    		throw new IllegalArgumentException(
-    				"You have to define title or description");
-    	}
-        
+
+        if (title == null && description == null) {
+            throw new IllegalArgumentException(
+                    "You have to define title or description");
+        }
+
         if (icon == null) {
-        	icon = defaultIcon;
+            icon = defaultIcon;
         }
 
         NotificationLayout notification = new NotificationLayout(id, title,
@@ -215,20 +230,23 @@ public class FancyNotifications extends FancyCssLayout {
 
         addComponent(notification);
     }
-    
+
     /**
      * Close notification with ID
-     * @param id ID of notification
+     * 
+     * @param id
+     *            ID of notification
      */
     public void closeNotification(Object id) {
-    	Component notif = getNotification (id);
-    	if (notif != null) {
-    		fancyRemoveComponent(notif);
-    	}
+        Component notif = getNotification(id);
+        if (notif != null) {
+            fancyRemoveComponent(notif);
+        }
     }
 
     /**
      * Get automatic closing timeout in milliseconds.
+     * 
      * @return Closing time in milliseconds.
      */
     public int getCloseTimeout() {
@@ -237,20 +255,24 @@ public class FancyNotifications extends FancyCssLayout {
 
     /**
      * Set automatic closing time in milliseconds.
-     * @param millisecs Closing time in milliseconds. 0 (no automatic closing
-     * is only accepted if close by clicking is enabled).
+     * 
+     * @param millisecs
+     *            Closing time in milliseconds. 0 (no automatic closing is only
+     *            accepted if close by clicking is enabled).
      */
     public void setCloseTimeout(int millisecs) {
-    	if (millisecs < 0) {
-    		throw new IllegalArgumentException ("Negative time not accepted");
-    	}
-    	    	
-    	getState().closeTimeoutMs = millisecs;
+        if (millisecs < 0) {
+            throw new IllegalArgumentException("Negative time not accepted");
+        }
+
+        getState().closeTimeoutMs = millisecs;
     }
 
     /**
      * Add notification listener
-     * @param listener New listener
+     * 
+     * @param listener
+     *            New listener
      */
     public void addListener(NotificationsListener listener) {
         listeners.add(listener);
@@ -258,49 +280,56 @@ public class FancyNotifications extends FancyCssLayout {
 
     /**
      * Remove notification listener
-     * @param listener Removed listener
+     * 
+     * @param listener
+     *            Removed listener
      */
     public void removeListeners(NotificationsListener listener) {
         listeners.remove(listener);
     }
-    
+
     /**
      * Define if notifications should be closed when clicked/tapped. If you
-     * disable clickclose and close timeout is set to 0, then close timeout
-     * is set back to default value.
-     * @param closeWhenClicked true to close notifications when clicked
+     * disable clickclose and close timeout is set to 0, then close timeout is
+     * set back to default value.
+     * 
+     * @param closeWhenClicked
+     *            true to close notifications when clicked
      */
-    public void setClickClose (boolean closeWhenClicked) {
-    	if (this.closeWhenClicked != closeWhenClicked) {
-    		this.closeWhenClicked = closeWhenClicked;
-    		
-    		if (closeWhenClicked == false && getCloseTimeout() == 0) {
-    			setCloseTimeout(3000);
-    		}
-    		
-    	}
+    public void setClickClose(boolean closeWhenClicked) {
+        if (this.closeWhenClicked != closeWhenClicked) {
+            this.closeWhenClicked = closeWhenClicked;
+
+            if (closeWhenClicked == false && getCloseTimeout() == 0) {
+                setCloseTimeout(3000);
+            }
+
+        }
     }
-    
+
     /**
      * Will notifications be closed when clicked
      */
     public boolean isClickClose() {
-    	return closeWhenClicked;
+        return closeWhenClicked;
     }
-    
+
     /**
      * Set default icon used in notifications
-     * @param icon Default icon resource or null if no default icon
+     * 
+     * @param icon
+     *            Default icon resource or null if no default icon
      */
-    public void setDefaultIcon (Resource icon) {
-    	defaultIcon = icon;
+    public void setDefaultIcon(Resource icon) {
+        defaultIcon = icon;
     }
-    
+
     /**
      * Get default icon used in notifications
+     * 
      * @return Default icon resource or null if not defined
      */
     public Resource getDefaultIcon() {
-    	return defaultIcon;
+        return defaultIcon;
     }
 }

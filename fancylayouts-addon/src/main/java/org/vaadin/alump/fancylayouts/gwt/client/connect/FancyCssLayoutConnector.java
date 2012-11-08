@@ -18,7 +18,6 @@
 
 package org.vaadin.alump.fancylayouts.gwt.client.connect;
 
-
 import org.vaadin.alump.fancylayouts.gwt.client.GwtFancyCssLayout;
 import org.vaadin.alump.fancylayouts.gwt.client.model.FancyRemover;
 import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyCssLayoutState;
@@ -29,7 +28,7 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.Util;
 import com.vaadin.client.communication.RpcProxy;
-import com.vaadin.client.ui.AbstractComponentContainerConnector;
+import com.vaadin.client.ui.AbstractLayoutConnector;
 import com.vaadin.client.ui.LayoutClickEventHandler;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.Connect;
@@ -37,101 +36,98 @@ import com.vaadin.shared.ui.LayoutClickRpc;
 
 @SuppressWarnings("serial")
 @Connect(org.vaadin.alump.fancylayouts.FancyCssLayout.class)
-public class FancyCssLayoutConnector extends AbstractComponentContainerConnector {
-	
-	protected final FancyCssLayoutServerRpc cssServerRpc =
-			RpcProxy.create(FancyCssLayoutServerRpc.class, this);
-	
-	private final FancyCssLayoutClientRpc clientRpc =
-			new FancyCssLayoutClientRpc() {
+public class FancyCssLayoutConnector extends AbstractLayoutConnector {
 
-		@Override
-		public void fancyRemove(Connector child) {
-			Widget widget = ((ComponentConnector)child).getWidget();
-			getWidget().fancyRemove(widget);
-		}
-		
-	};
-	
-	private final LayoutClickEventHandler clickEventHandler = 
-			new LayoutClickEventHandler(this) {
+    protected final FancyCssLayoutServerRpc cssServerRpc = RpcProxy.create(
+            FancyCssLayoutServerRpc.class, this);
 
-				@Override
-				protected ComponentConnector getChildComponent(
-						com.google.gwt.user.client.Element element) {
-					
-					return findConnectorWithElement(element);
-				}
+    private final FancyCssLayoutClientRpc clientRpc = new FancyCssLayoutClientRpc() {
 
-				@Override
-				protected LayoutClickRpc getLayoutClickRPC() {
-					return cssServerRpc;
-				}
+        @Override
+        public void fancyRemove(Connector child) {
+            Widget widget = ((ComponentConnector) child).getWidget();
+            getWidget().fancyRemove(widget);
+        }
+
     };
-	
-	@Override
-	public void init() {
-		super.init();
-		registerRpc(FancyCssLayoutClientRpc.class, clientRpc);
-	}
-	
-	@Override
-	public GwtFancyCssLayout createWidget() {
-		
-		GwtFancyCssLayout widget = new GwtFancyCssLayout();
-		attachFancyRemover(widget);
-		return widget;
-	}
-	
-	protected void attachFancyRemover(GwtFancyCssLayout widget) {
-		widget.setFancyRemover(new FancyRemover() {
 
-			@Override
-			public void remove(Widget widget) {
-				 cssServerRpc.remove(findConnectorWithElement(
-						 widget.getElement()));
-			}
-		});
-	}
-	
-	@Override
-	public GwtFancyCssLayout getWidget() {
-		return (GwtFancyCssLayout)super.getWidget();
-	}
-	
-	@Override
-	public FancyCssLayoutState getState() {
-		return (FancyCssLayoutState)super.getState();
-	}
+    private final LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
+            this) {
 
-	@Override
-	public void updateCaption(ComponentConnector connector) {
-		// TODO Auto-generated method stub
-	}
-	
+        @Override
+        protected ComponentConnector getChildComponent(
+                com.google.gwt.user.client.Element element) {
+
+            return findConnectorWithElement(element);
+        }
+
+        @Override
+        protected LayoutClickRpc getLayoutClickRPC() {
+            return cssServerRpc;
+        }
+    };
+
+    @Override
+    public void init() {
+        super.init();
+        registerRpc(FancyCssLayoutClientRpc.class, clientRpc);
+
+        attachFancyRemover(getWidget());
+    }
+
+    protected void attachFancyRemover(GwtFancyCssLayout widget) {
+        widget.setFancyRemover(new FancyRemover() {
+
+            @Override
+            public void remove(Widget widget) {
+                cssServerRpc.remove(findConnectorWithElement(widget
+                        .getElement()));
+            }
+        });
+    }
+
+    @Override
+    public GwtFancyCssLayout getWidget() {
+        return (GwtFancyCssLayout) super.getWidget();
+    }
+
+    @Override
+    public FancyCssLayoutState getState() {
+        return (FancyCssLayoutState) super.getState();
+    }
+
+    @Override
+    public void updateCaption(ComponentConnector connector) {
+        // TODO Auto-generated method stub
+    }
+
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
-        //super.onConnectorHierarchyChange(event);
-        
+        // super.onConnectorHierarchyChange(event);
+
         clickEventHandler.handleEventHandlerRegistration();
-        
+
         // Remove old children
         for (ComponentConnector child : event.getOldChildren()) {
             if (child.getParent() != this) {
-            	getWidget().remove(child.getWidget());
+                Widget widget = child.getWidget();
+                if (widget.isAttached()) {
+                    getWidget().remove(widget);
+                }
             }
         }
-        
+
         // Add or move children
         int index = 0;
         for (ComponentConnector child : getChildComponents()) {
             getWidget().addOrMove(child.getWidget(), index++);
         }
     }
-    
+
     protected ComponentConnector findConnectorWithElement(Element element) {
-        return Util.getConnectorForElement(getConnection(), (Widget)getWidget(),
-        		(com.google.gwt.user.client.Element) element);
+        return Util.getConnectorForElement(getConnection(),
+                (Widget) getWidget(),
+                (com.google.gwt.user.client.Element) element);
     }
 
 }

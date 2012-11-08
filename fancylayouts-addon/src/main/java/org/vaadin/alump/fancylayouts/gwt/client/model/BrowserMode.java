@@ -43,7 +43,9 @@ public enum BrowserMode {
 
     /**
      * Resolve browser mode from given user agent string
-     * @param agent User agent string
+     * 
+     * @param agent
+     *            User agent string
      * @return Browser mode
      */
     public static BrowserMode resolve(String agent) {
@@ -63,6 +65,7 @@ public enum BrowserMode {
 
     /**
      * Check if browser has transition end event handling
+     * 
      * @return true if supported
      */
     public boolean hasTransitionEndEvent() {
@@ -71,6 +74,7 @@ public enum BrowserMode {
 
     /**
      * Get transition end event name for browser
+     * 
      * @return Name of event
      */
     public String getTransitionEnd() {
@@ -88,10 +92,20 @@ public enum BrowserMode {
 
     /**
      * Resolve browser type from user agent
+     * 
      * @return Browser mode
      */
     public static BrowserMode resolve() {
         return resolve(getUserAgent());
+    }
+
+    public String getTransform() {
+        switch (this) {
+        case MODERN_WEBKIT:
+            return "-webkit-transform";
+        default:
+            return "transform";
+        }
     }
 
     private static native String getUserAgent()

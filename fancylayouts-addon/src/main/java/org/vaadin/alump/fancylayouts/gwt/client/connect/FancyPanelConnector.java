@@ -20,7 +20,6 @@ package org.vaadin.alump.fancylayouts.gwt.client.connect;
 
 import org.vaadin.alump.fancylayouts.gwt.client.GwtFancyPanel;
 import org.vaadin.alump.fancylayouts.gwt.client.model.FadeOutListener;
-import org.vaadin.alump.fancylayouts.gwt.client.model.FancyRemover;
 import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyPanelState;
 
 import com.google.gwt.dom.client.Element;
@@ -28,97 +27,113 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.Util;
+import com.vaadin.client.VConsole;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
-import com.vaadin.client.ui.AbstractComponentContainerConnector;
-import com.vaadin.shared.Connector;
+import com.vaadin.client.ui.AbstractLayoutConnector;
 import com.vaadin.shared.ui.Connect;
 
 @SuppressWarnings("serial")
 @Connect(org.vaadin.alump.fancylayouts.FancyPanel.class)
-public class FancyPanelConnector extends AbstractComponentContainerConnector {
-	
-	private FancyPanelClientRpc clientRpc = new FancyPanelClientRpc() {
+public class FancyPanelConnector extends AbstractLayoutConnector {
 
-		@Override
-		public void scrollTop(int top) {
-			getWidget().setScrollTop(top);
-		}
+    private final FancyPanelClientRpc clientRpc = new FancyPanelClientRpc() {
 
-		@Override
-		public void scrollLeft(int left) {
-			getWidget().setScrollLeft(left);
-		}
-		
-	};
-	
-	protected final FancyPanelServerRpc panelServerRpc =
-			RpcProxy.create(FancyPanelServerRpc.class, this);
-	
-	protected final FadeOutListener fancyRemover = new FadeOutListener() {
-		@Override
-		public void fadeOut(Widget widget) {
-			panelServerRpc.hidden(findConnectorWithElement(
-					widget.getElement()));
-		}
-	};
-	
-	@Override
-	public void init() {
-		super.init();
-		registerRpc(FancyPanelClientRpc.class, clientRpc);
-	}
-	
-	@Override
-	public GwtFancyPanel getWidget() {
-		return (GwtFancyPanel)super.getWidget();
-	}
-	
-	@Override
-	public FancyPanelState getState() {
-		return (FancyPanelState)super.getState();
-	}
-
-	@Override
-	public void updateCaption(ComponentConnector connector) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	public void onStateChanged(StateChangeEvent stateChangeEvent) {
-		super.onStateChanged(stateChangeEvent);
-		
-		getWidget().setScrollable(getState().scrollable);
-		getWidget().disableTransitions(!getState().useTransitions);
-		getWidget().setFadeOutListener(fancyRemover);
-		
-		if (getState().currentComponent != null) {
-			ComponentConnector cc = (ComponentConnector)getState().currentComponent;
-			getWidget().setContent(cc.getWidget());
-		}
-		
-	}
-	
-    @Override
-    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
-        //super.onConnectorHierarchyChange(event);
-        
-        for (ComponentConnector child : event.getOldChildren()) {
-            if (child.getParent() != this) {
-            	getWidget().remove(child.getWidget());
-            }
+        @Override
+        public void scrollTop(int top) {
+            getWidget().setScrollTop(top);
         }
-        
-        for (ComponentConnector child : getChildComponents()) {
-       		getWidget().add(child.getWidget());
+
+        @Override
+        public void scrollLeft(int left) {
+            getWidget().setScrollLeft(left);
+        }
+
+    };
+
+    protected final FancyPanelServerRpc panelServerRpc = RpcProxy.create(
+            FancyPanelServerRpc.class, this);
+
+    protected final FadeOutListener fancyRemover = new FadeOutListener() {
+        @Override
+        public void fadeOut(Widget widget) {
+            panelServerRpc
+                    .hidden(findConnectorWithElement(widget.getElement()));
+        }
+    };
+
+    @Override
+    public void init() {
+        super.init();
+        registerRpc(FancyPanelClientRpc.class, clientRpc);
+    }
+
+    @Override
+    public GwtFancyPanel getWidget() {
+        return (GwtFancyPanel) super.getWidget();
+    }
+
+    @Override
+    public FancyPanelState getState() {
+        return (FancyPanelState) super.getState();
+    }
+
+    @Override
+    public void updateCaption(ComponentConnector connector) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+
+        getWidget().setScrollable(getState().scrollable);
+        getWidget().disableTransitions(!getState().useTransitions);
+        getWidget().setFadeOutListener(fancyRemover);
+
+        ComponentConnector currentConnector = (ComponentConnector) getState().currentComponent;
+        if (currentConnector != null
+                && getWidget().hasWidget(currentConnector.getWidget())) {
+            getWidget().setContent(currentConnector.getWidget());
         }
 
     }
-    
+
+    @Override
+    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+
+        VConsole.log("Widget is null: " + (getWidget() != null));
+
+        // Remove old children
+        for (ComponentConnector child : event.getOldChildren()) {
+            if (child.getParent() != this) {
+                Widget widget = child.getWidget();
+                if (widget.isAttached()) {
+                    getWidget().remove(widget);
+                }
+            }
+        }
+
+        for (ComponentConnector child : getChildComponents()) {
+            try {
+                getWidget().add(child.getWidget());
+            } catch (Exception e) {
+                VConsole.error("Failed to add! " + e.getMessage());
+            }
+        }
+
+        ComponentConnector currentConnector = (ComponentConnector) getState().currentComponent;
+        if (currentConnector != null) {
+            getWidget().setContent(currentConnector.getWidget());
+        }
+
+    }
+
     protected ComponentConnector findConnectorWithElement(Element element) {
-        return Util.getConnectorForElement(getConnection(), (Widget)getWidget(),
-        		(com.google.gwt.user.client.Element) element);
+        return Util.getConnectorForElement(getConnection(),
+                (Widget) getWidget(),
+                (com.google.gwt.user.client.Element) element);
     }
 
 }

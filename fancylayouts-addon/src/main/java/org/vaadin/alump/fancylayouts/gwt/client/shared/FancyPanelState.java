@@ -23,8 +23,16 @@ import com.vaadin.shared.ui.AbstractLayoutState;
 
 @SuppressWarnings("serial")
 public class FancyPanelState extends AbstractLayoutState {
-	public boolean useTransitions = true;
-	public boolean scrollable = false;
-	public Connector currentComponent = null;
-	public boolean autoRemove = true;
+
+    public boolean scrollable = false;
+
+    public Connector currentComponent = null;
+
+    public boolean autoRemove = true;
+
+    // Transitions
+
+    public boolean fadeTransition = true;
+
+    public boolean zoomTransition = false;
 }

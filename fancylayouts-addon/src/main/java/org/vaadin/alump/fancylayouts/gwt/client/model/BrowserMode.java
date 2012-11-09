@@ -18,6 +18,8 @@
 
 package org.vaadin.alump.fancylayouts.gwt.client.model;
 
+import com.google.gwt.dom.client.Element;
+
 /**
  * BrowserMode is used to store and identify browser and browser specific
  * functionalities.
@@ -40,6 +42,8 @@ public enum BrowserMode {
      * Modern Opera (presto?) browser
      */
     MODERN_OPERA;
+
+    private static BrowserMode browserMode;
 
     /**
      * Resolve browser mode from given user agent string
@@ -96,7 +100,10 @@ public enum BrowserMode {
      * @return Browser mode
      */
     public static BrowserMode resolve() {
-        return resolve(getUserAgent());
+        if (browserMode == null) {
+            browserMode = resolve(getUserAgent());
+        }
+        return browserMode;
     }
 
     public String getTransform() {
@@ -106,6 +113,14 @@ public enum BrowserMode {
         default:
             return "transform";
         }
+    }
+
+    public String getTranformValue(Element element) {
+        return element.getStyle().getProperty(this.getTransform());
+    }
+
+    public void setTranformValue(Element element, String value) {
+        element.getStyle().setProperty(this.getTransform(), value);
     }
 
     private static native String getUserAgent()

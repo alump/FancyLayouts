@@ -40,7 +40,7 @@ import com.vaadin.ui.CssLayout;
 @SuppressWarnings("serial")
 public class FancyPanel extends AbstractLayout implements
         ComponentContainer.ComponentAttachListener,
-        ComponentContainer.ComponentDetachListener, FancyAnimator {
+        ComponentContainer.ComponentDetachListener {
 
     protected Set<Component> components = new HashSet<Component>();
     protected ActionManager actionManager;
@@ -249,35 +249,20 @@ public class FancyPanel extends AbstractLayout implements
         return getState().scrollable;
     }
 
-    @Override
-    public boolean setTransitionEnabled(FancyTransition trans, boolean enabled) {
-        switch (trans) {
-        case FADE:
-            getState().useTransitions = enabled;
-            return !getState().useTransitions;
-        default:
-            return false;
-        }
+    public void setFadeTransition(boolean enabled) {
+        getState().fadeTransition = enabled;
     }
 
-    @Override
-    public boolean isTransitionEnabled(FancyTransition trans) {
-        switch (trans) {
-        case FADE:
-            return !getState().useTransitions;
-        default:
-            return false;
-        }
+    public boolean getFadeTransition() {
+        return getState().fadeTransition;
     }
 
-    /**
-     * Enabled and disable fade transition
-     * 
-     * @param enabled
-     *            true to enable, false to disable
-     */
-    public void setFadeTransitionEnabled(boolean enabled) {
-        setTransitionEnabled(FancyTransition.FADE, enabled);
+    public void setZoomTransition(boolean enabled) {
+        getState().zoomTransition = enabled;
+    }
+
+    public boolean getZoomTransition() {
+        return getState().zoomTransition;
     }
 
     @Override

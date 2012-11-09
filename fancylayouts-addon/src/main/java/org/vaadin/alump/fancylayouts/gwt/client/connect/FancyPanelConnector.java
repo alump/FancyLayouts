@@ -89,7 +89,8 @@ public class FancyPanelConnector extends AbstractLayoutConnector {
         super.onStateChanged(stateChangeEvent);
 
         getWidget().setScrollable(getState().scrollable);
-        getWidget().disableTransitions(!getState().useTransitions);
+        getWidget().setFade(getState().fadeTransition);
+        getWidget().setZoom(getState().zoomTransition);
         getWidget().setFadeOutListener(fancyRemover);
 
         ComponentConnector currentConnector = (ComponentConnector) getState().currentComponent;

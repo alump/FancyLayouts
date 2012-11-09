@@ -20,6 +20,7 @@ package org.vaadin.alump.fancylayouts.demo;
 
 import org.vaadin.alump.fancylayouts.FancyPanel;
 import org.vaadin.alump.fancylayouts.FancyTransition;
+import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyPanelState;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -78,10 +79,15 @@ public class PanelDemo extends VerticalLayout {
         scrollable.setImmediate(true);
         buttonLayout.addComponent(scrollable);
 
-        CheckBox transitions = new CheckBox("transitions");
-        transitions.setValue(panel.isTransitionEnabled(FancyTransition.FADE));
-        transitions.setImmediate(true);
-        buttonLayout.addComponent(transitions);
+        CheckBox fade = new CheckBox("fade");
+        fade.setValue(panel.getFadeTransition());
+        fade.setImmediate(true);
+        buttonLayout.addComponent(fade);
+        
+        CheckBox zoom = new CheckBox("zoom");
+        zoom.setValue(panel.getZoomTransition());
+        zoom.setImmediate(true);
+        buttonLayout.addComponent(zoom);
 
         panel.setSizeFull();
         addComponent(panel);
@@ -127,12 +133,21 @@ public class PanelDemo extends VerticalLayout {
             }
         });
 
-        transitions.addValueChangeListener(new Property.ValueChangeListener() {
+        fade.addValueChangeListener(new Property.ValueChangeListener() {
 
             public void valueChange(ValueChangeEvent event) {
                 boolean enable = (Boolean) event.getProperty().getValue();
                 // Enable/disable transitions
-                panel.setFadeTransitionEnabled(enable);
+                panel.setFadeTransition(enable);
+            }
+        });
+        
+        zoom.addValueChangeListener(new Property.ValueChangeListener() {
+
+            public void valueChange(ValueChangeEvent event) {
+                boolean enable = (Boolean) event.getProperty().getValue();
+                // Enable/disable transitions
+                panel.setZoomTransition(enable);
             }
         });
     }
@@ -216,6 +231,9 @@ public class PanelDemo extends VerticalLayout {
         layout.setWidth("100%");
         layout.setMargin(true);
         layout.setSpacing(true);
+        
+        Label label = new Label ("Table is quite broken in Vaadin 7?");
+        layout.addComponent(label);
 
         Table table = new Table();
         table.setWidth("400px");

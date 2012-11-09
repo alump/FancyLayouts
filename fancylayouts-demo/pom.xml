@@ -175,7 +175,7 @@
 					</filesets>
 				</configuration>
 			</plugin>
-			
+
 			<!-- Jetty is used for development testing -->
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
@@ -191,23 +191,23 @@
 					</webAppConfig>
 				</configuration>
 			</plugin>
-			
+
 			<!-- This is used to autodeploy demo to Tomcat in CI -->
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>2.0</version>
 				<configuration>
-                    <url>http://localhost:8080/manager/text</url>
-                    <server>mytomcat</server>
-                    <path>/FancyLayoutsDemo</path>
+					<url>http://localhost:8080/manager/text</url>
+					<server>mytomcat</server>
+					<path>/FancyLayoutsDemo</path>
 				</configuration>
 			</plugin>
-			
+
 		</plugins>
-		
+
 		<finalName>FancyLayoutsDemo</finalName>
-		
+
 		<pluginManagement>
 			<plugins>
 				<!--This plugin's configuration is used to store Eclipse m2e settings 

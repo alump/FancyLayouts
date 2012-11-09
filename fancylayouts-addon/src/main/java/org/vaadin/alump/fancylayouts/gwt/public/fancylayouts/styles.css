@@ -14,10 +14,20 @@
  -o-transition: opacity 0.5s ease-in-out, -o-transform 0.5s linear;
  -o-backface-visibility: hidden;
 }
-.fancy-panel-cwrapper {
+.fancy-panel-container.fancy-fade > .fancy-panel-cwrapper {
  -moz-transition: opacity 0.25s ease-in-out;
  -webkit-transition: opacity 0.25s ease-in-out;
  -o-transition: opacity 0.25s ease-in-out;	
+}
+.fancy-panel-container.fancy-zoom > .fancy-panel-cwrapper {
+ -moz-transition: transform 0.25s ease-in-out;
+ -webkit-transition: -webkit-transform 0.25s ease-in-out;
+ -o-transition: transform 0.25s ease-in-out;  
+}
+.fancy-panel-container.fancy-fade.fancy-zoom > .fancy-panel-cwrapper {
+ -moz-transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
+ -webkit-transition: opacity 0.25s ease-in-out, -webkit-transform 0.25s ease-in-out;
+ -o-transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
 }
 .fancy-csslayout-item {
  -moz-transition: opacity 0.34s ease-in, margin 0.34s ease-in;

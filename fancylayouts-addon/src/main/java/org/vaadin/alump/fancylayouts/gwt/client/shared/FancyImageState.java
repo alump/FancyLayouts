@@ -21,11 +21,11 @@ package org.vaadin.alump.fancylayouts.gwt.client.shared;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.communication.URLReference;
 
 @SuppressWarnings("serial")
-public class FancyImageState extends ComponentState {
+public class FancyImageState extends AbstractComponentState {
 
     public enum Transition {
         FADE, FADE_AND_ROTATE;

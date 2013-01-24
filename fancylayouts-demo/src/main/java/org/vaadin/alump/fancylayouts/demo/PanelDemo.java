@@ -25,14 +25,17 @@ import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyPanelState;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
@@ -43,23 +46,28 @@ import com.vaadin.ui.VerticalLayout;
 @SuppressWarnings("serial")
 public class PanelDemo extends VerticalLayout {
 	
+	protected FancyPanel panel;
+	protected Component introPanel;
 	protected Component panelA;
 	protected Component panelB;
 	protected Component panelC;
+	protected CheckBox fade;
+	protected CheckBox zoom;
+	protected CheckBox rotate;
 
     public PanelDemo() {
         setMargin(true);
         setSizeFull();
         setSpacing(true);
 
-        final FancyPanel panel = new FancyPanel(createPanelContentStart());
+        panel = new FancyPanel(createPanelContentStart());
 
-        Label desc = new Label(
+        introPanel = new Label(
                 "FancyPanel is panel that offer scrolling and transition when "
                         + "you replace it's content with setContent() call. It's like "
                         + "Vaadin Panel, but I haven't added panel styling DOM "
                         + "elements to keep this clean and simple.");
-        addComponent(desc);
+        addComponent(introPanel);
 
         HorizontalLayout buttonLayout = new HorizontalLayout();
         buttonLayout.setSpacing(true);
@@ -79,15 +87,17 @@ public class PanelDemo extends VerticalLayout {
         scrollable.setImmediate(true);
         buttonLayout.addComponent(scrollable);
 
-        CheckBox fade = new CheckBox("fade");
-        fade.setValue(panel.getFadeTransition());
+        fade = new CheckBox("fade");
         fade.setImmediate(true);
         buttonLayout.addComponent(fade);
         
-        CheckBox zoom = new CheckBox("zoom");
-        zoom.setValue(panel.getZoomTransition());
+        zoom = new CheckBox("zoom");
         zoom.setImmediate(true);
         buttonLayout.addComponent(zoom);
+        
+        rotate = new CheckBox("rotate");
+        rotate.setImmediate(true);
+        buttonLayout.addComponent(rotate);
 
         panel.setSizeFull();
         addComponent(panel);
@@ -100,7 +110,7 @@ public class PanelDemo extends VerticalLayout {
             		panelA = createPanelContentA();
             	}
                 panel.showComponent(panelA);
-
+                removeIntro();
             }
         });
 
@@ -111,6 +121,7 @@ public class PanelDemo extends VerticalLayout {
             		panelB = createPanelContentB();
             	}
                 panel.showComponent(panelB);
+                removeIntro();
             }
         });
 
@@ -118,9 +129,10 @@ public class PanelDemo extends VerticalLayout {
 
             public void buttonClick(ClickEvent event) {
             	if (panelC == null) {
-            		panelC = createPanelContentC();
+            		panelC = createPanelContentD();
             	}
                 panel.showComponent(panelC);
+                removeIntro();
             }
         });
 
@@ -139,6 +151,7 @@ public class PanelDemo extends VerticalLayout {
                 boolean enable = (Boolean) event.getProperty().getValue();
                 // Enable/disable transitions
                 panel.setFadeTransition(enable);
+                updateTransitionCheckboxes();
             }
         });
         
@@ -148,8 +161,27 @@ public class PanelDemo extends VerticalLayout {
                 boolean enable = (Boolean) event.getProperty().getValue();
                 // Enable/disable transitions
                 panel.setZoomTransition(enable);
+                updateTransitionCheckboxes();
             }
         });
+        
+        rotate.addValueChangeListener(new Property.ValueChangeListener() {
+
+            public void valueChange(ValueChangeEvent event) {
+                boolean enable = (Boolean) event.getProperty().getValue();
+                // Enable/disable transitions
+                panel.setRotateTransition(enable);
+                updateTransitionCheckboxes();
+            }
+        });
+        
+        updateTransitionCheckboxes();
+    }
+    
+    protected void updateTransitionCheckboxes() {
+        fade.setValue(panel.isFadeTransition());
+        zoom.setValue(panel.isZoomTransition());
+        rotate.setValue(panel.isRotateTransition());
     }
 
     /**
@@ -166,6 +198,14 @@ public class PanelDemo extends VerticalLayout {
         layout.addComponent(guide);
 
         return layout;
+    }
+    
+    private void removeIntro() {
+    	if (introPanel != null) {
+    		System.out.println("Remove intro page");
+    		panel.removeComponent(introPanel);
+    		introPanel = null;
+    	}
     }
 
     /**
@@ -223,7 +263,8 @@ public class PanelDemo extends VerticalLayout {
     }
 
     /**
-     * Sample content with simple table
+     * Sample content with simple table (disabled as table is so broken in
+     * Vaadin 7). To get table work you probably need some special timer.
      * @return
      */
     private ComponentContainer createPanelContentC() {
@@ -237,6 +278,7 @@ public class PanelDemo extends VerticalLayout {
 
         Table table = new Table();
         table.setWidth("400px");
+        table.setHeight("500px");
         table.addContainerProperty("Name", String.class, "");
         table.addContainerProperty("Phone Number", String.class, "");
         table.addItem(new Object[] { "Matti Meikäläinen", "555 234 2344" },
@@ -245,6 +287,20 @@ public class PanelDemo extends VerticalLayout {
 
         layout.addComponent(table);
 
+        return layout;
+    }
+    
+    private ComponentContainer createPanelContentD() {
+        CssLayout layout = new CssLayout();
+        layout.addStyleName("demo-panel-d");
+        layout.setWidth("100%");
+        layout.setHeight("100%");
+        
+        Image image = new Image ();
+        image.setSource(new ThemeResource("images/meme.jpg"));
+        image.addStyleName("demo-meme");
+        layout.addComponent(image);
+        
         return layout;
     }
 

@@ -65,13 +65,6 @@ public class FancyPanel extends AbstractLayout implements
 
         @Override
         public void hidden(Connector child) {
-            /*
-             * Component component = (Component)child; if
-             * (contents.contains(component)) { if (getContent() == component) {
-             * setContent(null, true); } else {
-             * FancyPanel.super.removeComponent(component); }
-             * contents.remove(component); }
-             */
         }
 
         @Override
@@ -253,19 +246,57 @@ public class FancyPanel extends AbstractLayout implements
         return getState().scrollable;
     }
 
+    /**
+     * Enable disable rotate transition. When this transition is enabled
+     * conflicting transition will be automatically disabled.
+     * 
+     * @param enabled
+     *            true to enable, false to disable.
+     */
+    public void setRotateTransition(boolean enabled) {
+        if (enabled) {
+            setZoomTransition(false);
+        }
+
+        getState().rotateTransition = enabled;
+    }
+
+    public boolean isRotateTransition() {
+        return getState().rotateTransition;
+    }
+
+    /**
+     * Enable disable fade transition. When this transition is enabled
+     * conflicting transition will be automatically disabled.
+     * 
+     * @param enabled
+     *            true to enable, false to disable.
+     */
     public void setFadeTransition(boolean enabled) {
+
         getState().fadeTransition = enabled;
     }
 
-    public boolean getFadeTransition() {
+    public boolean isFadeTransition() {
         return getState().fadeTransition;
     }
 
+    /**
+     * Enable disable zoom transition. When this transition is enabled
+     * conflicting transition will be automatically disabled.
+     * 
+     * @param enabled
+     *            true to enable, false to disable.
+     */
     public void setZoomTransition(boolean enabled) {
+        if (enabled) {
+            setRotateTransition(false);
+        }
+
         getState().zoomTransition = enabled;
     }
 
-    public boolean getZoomTransition() {
+    public boolean isZoomTransition() {
         return getState().zoomTransition;
     }
 

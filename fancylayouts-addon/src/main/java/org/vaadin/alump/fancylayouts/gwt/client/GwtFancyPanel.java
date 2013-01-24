@@ -26,9 +26,12 @@ import org.vaadin.alump.fancylayouts.gwt.client.model.ElementStyler;
 import org.vaadin.alump.fancylayouts.gwt.client.model.ElementStyler.Value;
 import org.vaadin.alump.fancylayouts.gwt.client.model.FadeOutListener;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Position;
@@ -55,23 +58,32 @@ public class GwtFancyPanel extends SimplePanel {
 
     protected ContentPanel contentPanel;
 
-    private Boolean scrollEnabled;
-    private String overflowXBeforeHide;
-    private String overflowYBeforeHide;
+    protected Boolean scrollEnabled;
 
     protected FadeOutListener fadeOutListener;
+
+    protected boolean activeTransition = false;
 
     protected class ContentPanel extends ComplexPanel {
 
         public ContentPanel() {
             setElement(Document.get().createDivElement());
             setStyleName(CLASS_NAME + "-container");
+            getElement().getStyle().setPosition(Position.RELATIVE);
+            getElement().getStyle().setLeft(0, Unit.PX);
+            getElement().getStyle().setTop(0, Unit.PX);
+            getElement().getStyle().setWidth(100, Unit.PCT);
+            getElement().getStyle().setHeight(100, Unit.PCT);
         }
 
         @Override
         public void add(Widget widget) {
             DivElement contentWrapper = Document.get().createDivElement();
             contentWrapper.setClassName(CLASS_NAME + "-cwrapper");
+            contentWrapper.getStyle().setWidth(100, Unit.PCT);
+            if (!GwtFancyPanel.this.isScrollable()) {
+                contentWrapper.getStyle().setHeight(100, Unit.PCT);
+            }
             getElement().appendChild(contentWrapper);
             add(widget,
                     (com.google.gwt.user.client.Element) Element
@@ -81,6 +93,8 @@ public class GwtFancyPanel extends SimplePanel {
 
         @Override
         public boolean remove(Widget widget) {
+            hide(widget);
+
             Element wrapper = getWrapper(widget);
             boolean removed = super.remove(widget);
 
@@ -144,19 +158,24 @@ public class GwtFancyPanel extends SimplePanel {
 
     private boolean addTransitionEndListener(Element element) {
 
-        if (element.hasAttribute("hasTransitionEndListener")
-                && element.getAttribute("hasTransitionEndListener").equals("1")) {
+        if (hasTransitionEndListener(element)) {
             return true;
         }
 
         String eventName = browserMode.getTransitionEnd();
         if (eventName != null) {
+            VConsole.error("addTransitionEndListener...");
             addTransitionEndListener(eventName, element);
             return true;
         }
 
         return false;
     }
+
+    private native boolean hasTransitionEndListener(Element element)
+    /*-{
+        return element.hasTransitionEndListener == true;
+    }-*/;
 
     private native void addTransitionEndListener(String eventName,
             Element element)
@@ -170,35 +189,70 @@ public class GwtFancyPanel extends SimplePanel {
 
     private void onTransitionEnd(Object object) {
 
+        if (!activeTransition) {
+            VConsole.error("onTransitionEnd ignored!");
+            return;
+        }
+
         if (!(object instanceof Element)) {
             return;
         }
 
+        VConsole.error("onTransitionEnd");
+
         Element element = (Element) object;
 
-        if (getContentElement(previousWidget) == element) {
-
-            if (this.elementStyler.isElementStyledOut(element)) {
-                onFadeOutEnded();
+        if (previousWidget != null) {
+            if (element == contentPanel.getWrapper(previousWidget)) {
+                if (elementStyler.isElementStyledOut(element)) {
+                    onFadeOutEnded();
+                } else {
+                    VConsole.error("onTransitionEnd for hidden: wrong state?");
+                }
+            }
+        } else {
+            if (element == contentPanel.getWrapper(currentWidget)) {
+                if (elementStyler.isElementStyledOn(element)) {
+                    onFadeInEnded();
+                } else {
+                    VConsole.error("onTransitionEnd for shown: wrong state?");
+                }
             }
         }
     }
 
     private void onFadeOutEnded() {
+        clearWrapperTransitionPosition(getContentElement(previousWidget));
         contentPanel.hideAndShow(previousWidget, currentWidget);
-        Element wrapper = getContentElement(currentWidget);
+        previousWidget = null;
 
-        setWrapperTransitionPosition(wrapper, true);
+        final Widget currentWidgetWas = currentWidget;
+        final Element wrapper = getContentElement(currentWidget);
+
         if (wrapper != null) {
-            elementStyler.styleElementIn(wrapper);
+            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+                @Override
+                public void execute() {
+                    if (currentWidgetWas == currentWidget) {
+                        elementStyler.styleElementOn(wrapper);
+                    }
+                }
+            });
+        } else {
+            VConsole.error("Failed to fade in new widget");
         }
-        setFadeScrollHide(false);
+    }
+
+    private void onFadeInEnded() {
+        clearWrapperTransitionPosition(getContentElement(currentWidget));
+        activeTransition = false;
     }
 
     @Override
     public void add(Widget widget) {
         if (widget == null) {
-            VConsole.error("null widget can not be added");
+            VConsole.error("null widget can not be added to fancy panel");
             return;
         }
 
@@ -210,51 +264,51 @@ public class GwtFancyPanel extends SimplePanel {
         contentPanel.add(widget);
     }
 
+    protected void skipTransition() {
+        activeTransition = false;
+        clearWrapperTransitionPosition(contentPanel.getWrapper(currentWidget));
+        changeContentWithoutTransition(currentWidget);
+    }
+
     @Override
     public boolean remove(Widget widget) {
+
+        if (widget == previousWidget && activeTransition) {
+            skipTransition();
+        } else if (widget == currentWidget) {
+            currentWidget = null;
+        }
+
         if (!contentPanel.remove(widget)) {
             return false;
         }
 
-        if (contentWidgets.contains(widget)) {
-            contentWidgets.remove(widget);
-        }
-
-        if (currentWidget == widget) {
-            currentWidget = null;
-        }
+        contentWidgets.remove(widget);
 
         return true;
     }
 
-    private void setContentWithTransition(Widget content) {
+    private void changeContentWithTransition(Widget content) {
 
         previousWidget = currentWidget;
         currentWidget = content;
 
-        if (previousWidget == null) {
-            setContentWithoutTransition(currentWidget);
-        } else {
-            setFadeScrollHide(true);
+        Element nextWrapper = getContentElement(currentWidget);
+        Element prevWrapper = getContentElement(previousWidget);
 
-            Element prevWrapper = getContentElement(previousWidget);
+        addTransitionEndListener(prevWrapper);
+        addTransitionEndListener(nextWrapper);
 
-            if (prevWrapper != null
-                    && !prevWrapper.getStyle().getOpacity().equals("0")
-                    && addTransitionEndListener(prevWrapper)) {
-                Element nextWrapper = getContentElement(currentWidget);
+        activeTransition = true;
 
-                elementStyler.styleElementOut(prevWrapper);
-                elementStyler.styleElementOut(nextWrapper);
+        setWrapperTransitionPosition(prevWrapper);
+        setWrapperTransitionPosition(nextWrapper);
 
-                setWrapperTransitionPosition(nextWrapper, false);
-            } else {
-                contentPanel.hideAndShow(previousWidget, currentWidget);
-            }
-        }
+        elementStyler.styleElementOut(prevWrapper);
+        elementStyler.styleElementIn(nextWrapper);
     }
 
-    protected void setContentWithoutTransition(Widget content) {
+    protected void changeContentWithoutTransition(Widget content) {
         if (currentWidget != null) {
             contentPanel.hide(currentWidget);
         }
@@ -276,10 +330,11 @@ public class GwtFancyPanel extends SimplePanel {
             add(content);
         }
 
-        if (elementStyler.hasValues()) {
-            setContentWithTransition(content);
+        if (browserMode.hasTransitionEndEvent() && elementStyler.hasValues()
+                && previousWidget == null) {
+            changeContentWithTransition(content);
         } else {
-            setContentWithoutTransition(content);
+            changeContentWithoutTransition(content);
         }
     }
 
@@ -291,78 +346,37 @@ public class GwtFancyPanel extends SimplePanel {
         return scrollEnabled != null && scrollEnabled;
     }
 
-    private void setFadeScrollHide(boolean on) {
-        if (scrollEnabled == null || !scrollEnabled) {
-            return;
-        }
-
-        // Disable on mozilla, causes issues
-        if (browserMode == BrowserMode.MODERN_GECKO) {
-            return;
-        }
-
-        /*
-         * if (on) { if (overflowYBeforeHide == null) { overflowXBeforeHide =
-         * scrollPanel.getElement().getStyle() .getOverflowX();
-         * overflowYBeforeHide = scrollPanel.getElement().getStyle()
-         * .getOverflowY(); scrollPanel.getElement().getStyle()
-         * .setOverflowX(Overflow.HIDDEN); scrollPanel.getElement().getStyle()
-         * .setOverflowY(Overflow.HIDDEN); } } else { if (overflowYBeforeHide !=
-         * null) { scrollPanel.getElement().getStyle()
-         * .setProperty("overflow-x", overflowXBeforeHide);
-         * scrollPanel.getElement().getStyle() .setProperty("overflow-y",
-         * overflowYBeforeHide); overflowXBeforeHide = null; overflowYBeforeHide
-         * = null; } }
-         */
-
-    }
-
     public void setScrollable(boolean scroll) {
 
         if (scrollEnabled != null && scrollEnabled == scroll) {
             return;
         }
 
-        setFadeScrollHide(false);
+        Style style = contentPanel.getElement().getStyle();
 
-        /*
-         * Style scrollStyle = scrollPanel.getElement().getStyle();
-         * 
-         * if (scroll) { scrollStyle.setOverflow(Overflow.AUTO); } else {
-         * scrollStyle.setOverflow(Overflow.HIDDEN); }
-         */
+        if (scroll) {
+            style.setOverflow(Overflow.AUTO);
+        } else {
+            style.clearOverflow();
+        }
 
         scrollEnabled = scroll;
     }
 
     public void setScrollTop(int value) {
-        /*
-         * if (scrollPanel != null) {
-         * scrollPanel.setVerticalScrollPosition(value); }
-         */
+        contentPanel.getElement().setScrollTop(value);
     }
 
     public int getScrollTop() {
-        /*
-         * if (scrollEnabled != null) { return
-         * scrollPanel.getVerticalScrollPosition(); } else { return 0; }
-         */
-        return 0;
+        return contentPanel.getElement().getScrollTop();
     }
 
     public void setScrollLeft(int value) {
-        /*
-         * if (scrollPanel != null) {
-         * scrollPanel.setHorizontalScrollPosition(value); }
-         */
+        contentPanel.getElement().setScrollLeft(value);
     }
 
     public int getScrollLeft() {
-        /*
-         * if (scrollEnabled != null) { return
-         * scrollPanel.getHorizontalScrollPosition(); } else { return 0; }
-         */
-        return 0;
+        return contentPanel.getElement().getScrollLeft();
     }
 
     @Override
@@ -386,6 +400,11 @@ public class GwtFancyPanel extends SimplePanel {
     }
 
     public void setFade(boolean enabled) {
+
+        if (enabled == elementStyler.isValueEnabled(Value.OPACITY)) {
+            return;
+        }
+
         if (enabled) {
             contentPanel.addStyleName("fancy-fade");
         } else {
@@ -394,6 +413,10 @@ public class GwtFancyPanel extends SimplePanel {
         elementStyler.setValueEnabled(Value.OPACITY, enabled);
 
         if (!enabled) {
+            if (!elementStyler.hasValues()) {
+                activeTransition = false;
+            }
+
             for (Widget child : contentWidgets) {
                 elementStyler.removeStylingFromElement(
                         contentPanel.getWrapper(child), Value.OPACITY);
@@ -402,6 +425,11 @@ public class GwtFancyPanel extends SimplePanel {
     }
 
     public void setZoom(boolean enabled) {
+
+        if (enabled == elementStyler.isValueEnabled(Value.SCALE)) {
+            return;
+        }
+
         if (enabled) {
             contentPanel.addStyleName("fancy-zoom");
         } else {
@@ -410,6 +438,10 @@ public class GwtFancyPanel extends SimplePanel {
         elementStyler.setValueEnabled(Value.SCALE, enabled);
 
         if (!enabled) {
+            if (!elementStyler.hasValues()) {
+                activeTransition = false;
+            }
+
             for (Widget child : contentWidgets) {
                 elementStyler.removeStylingFromElement(
                         contentPanel.getWrapper(child), Value.SCALE);
@@ -417,23 +449,61 @@ public class GwtFancyPanel extends SimplePanel {
         }
     }
 
-    private void setWrapperTransitionPosition(Element wrapper, boolean shown) {
-        if (shown) {
-            wrapper.getStyle().setProperty("width", null);
-            wrapper.getStyle().setProperty("height", null);
-            wrapper.getStyle().setProperty("top", null);
-            wrapper.getStyle().setProperty("left", null);
-            wrapper.getStyle().setPosition(Position.FIXED);
-            wrapper.getStyle().setDisplay(Display.BLOCK);
-        } else {
-            int width = wrapper.getClientWidth();
-            int height = wrapper.getClientHeight();
-            wrapper.getStyle().setTop(0, Unit.PX);
-            wrapper.getStyle().setLeft(0, Unit.PX);
-            wrapper.getStyle().setWidth(width, Unit.PX);
-            wrapper.getStyle().setHeight(height, Unit.PX);
-            wrapper.getStyle().setPosition(Position.ABSOLUTE);
-            wrapper.getStyle().setDisplay(Display.BLOCK);
+    public void setRotate(boolean enabled) {
+
+        if (enabled == elementStyler.isValueEnabled(Value.ROTATE)) {
+            return;
         }
+
+        if (enabled) {
+            contentPanel.addStyleName("fancy-rotate");
+        } else {
+            contentPanel.removeStyleName("fancy-rotate");
+        }
+        elementStyler.setValueEnabled(Value.ROTATE, enabled);
+
+        if (!enabled) {
+            if (!elementStyler.hasValues()) {
+                activeTransition = false;
+            }
+
+            for (Widget child : contentWidgets) {
+                elementStyler.removeStylingFromElement(
+                        contentPanel.getWrapper(child), Value.ROTATE);
+            }
+        }
+    }
+
+    /**
+     * Clear hardcoded position on the screen
+     * 
+     * @param wrapper
+     */
+    private void clearWrapperTransitionPosition(Element wrapper) {
+        Style style = wrapper.getStyle();
+        style.clearPosition();
+        if (this.isScrollable()) {
+            style.clearHeight();
+        } else {
+            style.setHeight(100, Unit.PCT);
+        }
+        style.clearTop();
+        style.clearLeft();
+        style.clearOverflow();
+    }
+
+    /**
+     * Set wrapper to hard coded position on the screen
+     * 
+     * @param wrapper
+     */
+    private void setWrapperTransitionPosition(Element wrapper) {
+        Style style = wrapper.getStyle();
+
+        style.setTop(0, Unit.PX);
+        style.setLeft(0, Unit.PX);
+        style.setHeight(100, Unit.PCT);
+        style.setPosition(Position.ABSOLUTE);
+        style.setOverflow(Overflow.HIDDEN);
     }
 }

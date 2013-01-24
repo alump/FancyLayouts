@@ -35,4 +35,6 @@ public class FancyPanelState extends AbstractLayoutState {
     public boolean fadeTransition = true;
 
     public boolean zoomTransition = false;
+
+    public boolean rotateTransition = false;
 }

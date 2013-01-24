@@ -19,12 +19,14 @@
  -webkit-transition: opacity 0.25s ease-in-out;
  -o-transition: opacity 0.25s ease-in-out;	
 }
-.fancy-panel-container.fancy-zoom > .fancy-panel-cwrapper {
+.fancy-panel-container.fancy-zoom > .fancy-panel-cwrapper,
+.fancy-panel-container.fancy-rotate > .fancy-panel-cwrapper {
  -moz-transition: transform 0.25s ease-in-out;
  -webkit-transition: -webkit-transform 0.25s ease-in-out;
  -o-transition: transform 0.25s ease-in-out;  
 }
-.fancy-panel-container.fancy-fade.fancy-zoom > .fancy-panel-cwrapper {
+.fancy-panel-container.fancy-fade.fancy-zoom > .fancy-panel-cwrapper,
+.fancy-panel-container.fancy-fade.fancy-rotate > .fancy-panel-cwrapper {
  -moz-transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
  -webkit-transition: opacity 0.25s ease-in-out, -webkit-transform 0.25s ease-in-out;
  -o-transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;

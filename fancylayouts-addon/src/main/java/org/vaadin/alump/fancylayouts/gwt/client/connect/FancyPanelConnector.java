@@ -75,6 +75,7 @@ public class FancyPanelConnector extends AbstractLayoutConnector {
     protected final FadeOutListener fancyRemover = new FadeOutListener() {
         @Override
         public void fadeOut(Widget widget) {
+            VConsole.error("Hidden information sent");
             panelServerRpc
                     .hidden(findConnectorWithElement(widget.getElement()));
         }
@@ -110,6 +111,7 @@ public class FancyPanelConnector extends AbstractLayoutConnector {
         getWidget().setScrollable(getState().scrollable);
         getWidget().setFade(getState().fadeTransition);
         getWidget().setZoom(getState().zoomTransition);
+        getWidget().setRotate(getState().rotateTransition);
         getWidget().setFadeOutListener(fancyRemover);
 
         ComponentConnector currentConnector = (ComponentConnector) getState().currentComponent;

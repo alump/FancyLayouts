@@ -31,11 +31,29 @@ import com.vaadin.client.VConsole;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractLayoutConnector;
+import com.vaadin.client.ui.LayoutClickEventHandler;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.LayoutClickRpc;
 
 @SuppressWarnings("serial")
 @Connect(org.vaadin.alump.fancylayouts.FancyPanel.class)
 public class FancyPanelConnector extends AbstractLayoutConnector {
+
+    private final LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
+            this) {
+
+        @Override
+        protected LayoutClickRpc getLayoutClickRPC() {
+            return panelServerRpc;
+        }
+
+        @Override
+        protected ComponentConnector getChildComponent(
+                com.google.gwt.user.client.Element element) {
+            return Util.getConnectorForElement(getConnection(), getWidget(),
+                    element);
+        };
+    };
 
     private final FancyPanelClientRpc clientRpc = new FancyPanelClientRpc() {
 
@@ -87,6 +105,7 @@ public class FancyPanelConnector extends AbstractLayoutConnector {
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
+        clickEventHandler.handleEventHandlerRegistration();
 
         getWidget().setScrollable(getState().scrollable);
         getWidget().setFade(getState().fadeTransition);
@@ -103,8 +122,6 @@ public class FancyPanelConnector extends AbstractLayoutConnector {
 
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
-
-        VConsole.log("Widget is null: " + (getWidget() != null));
 
         // Remove old children
         for (ComponentConnector child : event.getOldChildren()) {

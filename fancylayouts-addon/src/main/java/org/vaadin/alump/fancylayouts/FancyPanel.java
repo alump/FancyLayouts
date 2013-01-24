@@ -26,7 +26,11 @@ import org.vaadin.alump.fancylayouts.gwt.client.connect.FancyPanelServerRpc;
 import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyPanelState;
 
 import com.vaadin.event.ActionManager;
+import com.vaadin.event.LayoutEvents.LayoutClickEvent;
+import com.vaadin.event.LayoutEvents.LayoutClickListener;
+import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
 import com.vaadin.shared.Connector;
+import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.Component;
@@ -40,7 +44,7 @@ import com.vaadin.ui.CssLayout;
 @SuppressWarnings("serial")
 public class FancyPanel extends AbstractLayout implements
         ComponentContainer.ComponentAttachListener,
-        ComponentContainer.ComponentDetachListener {
+        ComponentContainer.ComponentDetachListener, LayoutClickNotifier {
 
     protected Set<Component> components = new HashSet<Component>();
     protected ActionManager actionManager;
@@ -73,8 +77,8 @@ public class FancyPanel extends AbstractLayout implements
         @Override
         public void layoutClick(MouseEventDetails mouseDetails,
                 Connector clickedConnector) {
-            // TODO Auto-generated method stub
-
+            fireEvent(LayoutClickEvent.createEvent(FancyPanel.this,
+                    mouseDetails, clickedConnector));
         }
 
     };
@@ -303,6 +307,31 @@ public class FancyPanel extends AbstractLayout implements
 
     public boolean isAutoRemove() {
         return getState().autoRemove;
+    }
+
+    @Override
+    public void addLayoutClickListener(LayoutClickListener listener) {
+        addListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
+                LayoutClickEvent.class, listener,
+                LayoutClickListener.clickMethod);
+    }
+
+    @Override
+    @Deprecated
+    public void addListener(LayoutClickListener listener) {
+        addLayoutClickListener(listener);
+    }
+
+    @Override
+    public void removeLayoutClickListener(LayoutClickListener listener) {
+        removeListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
+                LayoutClickEvent.class, listener);
+    }
+
+    @Override
+    @Deprecated
+    public void removeListener(LayoutClickListener listener) {
+        removeLayoutClickListener(listener);
     }
 
 }

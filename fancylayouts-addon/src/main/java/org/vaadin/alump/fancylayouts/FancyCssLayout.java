@@ -61,6 +61,8 @@ public class FancyCssLayout extends AbstractLayout implements
         @Override
         public void layoutClick(MouseEventDetails mouseDetails,
                 Connector clickedConnector) {
+            fireEvent(LayoutClickEvent.createEvent(FancyCssLayout.this,
+                    mouseDetails, clickedConnector));
         }
     };
 

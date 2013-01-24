@@ -19,8 +19,8 @@
 
 		<!-- May be overridden by the build system -->
 		<license.short.name>apache2</license.short.name>
-		<vaadin.version>7.0-SNAPSHOT</vaadin.version>
-		<vaadin.plugin.version>7.0-SNAPSHOT</vaadin.plugin.version>
+        <vaadin.version>7.0.0.rc1</vaadin.version>
+        <vaadin.plugin.version>7.0.0.rc1</vaadin.plugin.version>
 
 		<Implementation-Version>${project.version}</Implementation-Version>
 		<!-- Must not change this because of the Directory -->
@@ -72,9 +72,14 @@
 		</dependency>
 		<dependency>
 			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-themes-compiled</artifactId>
+			<artifactId>vaadin-themes</artifactId>
 			<version>${vaadin.version}</version>
 		</dependency>
+		<dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-theme-compiler</artifactId>
+            <version>${vaadin.version}</version>
+        </dependency>
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-client-compiler</artifactId>
@@ -128,6 +133,16 @@
 					<strict>true</strict>
 					<compileReport>false</compileReport>
 				</configuration>
+				
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>resources</goal>
+                            <goal>compile</goal>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

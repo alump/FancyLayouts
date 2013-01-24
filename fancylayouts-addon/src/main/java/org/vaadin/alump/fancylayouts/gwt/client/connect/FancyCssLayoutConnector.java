@@ -28,6 +28,7 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.Util;
 import com.vaadin.client.communication.RpcProxy;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractLayoutConnector;
 import com.vaadin.client.ui.LayoutClickEventHandler;
 import com.vaadin.shared.Connector;
@@ -57,8 +58,8 @@ public class FancyCssLayoutConnector extends AbstractLayoutConnector {
         @Override
         protected ComponentConnector getChildComponent(
                 com.google.gwt.user.client.Element element) {
-
-            return findConnectorWithElement(element);
+            return Util.getConnectorForElement(getConnection(), getWidget(),
+                    element);
         }
 
         @Override
@@ -102,10 +103,14 @@ public class FancyCssLayoutConnector extends AbstractLayoutConnector {
     }
 
     @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+        clickEventHandler.handleEventHandlerRegistration();
+    }
+
+    @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
         // super.onConnectorHierarchyChange(event);
-
-        clickEventHandler.handleEventHandlerRegistration();
 
         // Remove old children
         for (ComponentConnector child : event.getOldChildren()) {

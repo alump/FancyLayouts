@@ -36,8 +36,8 @@
 	
 	    <!-- May be overridden by the build system -->
 	    <license.short.name>apache2</license.short.name>
-	    <vaadin.version>7.0-SNAPSHOT</vaadin.version>
-	    <vaadin.plugin.version>7.0-SNAPSHOT</vaadin.plugin.version>
+	    <vaadin.version>7.0.0.rc1</vaadin.version>
+	    <vaadin.plugin.version>7.0.0.rc1</vaadin.plugin.version>
 	    
 	    <snapshot.repository.url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</snapshot.repository.url>
 	

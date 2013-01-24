@@ -1,0 +1,1 @@
+This is for Vaadin 6.8. Version above 1.0.0 alpha 1 support Vaadin 7+.

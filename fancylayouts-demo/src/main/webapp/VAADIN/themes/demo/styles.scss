@@ -87,8 +87,7 @@
  height: 400px;
  animation-duration: 3s;
  animation-name: meme-anim;
- -webkit-animation-duration: 3s;
- -webkit-animation-name: meme-anim;
+ -webkit-animation: meme-anim 3s linear;
 }
 
 @keyframes meme-anim {
@@ -98,7 +97,7 @@
   }
   
   50% {
-    left: -10%;
+    left: 10%;
     opacity: 1;
   }
   
@@ -115,19 +114,28 @@
   from {
     left: 140%;
     opacity: 0;
+    -webkit-transform: rotateZ(20deg);
   }
-  
-  50% {
-    left: -10%;
-    opacity: 1;
-  }
-  
-  75% {
-    left: 60%;
-  }
- 
-  100% {
+  40% {
     left: 50%;
+    opacity: 0.8;
+    -webkit-transform: rotateZ(10deg);
+  }
+  50% {
+    left: 40%;
+    -webkit-transform: rotateZ(-20deg);
+  } 
+  65% {
+    left: 60%;
+    -webkit-transform: rotateZ(5deg);
+  }
+  80% {
+    left: 50%;
+    opacity: 0.8;
+    -webkit-transform: rotateZ(0deg);
+  }
+  100% {
+    opacity: 1.0;
   }
 }
 

@@ -95,11 +95,15 @@ public class GwtFancyPanel extends SimplePanel {
         public boolean remove(Widget widget) {
             hide(widget);
 
-            Element wrapper = getWrapper(widget);
             boolean removed = super.remove(widget);
 
-            if (removed && wrapper != null) {
-                getElement().removeChild(wrapper);
+            if (removed) {
+                Element wrapper = getWrapper(widget);
+                if (wrapper != null) {
+                    getElement().removeChild(wrapper);
+                }
+            } else {
+                VConsole.error("FancyPanel: Failed to remove child!");
             }
 
             return removed;
@@ -273,8 +277,11 @@ public class GwtFancyPanel extends SimplePanel {
     @Override
     public boolean remove(Widget widget) {
 
-        if (widget == previousWidget && activeTransition) {
-            skipTransition();
+        if (widget == previousWidget) {
+            if (activeTransition) {
+                skipTransition();
+            }
+            previousWidget = null;
         } else if (widget == currentWidget) {
             currentWidget = null;
         }

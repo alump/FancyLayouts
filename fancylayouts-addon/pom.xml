@@ -5,14 +5,9 @@
   <artifactId>fancylayouts-addon</artifactId>
   <packaging>jar</packaging>
   <name>FancyLayouts addon</name>
+  <version>${fancylayouts.version}</version>
   
   <description>FancyLayouts Vaadin 7 addon</description>
-  
-  <parent>
-    <groupId>org.vaadin.alump</groupId>
-    <artifactId>fancylayouts</artifactId>
-    <version>1.0.0.alpha4-SNAPSHOT</version>
-  </parent>
   
   <organization>
       <name>Sami Viitanen</name>
@@ -32,6 +27,8 @@
     </developers>
     
 	<properties>
+		<fancylayouts.version>1.0.0.alpha4-SNAPSHOT</fancylayouts.version>
+	
 	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	
 	    <!-- May be overridden by the build system -->

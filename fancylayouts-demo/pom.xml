@@ -7,14 +7,12 @@
 	<packaging>war</packaging>
 	<name>FancyLayouts demo</name>
 	<description>FancyLayouts Demo Application</description>
-
-	<parent>
-		<groupId>org.vaadin.alump</groupId>
-		<artifactId>fancylayouts</artifactId>
-		<version>1.0.0.alpha4-SNAPSHOT</version>
-	</parent>
+	<version>${fancylayouts.version}</version>
 
 	<properties>
+		<fancylayouts.version>1.0.0.alpha4-SNAPSHOT</fancylayouts.version>
+		<Implementation-Version>${project.version}</Implementation-Version>
+	
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- May be overridden by the build system -->
@@ -22,10 +20,9 @@
         <vaadin.version>7.0.0.rc2</vaadin.version>
         <vaadin.plugin.version>7.0.0.rc2</vaadin.plugin.version>
 
-		<Implementation-Version>${project.version}</Implementation-Version>
 		<!-- Must not change this because of the Directory -->
 		<Implementation-Title>FancyLayouts</Implementation-Title>
-		<Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
+		<Implementation-Vendor>Sami Viitanen</Implementation-Vendor>
 
 	</properties>
 

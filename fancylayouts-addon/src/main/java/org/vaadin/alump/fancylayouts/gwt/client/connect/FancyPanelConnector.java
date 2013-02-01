@@ -21,6 +21,7 @@ package org.vaadin.alump.fancylayouts.gwt.client.connect;
 import org.vaadin.alump.fancylayouts.gwt.client.GwtFancyPanel;
 import org.vaadin.alump.fancylayouts.gwt.client.model.FadeOutListener;
 import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyPanelState;
+import org.vaadin.alump.fancylayouts.gwt.client.shared.RotateDirection;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Widget;
@@ -111,7 +112,9 @@ public class FancyPanelConnector extends AbstractLayoutConnector {
         getWidget().setScrollable(getState().scrollable);
         getWidget().setFade(getState().fadeTransition);
         getWidget().setZoom(getState().zoomTransition);
-        getWidget().setRotate(getState().rotateTransition);
+        getWidget().setRotate(
+                getState().rotateTransition != RotateDirection.NONE,
+                getState().rotateTransition == RotateDirection.HORIZONTAL);
         getWidget().setFadeOutListener(fancyRemover);
 
         ComponentConnector currentConnector = (ComponentConnector) getState().currentComponent;
@@ -128,8 +131,9 @@ public class FancyPanelConnector extends AbstractLayoutConnector {
         // Remove old children
         for (ComponentConnector child : event.getOldChildren()) {
             if (child.getParent() != this) {
+                VConsole.error("Remove old child widget");
                 Widget widget = child.getWidget();
-                if (widget.isAttached()) {
+                if (widget != null && widget.isAttached()) {
                     getWidget().remove(widget);
                 }
             }

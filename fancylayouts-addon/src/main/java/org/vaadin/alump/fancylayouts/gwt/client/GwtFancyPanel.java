@@ -95,10 +95,10 @@ public class GwtFancyPanel extends SimplePanel {
         public boolean remove(Widget widget) {
             hide(widget);
 
+            Element wrapper = getWrapper(widget);
             boolean removed = super.remove(widget);
 
             if (removed) {
-                Element wrapper = getWrapper(widget);
                 if (wrapper != null) {
                     getElement().removeChild(wrapper);
                 }
@@ -112,7 +112,9 @@ public class GwtFancyPanel extends SimplePanel {
         public Element getWrapper(Widget widget) {
             Element ret = null;
 
-            if (widget.getParent() == this) {
+            if (widget != null && widget.getParent() == this
+                    && widget.getElement() != null) {
+
                 ret = widget.getElement().getParentElement();
             }
 
@@ -154,6 +156,7 @@ public class GwtFancyPanel extends SimplePanel {
         }
 
         setScrollable(false);
+        setFade(true);
     }
 
     public void setFadeOutListener(FadeOutListener listener) {
@@ -168,7 +171,6 @@ public class GwtFancyPanel extends SimplePanel {
 
         String eventName = browserMode.getTransitionEnd();
         if (eventName != null) {
-            VConsole.error("addTransitionEndListener...");
             addTransitionEndListener(eventName, element);
             return true;
         }
@@ -194,15 +196,13 @@ public class GwtFancyPanel extends SimplePanel {
     private void onTransitionEnd(Object object) {
 
         if (!activeTransition) {
-            VConsole.error("onTransitionEnd ignored!");
+            VConsole.log("onTransitionEnd after transitions cancelled");
             return;
         }
 
         if (!(object instanceof Element)) {
             return;
         }
-
-        VConsole.error("onTransitionEnd");
 
         Element element = (Element) object;
 
@@ -211,7 +211,7 @@ public class GwtFancyPanel extends SimplePanel {
                 if (elementStyler.isElementStyledOut(element)) {
                     onFadeOutEnded();
                 } else {
-                    VConsole.error("onTransitionEnd for hidden: wrong state?");
+                    VConsole.log("onTransitionEnd for hidden: wrong state?");
                 }
             }
         } else {
@@ -219,7 +219,7 @@ public class GwtFancyPanel extends SimplePanel {
                 if (elementStyler.isElementStyledOn(element)) {
                     onFadeInEnded();
                 } else {
-                    VConsole.error("onTransitionEnd for shown: wrong state?");
+                    VConsole.log("onTransitionEnd for shown: wrong state?");
                 }
             }
         }
@@ -297,11 +297,17 @@ public class GwtFancyPanel extends SimplePanel {
 
     private void changeContentWithTransition(Widget content) {
 
+        Element prevWrapper = getContentElement(currentWidget);
+        if (prevWrapper == null) {
+            VConsole.log("Missing wrapper of old widget, transition skipped.");
+            changeContentWithoutTransition(content);
+            return;
+        }
+
         previousWidget = currentWidget;
         currentWidget = content;
 
         Element nextWrapper = getContentElement(currentWidget);
-        Element prevWrapper = getContentElement(previousWidget);
 
         addTransitionEndListener(prevWrapper);
         addTransitionEndListener(nextWrapper);
@@ -334,6 +340,7 @@ public class GwtFancyPanel extends SimplePanel {
         }
 
         if (!contentWidgets.contains(content)) {
+            VConsole.error("Setting widget not found from children as current.");
             add(content);
         }
 
@@ -456,28 +463,31 @@ public class GwtFancyPanel extends SimplePanel {
         }
     }
 
-    public void setRotate(boolean enabled) {
-
-        if (enabled == elementStyler.isValueEnabled(Value.ROTATE)) {
-            return;
-        }
-
-        if (enabled) {
-            contentPanel.addStyleName("fancy-rotate");
-        } else {
-            contentPanel.removeStyleName("fancy-rotate");
-        }
-        elementStyler.setValueEnabled(Value.ROTATE, enabled);
+    public void setRotate(boolean enabled, boolean horizontal) {
 
         if (!enabled) {
+            contentPanel.removeStyleName("fancy-rotate");
+            elementStyler.setValueEnabled(Value.VERTICAL_ROTATE, false);
+            elementStyler.setValueEnabled(Value.HORIZONTAL_ROTATE, false);
+
             if (!elementStyler.hasValues()) {
                 activeTransition = false;
             }
 
             for (Widget child : contentWidgets) {
                 elementStyler.removeStylingFromElement(
-                        contentPanel.getWrapper(child), Value.ROTATE);
+                        contentPanel.getWrapper(child), Value.VERTICAL_ROTATE);
             }
+        } else {
+            if (horizontal) {
+                elementStyler.setValueEnabled(Value.VERTICAL_ROTATE, false);
+                elementStyler.setValueEnabled(Value.HORIZONTAL_ROTATE, true);
+            } else {
+                elementStyler.setValueEnabled(Value.HORIZONTAL_ROTATE, false);
+                elementStyler.setValueEnabled(Value.VERTICAL_ROTATE, true);
+            }
+
+            contentPanel.addStyleName("fancy-rotate");
         }
     }
 

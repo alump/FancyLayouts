@@ -1,5 +1,8 @@
 .fancy-image {
  border-width: 0px;	
+ -webkit-perspective: 700px;
+ -ie-perspective: 700px;
+ perspective: 700px;
 }
 .fancy-image > IMG {
  -moz-transition: opacity 0.5s ease-in-out;
@@ -8,6 +11,15 @@
  transition: opacity 0.5s ease-in-out;
 }
 .fancy-image > IMG.rotate-image {
+ backface-visibility: hidden;
+ -webkit-transform-style: preserve-3d;
+ -moz-transform-style: preserve-3d;
+ -o-transform-style: preserve-3d;
+ -ms-transform-style: preserve-3d;
+ transform-style: preserve-3d;	
+}
+.fancy-image.fancy-image-rotate > IMG.fancy--on,
+.fancy-image.fancy-image-rotate > IMG.fancy--out {
  -moz-transition: opacity 0.5s ease-in-out, -moz-transform 0.5s linear;
  -moz-backface-visibility: hidden;  
  -webkit-transition: opacity 0.5s ease-in-out, -webkit-transform 0.5s linear;
@@ -15,7 +27,6 @@
  -o-transition: opacity 0.5s ease-in-out, -o-transform 0.5s linear;
  -o-backface-visibility: hidden;
  transition: opacity 0.5s ease-in-out, transform 0.5s linear;
- backface-visibility: hidden;
 }
 .fancy-panel-container.fancy-fade > .fancy-panel-cwrapper {
  -moz-transition: opacity 0.25s ease-in-out;
@@ -29,6 +40,19 @@
  -webkit-transition: -webkit-transform 0.25s ease-in-out;
  -o-transition: transform 0.25s ease-in-out;
  transition: transform 0.25s ease-in-out; 
+}
+.fancy-panel-container.fancy-rotate {
+ -webkit-perspective: 700px;
+ -ie-perspective: 700px;
+ perspective: 700px;
+}
+.fancy-panel-container.fancy-rotate > .fancy-panel-cwrapper {
+ -webkit-transform-style: preserve-3d;
+ -moz-transform-style: preserve-3d;
+ -o-transform-style: preserve-3d;
+ -ms-transform-style: preserve-3d;
+ transform-style: preserve-3d;
+ backface-visibility: hidden;
 }
 .fancy-panel-container.fancy-fade.fancy-zoom > .fancy-panel-cwrapper,
 .fancy-panel-container.fancy-fade.fancy-rotate > .fancy-panel-cwrapper {

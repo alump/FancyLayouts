@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.vaadin.alump.fancylayouts.gwt.client.connect.FancyPanelServerRpc;
 import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyPanelState;
+import org.vaadin.alump.fancylayouts.gwt.client.shared.RotateDirection;
 
 import com.vaadin.event.ActionManager;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
@@ -50,6 +51,7 @@ public class FancyPanel extends AbstractLayout implements
     protected ActionManager actionManager;
     protected int scrollTop = 0;
     protected int scrollLeft = 0;
+    protected ComponentContainer placeHolderComponent = null;
 
     protected FancyPanelServerRpc serverRpc = new FancyPanelServerRpc() {
 
@@ -75,6 +77,13 @@ public class FancyPanel extends AbstractLayout implements
         }
 
     };
+
+    /**
+     * Create empty panel
+     */
+    public FancyPanel() {
+        this(null);
+    }
 
     /**
      * Create new panel with given content
@@ -111,10 +120,13 @@ public class FancyPanel extends AbstractLayout implements
      * @return Default content container
      */
     protected ComponentContainer createDefaultContent() {
-        CssLayout layout = new CssLayout();
-        layout.setStyleName("fancypanel-default-layout");
-        layout.setSizeFull();
-        return layout;
+        if (placeHolderComponent == null) {
+            CssLayout layout = new CssLayout();
+            layout.setStyleName("fancypanel-default-layout");
+            layout.setSizeFull();
+            placeHolderComponent = layout;
+        }
+        return placeHolderComponent;
     }
 
     /**
@@ -164,21 +176,24 @@ public class FancyPanel extends AbstractLayout implements
      * instance)
      */
     public void addComponent(Component c) {
-        if (!components.contains(c)) {
-            components.add(c);
+        if (components.contains(c)) {
+            return;
+        }
 
-            try {
-                super.addComponent(c);
+        components.add(c);
 
-                if (components.size() == 1) {
-                    getState().currentComponent = c;
-                }
+        try {
+            super.addComponent(c);
+            markAsDirty();
 
-                markAsDirty();
-            } catch (IllegalArgumentException e) {
-                components.remove(c);
-                throw e;
+            if (c != placeHolderComponent && placeHolderComponent != null) {
+                removeComponent(placeHolderComponent);
+                placeHolderComponent = null;
             }
+
+        } catch (IllegalArgumentException e) {
+            components.remove(c);
+            throw e;
         }
     }
 
@@ -195,13 +210,22 @@ public class FancyPanel extends AbstractLayout implements
 
     @Override
     public void removeComponent(Component c) {
-        if (components.contains(c)) {
-            components.remove(c);
+        if (!components.remove(c)) {
+            System.err.println("Can not remove unknown component");
+            return;
+        } else {
             super.removeComponent(c);
-            if (getCurrentComponent() == c) {
-                getState().currentComponent = null;
+            if (getState().currentComponent != c) {
+                resolveNewCurrent();
             }
-            markAsDirty();
+        }
+    }
+
+    protected void resolveNewCurrent() {
+        if (components.isEmpty()) {
+            getState().currentComponent = null;
+        } else {
+            showComponent(components.iterator().next());
         }
     }
 
@@ -247,22 +271,42 @@ public class FancyPanel extends AbstractLayout implements
     }
 
     /**
+     * Enabled or disable horizontal transition
+     * 
+     * @param enabled
+     *            true to enable, false to disable
+     */
+    public void setRotateTransition(boolean enabled) {
+        setRotateTransition(enabled, true);
+    }
+
+    /**
      * Enable disable rotate transition. When this transition is enabled
      * conflicting transition will be automatically disabled.
      * 
      * @param enabled
      *            true to enable, false to disable.
+     * @param horizontal
+     *            true to rotate horizontal, false to rotate vertical. If not
+     *            enabled then this value is ignored.
      */
-    public void setRotateTransition(boolean enabled) {
+    public void setRotateTransition(boolean enabled, boolean horizontal) {
         if (enabled) {
             setZoomTransition(false);
+            getState().rotateTransition = (horizontal ? RotateDirection.HORIZONTAL
+                    : RotateDirection.VERTICAL);
+        } else {
+            getState().rotateTransition = RotateDirection.NONE;
         }
-
-        getState().rotateTransition = enabled;
     }
 
+    /**
+     * Check if rotate transition is enabled
+     * 
+     * @return true if enabled
+     */
     public boolean isRotateTransition() {
-        return getState().rotateTransition;
+        return getState().rotateTransition != RotateDirection.NONE;
     }
 
     /**
@@ -273,10 +317,14 @@ public class FancyPanel extends AbstractLayout implements
      *            true to enable, false to disable.
      */
     public void setFadeTransition(boolean enabled) {
-
         getState().fadeTransition = enabled;
     }
 
+    /**
+     * Check if fade transition is enabled
+     * 
+     * @return
+     */
     public boolean isFadeTransition() {
         return getState().fadeTransition;
     }

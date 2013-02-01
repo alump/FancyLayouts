@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.vaadin.alump.fancylayouts.gwt.client.GwtFancyImage;
 import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyImageState;
-import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyImageState.Transition;
+import org.vaadin.alump.fancylayouts.gwt.client.shared.RotateDirection;
 
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
@@ -74,8 +74,9 @@ public class FancyImageConnector extends AbstractComponentConnector {
 
         getWidget().setAutoBrowseTimeout(getState().timeoutMs);
         getWidget().setAutoBrowseEnabled(getState().autoBrowse);
+        getWidget().setFadeImages(getState().fadeTransition);
         getWidget().setRotateImages(
-                getState().transition == Transition.FADE_AND_ROTATE);
+                getState().rotateTransition != RotateDirection.NONE,
+                getState().rotateTransition == RotateDirection.HORIZONTAL);
     }
-
 }

@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.google.gwt.dom.client.Element;
-import com.vaadin.client.VConsole;
 
 /**
  * Styler for wrapper element. In = element is hidden, but will be now shown. On
@@ -25,9 +24,18 @@ public class ElementStyler {
         // Zoom out
         SCALE(BrowserMode.resolve().getTransform(), "scale(1, 1)",
                 "scale(0, 0)"),
-        // Rotate as a card
-        ROTATE(BrowserMode.resolve().getTransform(), "rotateX(0deg)",
-                "rotateX(-90deg)", "rotateX(90deg)");
+        // Horizontal rotate (two parted)
+        HORIZONTAL_ROTATE(BrowserMode.resolve().getTransform(),
+                "rotateX(0deg)", "rotateX(-90deg)", "rotateX(90deg)"),
+        // Horizontal rotate (one part)
+        HORIZONTAL2_ROTATE(BrowserMode.resolve().getTransform(),
+                "rotateX(0deg)", "rotateX(-180deg)", "rotateX(180deg)"),
+        // Vertical rotate (two parted)
+        VERTICAL_ROTATE(BrowserMode.resolve().getTransform(), "rotateY(0deg)",
+                "rotateY(-90deg)", "rotateY(90deg)"),
+        // Vertical rotate (one part)
+        VERTICAL2_ROTATE(BrowserMode.resolve().getTransform(), "rotateY(0deg)",
+                "rotateY(-180deg)", "rotateY(180deg)");
 
         private String name;
         private String in;
@@ -65,30 +73,15 @@ public class ElementStyler {
         }
 
         public boolean isIn(String value) {
-            if (value != null && in != null && in.equals(value)) {
-                return true;
-            } else {
-                VConsole.error("IN: '" + in + "' != '" + value + "'");
-                return false;
-            }
+            return (value != null && in != null && in.equals(value));
         }
 
         public boolean isOn(String value) {
-            if (value != null && on != null && on.equals(value)) {
-                return true;
-            } else {
-                VConsole.error("ON: '" + in + "' != '" + value + "'");
-                return false;
-            }
+            return (value != null && on != null && on.equals(value));
         }
 
         public boolean isOut(String value) {
-            if (value != null && in != null && in.equals(value)) {
-                return true;
-            } else {
-                VConsole.error("OUT: '" + in + "' != '" + value + "'");
-                return false;
-            }
+            return (value != null && in != null && in.equals(value));
         }
     }
 
@@ -96,10 +89,13 @@ public class ElementStyler {
 
     }
 
-    public void removeStylingFromElement(Element element, Value value) {
+    public void removeStateFromElement(Element element) {
         element.removeClassName(ON_CLASSNAME);
-        element.removeClassName(OUT_CLASSNAME);
         element.removeClassName(IN_CLASSNAME);
+        element.removeClassName(OUT_CLASSNAME);
+    }
+
+    public void removeStylingFromElement(Element element, Value value) {
         element.getStyle().setProperty(value.getName(), null);
     }
 

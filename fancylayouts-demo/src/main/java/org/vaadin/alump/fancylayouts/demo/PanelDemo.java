@@ -54,6 +54,7 @@ public class PanelDemo extends VerticalLayout {
 	protected CheckBox fade;
 	protected CheckBox zoom;
 	protected CheckBox rotate;
+	protected CheckBox horizontal;
 
     public PanelDemo() {
         setMargin(true);
@@ -62,12 +63,12 @@ public class PanelDemo extends VerticalLayout {
 
         panel = new FancyPanel(createPanelContentStart());
 
-        introPanel = new Label(
+        Label label = new Label(
                 "FancyPanel is panel that offer scrolling and transition when "
                         + "you replace it's content with setContent() call. It's like "
                         + "Vaadin Panel, but I haven't added panel styling DOM "
                         + "elements to keep this clean and simple.");
-        addComponent(introPanel);
+        addComponent(label);
 
         HorizontalLayout buttonLayout = new HorizontalLayout();
         buttonLayout.setSpacing(true);
@@ -98,6 +99,11 @@ public class PanelDemo extends VerticalLayout {
         rotate = new CheckBox("rotate");
         rotate.setImmediate(true);
         buttonLayout.addComponent(rotate);
+        
+        horizontal = new CheckBox("horizontal");
+        horizontal.setValue(true);
+        horizontal.setImmediate(true);
+        buttonLayout.addComponent(horizontal);
 
         panel.setSizeFull();
         addComponent(panel);
@@ -170,8 +176,20 @@ public class PanelDemo extends VerticalLayout {
             public void valueChange(ValueChangeEvent event) {
                 boolean enable = (Boolean) event.getProperty().getValue();
                 // Enable/disable transitions
-                panel.setRotateTransition(enable);
+                panel.setRotateTransition(enable, horizontal.getValue());
                 updateTransitionCheckboxes();
+            }
+        });
+        
+        horizontal.addValueChangeListener(new Property.ValueChangeListener() {
+
+            public void valueChange(ValueChangeEvent event) {
+            	if (rotate.getValue()) {
+            		boolean enable = (Boolean) event.getProperty().getValue();
+            		// Enable/disable transitions
+            		panel.setRotateTransition(true, enable);
+            		updateTransitionCheckboxes();
+            	}
             }
         });
         
@@ -196,7 +214,8 @@ public class PanelDemo extends VerticalLayout {
         Label guide = new Label(
                 "Please select content shown in panel from the buttons above");
         layout.addComponent(guide);
-
+        
+        introPanel = layout;
         return layout;
     }
     

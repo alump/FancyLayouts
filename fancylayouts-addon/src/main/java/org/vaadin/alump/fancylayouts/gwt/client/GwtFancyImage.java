@@ -22,10 +22,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.vaadin.alump.fancylayouts.gwt.client.model.BrowserMode;
+import org.vaadin.alump.fancylayouts.gwt.client.model.ElementStyler;
+import org.vaadin.alump.fancylayouts.gwt.client.model.ElementStyler.Value;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.ImageElement;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Timer;
@@ -45,12 +50,13 @@ public class GwtFancyImage extends Widget {
 
     public final static String CLASS_NAME = "fancy-image";
 
-    private boolean rotateImages = false;
+    protected final ElementStyler styler = new ElementStyler();
 
     public GwtFancyImage() {
         DivElement root = Document.get().createDivElement();
         root.getStyle().setPosition(Position.RELATIVE);
         root.addClassName(CLASS_NAME);
+
         this.setElement(root);
     }
 
@@ -97,11 +103,10 @@ public class GwtFancyImage extends Widget {
     private ImageElement createImageElement(String url) {
         ImageElement image = Document.get().createImageElement();
         image.setSrc(url);
-        // image.getStyle().setDisplay(Display.NONE);
         image.getStyle().setPosition(Position.ABSOLUTE);
         image.getStyle().setLeft(0.0, Unit.PX);
         image.getStyle().setTop(0.0, Unit.PX);
-        image.getStyle().setOpacity(0.0);
+        styler.styleElementOut(image);
         return image;
     }
 
@@ -125,7 +130,7 @@ public class GwtFancyImage extends Widget {
             showImage(0);
         }
 
-        applyTransitionStyleNames(image);
+        applyTransitionStyleNames(image, false);
         return images.size();
     }
 
@@ -150,9 +155,9 @@ public class GwtFancyImage extends Widget {
     }
 
     public void showImage(String url) {
-        for (ImageElement image : images) {
-            if (image.getSrc().endsWith(url)) {
-                showImage(images.indexOf(image));
+        for (int i = 0; i < images.size(); ++i) {
+            if (images.get(i).getSrc().endsWith(url)) {
+                showImage(i);
                 break;
             }
         }
@@ -174,13 +179,15 @@ public class GwtFancyImage extends Widget {
 
             currentIndex = index;
 
-            applyTransitionStyleNames(prevImage);
-            applyTransitionStyleNames(currentImage);
-        } else {
-            ImageElement currentImage = images.get(currentIndex);
-            applyTransitionStyleNames(currentImage);
-        }
+            prevImage.getStyle().setDisplay(
+                    styler.hasValues() ? Display.BLOCK : Display.NONE);
+            currentImage.getStyle().setDisplay(Display.BLOCK);
 
+            if (styler.hasValues()) {
+                applyTransitionStyleNames(prevImage, true);
+                applyTransitionStyleNames(currentImage, true);
+            }
+        }
     }
 
     private void showNextImage() {
@@ -192,11 +199,38 @@ public class GwtFancyImage extends Widget {
         showImage(nextIndex);
     }
 
-    public void setRotateImages(boolean rotate) {
-        rotateImages = rotate;
+    public void setFadeImages(boolean fade) {
+        if (styler.isValueEnabled(Value.OPACITY) != fade) {
+            styler.setValueEnabled(Value.OPACITY, fade);
+            if (fade) {
+                updateStylingOfImages();
+            } else {
+                for (ImageElement element : images) {
+                    styler.removeStylingFromElement(element, Value.OPACITY);
+                }
+            }
+        }
+    }
 
-        for (ImageElement element : images) {
-            applyTransitionStyleNames(element);
+    public void setRotateImages(boolean rotate, boolean horizontal) {
+        if (rotate) {
+            if (horizontal) {
+                styler.setValueEnabled(Value.VERTICAL2_ROTATE, false);
+                styler.setValueEnabled(Value.HORIZONTAL2_ROTATE, true);
+            } else {
+                styler.setValueEnabled(Value.HORIZONTAL2_ROTATE, false);
+                styler.setValueEnabled(Value.VERTICAL2_ROTATE, true);
+            }
+            addStyleName(CLASS_NAME + "-rotate");
+        } else {
+            styler.setValueEnabled(Value.VERTICAL2_ROTATE, false);
+            styler.setValueEnabled(Value.HORIZONTAL2_ROTATE, false);
+
+            removeStyleName(CLASS_NAME + "-rotate");
+
+            for (ImageElement element : images) {
+                styler.removeStylingFromElement(element, Value.VERTICAL2_ROTATE);
+            }
         }
     }
 
@@ -208,29 +242,33 @@ public class GwtFancyImage extends Widget {
         return browserMode;
     }
 
-    protected void applyTransitionStyleNames(ImageElement element) {
+    protected void updateStylingOfImages() {
+        for (ImageElement element : images) {
+            applyTransitionStyleNames(element, false);
+        }
+    }
+
+    protected void applyTransitionStyleNames(final ImageElement element,
+            boolean animate) {
 
         boolean isCurrent = currentIndex == images.indexOf(element);
 
-        if (rotateImages) {
-            element.addClassName("rotate-image");
-            if (isCurrent) {
-                element.getStyle().setProperty(getBrowserMode().getTransform(),
-                        ROTATE_VALUE_VISIBLE);
+        if (isCurrent) {
+            if (animate) {
+                styler.styleElementIn(element);
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+                    @Override
+                    public void execute() {
+                        styler.styleElementOn(element);
+                    }
+
+                });
             } else {
-                element.getStyle().setProperty(getBrowserMode().getTransform(),
-                        ROTATE_VALUE_HIDDEN);
+                styler.styleElementOn(element);
             }
         } else {
-            element.removeClassName("rotate-image");
-            element.getStyle().setProperty(getBrowserMode().getTransform(),
-                    ROTATE_VALUE_DISABLED);
-        }
-
-        if (isCurrent) {
-            element.getStyle().setOpacity(1.0);
-        } else {
-            element.getStyle().setOpacity(0.0);
+            styler.styleElementOut(element);
         }
 
     }

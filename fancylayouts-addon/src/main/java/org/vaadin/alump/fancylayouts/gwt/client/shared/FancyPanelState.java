@@ -36,5 +36,5 @@ public class FancyPanelState extends AbstractLayoutState {
 
     public boolean zoomTransition = false;
 
-    public boolean rotateTransition = false;
+    public RotateDirection rotateTransition = RotateDirection.NONE;
 }

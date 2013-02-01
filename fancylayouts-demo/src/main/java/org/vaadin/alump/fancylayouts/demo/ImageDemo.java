@@ -19,7 +19,6 @@
 package org.vaadin.alump.fancylayouts.demo;
 
 import org.vaadin.alump.fancylayouts.FancyImage;
-import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyImageState.Transition;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -41,6 +40,8 @@ import com.vaadin.ui.VerticalLayout;
  */
 @SuppressWarnings("serial")
 public class ImageDemo extends VerticalLayout {
+	
+	protected CheckBox horizontal;
 
     public ImageDemo() {
         setMargin(true);
@@ -110,13 +111,27 @@ public class ImageDemo extends VerticalLayout {
         auto.setImmediate(true);
         buttonLayout.addComponent(auto);
         
+        CheckBox fade = new CheckBox("Fade");
+        fade.setDescription("Fade image when changing");
+        fade.setImmediate(true);
+        fade.setValue(image.isFadeTransition());
+        buttonLayout.addComponent(fade);
+        
         CheckBox rotate = new CheckBox("Rotate");
+        rotate.setDescription("Rotate image when changing");
         rotate.setImmediate(true);
+        rotate.setValue(image.isRotateTransition());
         buttonLayout.addComponent(rotate);
+        
+        horizontal = new CheckBox("Horizontal");
+        horizontal.setDescription("Should rotate happen horizontally or vertically.");
+        horizontal.setValue(true);
+        buttonLayout.addComponent(horizontal);
 
         TextField timeout = new TextField();
+        timeout.setCaption("Slide show millisecs");
         timeout.setValue(String.valueOf(image.getSlideShowTimeout()));
-        timeout.setDescription("millisecs");
+        timeout.setDescription("How many millisec the slideshow shows one image");
         buttonLayout.addComponent(timeout);
         timeout.addTextChangeListener(new TextChangeListener() {
 
@@ -143,13 +158,29 @@ public class ImageDemo extends VerticalLayout {
             }
         });
         
+        fade.addValueChangeListener(new Property.ValueChangeListener() {
+
+            public void valueChange(ValueChangeEvent event) {
+                Boolean value = (Boolean) event.getProperty().getValue();
+                image.setFadeTransition(value.booleanValue());
+            }
+        });
+        
         rotate.addValueChangeListener(new Property.ValueChangeListener() {
 
             public void valueChange(ValueChangeEvent event) {
                 Boolean value = (Boolean) event.getProperty().getValue();
-                image.setTransition(value.booleanValue() ? Transition.FADE_AND_ROTATE : Transition.FADE);
+                image.setRotateTransition(value.booleanValue(), horizontal.getValue());
             }
         });
 
+        horizontal.addValueChangeListener(new Property.ValueChangeListener() {
+
+            public void valueChange(ValueChangeEvent event) {
+            	if (image.isRotateTransition()) {
+            		image.setRotateTransition(true, (Boolean) event.getProperty().getValue());
+            	}
+            }
+        });
     }
 }

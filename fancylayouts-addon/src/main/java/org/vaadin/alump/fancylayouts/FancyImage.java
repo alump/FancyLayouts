@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.vaadin.alump.fancylayouts.gwt.client.connect.FancyImageClientRpc;
 import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyImageState;
+import org.vaadin.alump.fancylayouts.gwt.client.shared.RotateDirection;
 
 import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
@@ -120,12 +121,61 @@ public class FancyImage extends AbstractComponent {
         return getState().timeoutMs;
     }
 
-    public FancyImageState.Transition getTransition() {
-        return getState().transition;
+    /**
+     * Enable or disable fade transitions when shown image is changed. Fade
+     * might be enabled/disabled when you change other transition values.
+     * 
+     * @param enabled
+     *            true to enable, false to disable
+     */
+    public void setFadeTransition(boolean enabled) {
+        getState().fadeTransition = enabled;
     }
 
-    public void setTransition(FancyImageState.Transition transition) {
-        getState().transition = transition;
+    /**
+     * Check if fade transitions are enabled
+     * 
+     * @return true if enabled
+     */
+    public boolean isFadeTransition() {
+        return getState().fadeTransition;
+    }
+
+    /**
+     * Enabled or disable horizontal rotation transitions when shown image is
+     * changed
+     * 
+     * @param enabled
+     *            true to enable, false to disable
+     */
+    public void setRotateTransition(boolean enabled) {
+        setRotateTransition(enabled, true);
+    }
+
+    /**
+     * Enable or disable rotation transition when shown image is changed
+     * 
+     * @param enabled
+     *            true to enable, false to disable
+     * @param horizontal
+     *            true to rotate horizontally, false to rotate vertically
+     */
+    public void setRotateTransition(boolean enabled, boolean horizontal) {
+        if (enabled) {
+            getState().rotateTransition = (horizontal ? RotateDirection.HORIZONTAL
+                    : RotateDirection.VERTICAL);
+        } else {
+            getState().rotateTransition = RotateDirection.NONE;
+        }
+    }
+
+    /**
+     * Check if rotation transitions are enabled
+     * 
+     * @return true if enabled
+     */
+    public boolean isRotateTransition() {
+        return getState().rotateTransition != RotateDirection.NONE;
     }
 
 }

@@ -27,16 +27,14 @@ import com.vaadin.shared.communication.URLReference;
 @SuppressWarnings("serial")
 public class FancyImageState extends AbstractComponentState {
 
-    public enum Transition {
-        FADE, FADE_AND_ROTATE;
-    }
-
     public int timeoutMs = 2000;
 
     public boolean autoBrowse = false;
 
     public List<URLReference> images = new ArrayList<URLReference>();
 
-    public Transition transition = Transition.FADE;
+    public boolean fadeTransition = true;
+
+    public RotateDirection rotateTransition = RotateDirection.NONE;
 
 }

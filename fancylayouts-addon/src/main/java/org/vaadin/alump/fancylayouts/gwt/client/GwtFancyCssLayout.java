@@ -52,7 +52,7 @@ public class GwtFancyCssLayout extends SimplePanel {
 
     protected boolean horizontalMarginTransitionEnabled = true;
     protected boolean verticalMarginTransitionEnabled = true;
-    
+
     protected FancyRemover fancyRemover = null;
 
     public GwtFancyCssLayout() {
@@ -61,26 +61,31 @@ public class GwtFancyCssLayout extends SimplePanel {
         flowPanel.addStyleName(CLASS_NAME + "-content");
         super.add(flowPanel);
 
-        // TODO: Is is temporary hack!!!!
-        // TODO: Add proper version checks here (when transitionEnds support has
-        // been added)
         if (browserMode == null) {
             browserMode = BrowserMode.resolve();
         }
         transitionsEnabled = !(browserMode == BrowserMode.DEFAULT);
     }
-    
+
     public void addOrMove(Widget widget, int index) {
-    	if (hasChild(widget)) {
-    		if (children.indexOf(widget) == index) {
-    			return;
-    		}
-    		remove(widget);
-    	}
-    	
-    	add(widget, index);
+        if (hasChild(widget)) {
+            if (children.indexOf(widget) != index) {
+                remove(widget);
+                add(widget, index);
+            }
+        } else {
+            add(widget, index);
+        }
     }
 
+    /**
+     * Add widget to given position
+     * 
+     * @param widget
+     *            Widget added
+     * @param index
+     *            Index for widget
+     */
     public void add(Widget widget, int index) {
         if (hasChild(widget)) {
             return;
@@ -99,12 +104,13 @@ public class GwtFancyCssLayout extends SimplePanel {
         final Element wrapperElement = wrapper.getElement();
         widgetMap.put(wrapperElement, widget);
 
-        children.add(widget);
+        children.add(index, widget);
 
         if (this.isVisible()) {
             wrapperElement.getStyle().setOpacity(0.0);
             Scheduler.get().scheduleFixedDelay(new RepeatingCommand() {
 
+                @Override
                 public boolean execute() {
                     wrapperElement.getStyle().setOpacity(1.0);
                     return false;
@@ -192,15 +198,22 @@ public class GwtFancyCssLayout extends SimplePanel {
             }
         }
     }
-    
+
     public void setVerticalMarginTransitionEnabled(boolean enabled) {
-    	verticalMarginTransitionEnabled = enabled;
-    }
-    
-    public void setHorizontalMarginTransitionEnabled(boolean enabled) {
-    	horizontalMarginTransitionEnabled = enabled;
+        verticalMarginTransitionEnabled = enabled;
     }
 
+    public void setHorizontalMarginTransitionEnabled(boolean enabled) {
+        horizontalMarginTransitionEnabled = enabled;
+    }
+
+    /**
+     * Do fancy remove of widget
+     * 
+     * @param widget
+     *            Widget removed
+     * @return true if remove started/done
+     */
     public boolean fancyRemove(Widget widget) {
         if (!children.contains(widget)) {
             return false;
@@ -214,22 +227,30 @@ public class GwtFancyCssLayout extends SimplePanel {
 
         return true;
     }
-    
-    public void setFancyRemover (FancyRemover remover) {
-    	fancyRemover = remover;
+
+    /**
+     * Remove fancy remover (called when remove should be done)
+     * 
+     * @param remover
+     *            Handler of removing
+     */
+    public void setFancyRemover(FancyRemover remover) {
+        fancyRemover = remover;
     }
 
     /**
      * To be overwritten if additional actions has to be performed. For example
      * do the deletion via server.
-     * @param widget Child widget removed
+     * 
+     * @param widget
+     *            Child widget removed
      */
     protected void performFancyRemove(Widget widget) {
-    	if (fancyRemover == null) {
-    		remove(widget);
-    	} else {
-    		fancyRemover.remove(widget);
-    	}
+        if (fancyRemover == null) {
+            remove(widget);
+        } else {
+            fancyRemover.remove(widget);
+        }
     }
 
     @Override
@@ -239,6 +260,7 @@ public class GwtFancyCssLayout extends SimplePanel {
             Widget wrapper = widget.getParent();
             widgetMap.remove(wrapper.getElement());
             removingMap.remove(widget);
+
             flowPanel.remove(wrapper);
             children.remove(widget);
             return true;

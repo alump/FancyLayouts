@@ -185,8 +185,9 @@ public class FancyCssLayout extends AbstractLayout implements
         case FADE:
             return true;
         case SLIDE:
-            getState().marginTransition = enabled;
-            return getState().marginTransition;
+            getState().horMarginTransition = enabled;
+            getState().verMarginTransition = enabled;
+            return getState().horMarginTransition;
         default:
             return false;
         }
@@ -201,7 +202,8 @@ public class FancyCssLayout extends AbstractLayout implements
         case FADE:
             return true;
         case SLIDE:
-            return getState().marginTransition;
+            return getState().horMarginTransition
+                    && getState().verMarginTransition;
         default:
             return false;
         }

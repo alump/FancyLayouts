@@ -61,6 +61,7 @@ public class FancyNotifications extends FancyCssLayout {
      */
     public FancyNotifications() {
         super.addLayoutClickListener(layoutClickListener);
+        getState().horMarginTransition = false;
     }
 
     protected LayoutEvents.LayoutClickListener layoutClickListener = new LayoutEvents.LayoutClickListener() {
@@ -103,7 +104,7 @@ public class FancyNotifications extends FancyCssLayout {
     }
 
     protected Component getNotification(Object id) {
-        Iterator<Component> iter = this.getComponentIterator();
+        Iterator<Component> iter = this.iterator();
         while (iter.hasNext()) {
             Component child = iter.next();
             if (child instanceof AbstractComponent) {
@@ -331,5 +332,13 @@ public class FancyNotifications extends FancyCssLayout {
      */
     public Resource getDefaultIcon() {
         return defaultIcon;
+    }
+
+    @Override
+    public boolean setTransitionEnabled(FancyTransition trans, boolean enabled) {
+        // TODO: ugly way
+        boolean ret = super.setTransitionEnabled(trans, enabled);
+        getState().horMarginTransition = false;
+        return ret;
     }
 }

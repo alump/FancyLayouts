@@ -10,15 +10,15 @@
 	<version>${fancylayouts.version}</version>
 
 	<properties>
-		<fancylayouts.version>1.0.0.alpha4-SNAPSHOT</fancylayouts.version>
+		<fancylayouts.version>1.0.0.alpha4</fancylayouts.version>
 		<Implementation-Version>${project.version}</Implementation-Version>
 	
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- May be overridden by the build system -->
 		<license.short.name>apache2</license.short.name>
-        <vaadin.version>7.0.0.rc2</vaadin.version>
-        <vaadin.plugin.version>7.0.0.rc2</vaadin.plugin.version>
+        <vaadin.version>7.0.3</vaadin.version>
+        <vaadin.plugin.version>7.0.3</vaadin.plugin.version>
 
 		<!-- Must not change this because of the Directory -->
 		<Implementation-Title>FancyLayouts</Implementation-Title>
@@ -76,6 +76,12 @@
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-theme-compiler</artifactId>
             <version>${vaadin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-client</artifactId>
+            <version>${vaadin.version}</version>
+            <scope>provided</scope>
         </dependency>
 		<dependency>
 			<groupId>com.vaadin</groupId>

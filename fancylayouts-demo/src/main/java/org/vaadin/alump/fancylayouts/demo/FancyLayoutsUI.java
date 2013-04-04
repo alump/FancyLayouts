@@ -21,6 +21,7 @@ package org.vaadin.alump.fancylayouts.demo;
 import org.vaadin.alump.fancylayouts.FancyNotifications;
 
 import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.Title;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.Button;
@@ -38,9 +39,10 @@ import com.vaadin.ui.themes.BaseTheme;
  */
 @SuppressWarnings("serial")
 @Theme("demo")
+@Title("FancyLayouts Demo")
 public class FancyLayoutsUI extends UI {
 
-    FancyNotifications notifications;
+    private FancyNotifications notifications;
 
     private ComponentContainer buildLayout() {
 

@@ -106,6 +106,10 @@ public class FancyCssLayoutConnector extends AbstractLayoutConnector {
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
         clickEventHandler.handleEventHandlerRegistration();
+        getWidget().setHorizontalMarginTransitionEnabled(
+                getState().horMarginTransition);
+        getWidget().setVerticalMarginTransitionEnabled(
+                getState().verMarginTransition);
     }
 
     @Override
@@ -125,7 +129,8 @@ public class FancyCssLayoutConnector extends AbstractLayoutConnector {
         // Add or move children
         int index = 0;
         for (ComponentConnector child : getChildComponents()) {
-            getWidget().addOrMove(child.getWidget(), index++);
+            getWidget().addOrMove(child.getWidget(), index);
+            ++index;
         }
     }
 

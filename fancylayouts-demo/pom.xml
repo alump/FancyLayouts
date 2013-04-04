@@ -10,7 +10,7 @@
 	<version>${fancylayouts.version}</version>
 
 	<properties>
-		<fancylayouts.version>1.0.0.alpha4</fancylayouts.version>
+		<fancylayouts.version>1.0.0.alpha5-SNAPSHOT</fancylayouts.version>
 		<Implementation-Version>${project.version}</Implementation-Version>
 	
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -77,6 +77,7 @@
             <artifactId>vaadin-theme-compiler</artifactId>
             <version>${vaadin.version}</version>
         </dependency>
+        <!-- 
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-client</artifactId>
@@ -89,6 +90,7 @@
 			<version>${vaadin.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		-->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>

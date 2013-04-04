@@ -27,7 +27,7 @@
     </developers>
     
 	<properties>
-		<fancylayouts.version>1.0.0.alpha4</fancylayouts.version>
+            <fancylayouts.version>1.0.0.alpha5-SNAPSHOT</fancylayouts.version>
 	
 	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	
@@ -82,11 +82,13 @@
         <artifactId>vaadin-server</artifactId>
         <version>${vaadin.version}</version>
     </dependency>
+    <!-- 
     <dependency>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-client</artifactId>
         <version>${vaadin.version}</version>
     </dependency>
+    -->
     <dependency>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-client-compiler</artifactId>
@@ -99,19 +101,6 @@
 	    <version>3.8.1</version>
 	    <scope>test</scope>
     </dependency>
-    <!--
-    <dependency>
-        <groupId>javax.validation</groupId>
-        <artifactId>validation-api</artifactId>
-        <version>1.0.0.GA</version>
-    </dependency>
-    <dependency>
-        <groupId>javax.validation</groupId>
-        <artifactId>validation-api</artifactId>
-        <version>1.0.0.GA</version>
-        <classifier>sources</classifier>
-    </dependency>
-    -->
   </dependencies>
   
   <build>

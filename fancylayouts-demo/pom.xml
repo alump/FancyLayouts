@@ -10,15 +10,15 @@
 	<version>${fancylayouts.version}</version>
 
 	<properties>
-		<fancylayouts.version>1.0.0.alpha5-SNAPSHOT</fancylayouts.version>
+		<fancylayouts.version>1.0.0.alpha5</fancylayouts.version>
 		<Implementation-Version>${project.version}</Implementation-Version>
-	
+
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- May be overridden by the build system -->
 		<license.short.name>apache2</license.short.name>
-        <vaadin.version>7.0.3</vaadin.version>
-        <vaadin.plugin.version>7.0.3</vaadin.plugin.version>
+		<vaadin.version>7.0.5</vaadin.version>
+		<vaadin.plugin.version>7.0.5</vaadin.plugin.version>
 
 		<!-- Must not change this because of the Directory -->
 		<Implementation-Title>FancyLayouts</Implementation-Title>
@@ -73,32 +73,16 @@
 			<version>${vaadin.version}</version>
 		</dependency>
 		<dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-theme-compiler</artifactId>
-            <version>${vaadin.version}</version>
-        </dependency>
-        <!-- 
-        <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-client</artifactId>
-            <version>${vaadin.version}</version>
-            <scope>provided</scope>
-        </dependency>
-		<dependency>
 			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-client-compiler</artifactId>
+			<artifactId>vaadin-theme-compiler</artifactId>
 			<version>${vaadin.version}</version>
-			<scope>provided</scope>
 		</dependency>
-		-->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 			<version>2.5</version>
 			<scope>provided</scope>
 		</dependency>
-		<!-- <dependency> <groupId>javax.validation</groupId> <artifactId>validation-api</artifactId> 
-			<version>1.0.0.GA</version> <classifier>sources</classifier> </dependency> -->
 	</dependencies>
 
 	<build>
@@ -138,16 +122,16 @@
 					<strict>true</strict>
 					<compileReport>false</compileReport>
 				</configuration>
-				
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>resources</goal>
-                            <goal>compile</goal>
-                            <goal>test</goal>
-                        </goals>
-                    </execution>
-                </executions>
+
+				<executions>
+					<execution>
+						<goals>
+							<goal>resources</goal>
+							<goal>compile</goal>
+							<goal>test</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

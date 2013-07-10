@@ -9,6 +9,7 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
@@ -25,6 +26,7 @@ public class NotificationsDemo extends VerticalLayout {
     private final ComboBox positionCB;
 
     public final static int MAX_SLEEP_TIME = 10;
+    private int sleepCounter = 0;
 
     public NotificationsDemo() {
 
@@ -214,48 +216,49 @@ public class NotificationsDemo extends VerticalLayout {
         buttonLayout.addComponent(closeSingle);
 
         // Push code, not working yet, so left out
-        //
-        // buttonLayout = new HorizontalLayout();
-        // buttonLayout.setCaption("Push tests:");
-        // buttonLayout.setSpacing(true);
-        // addComponent(buttonLayout);
-        //
-        // Button pushMe = new Button("Push notification (random delay)");
-        // buttonLayout.addComponent(pushMe);
-        // pushMe.addClickListener(new ClickListener() {
-        //
-        // @Override
-        // public void buttonClick(ClickEvent event) {
-        // Thread myThread = new Thread(new Runnable() {
-        //
-        // @Override
-        // public void run() {
-        // final int sleepNow = (int) Math.round(Math.random()
-        // * MAX_SLEEP_TIME);
-        // try {
-        // Thread.sleep(sleepNow * 1000);
-        // } catch (InterruptedException e) {
-        // e.printStackTrace();
-        // }
-        // getUI().access(new Runnable() {
-        //
-        // @Override
-        // public void run() {
-        // notifications.showNotification(null,
-        // "That was nice " + sleepNow
-        // + "s sleep!");
-        //
-        // }
-        //
-        // });
-        //
-        // }
-        //
-        // });
-        //
-        // }
-        //
-        // });
+        buttonLayout = new HorizontalLayout();
+        buttonLayout.setCaption("Push tests:");
+        buttonLayout.setSpacing(true);
+        addComponent(buttonLayout);
+
+        Button pushMe = new Button("Push notification (random delay)");
+        buttonLayout.addComponent(pushMe);
+        pushMe.addClickListener(new ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                Thread myThread = new Thread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        final int sleepNow = 1 + (int) Math.round(Math.random()
+                                * MAX_SLEEP_TIME);
+                        final int sleepId = ++sleepCounter;
+                        try {
+                            Thread.sleep(sleepNow * 1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        getUI().access(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                notifications.showNotification(null, "Sleep #"
+                                        + sleepId, "That was nice " + sleepNow
+                                        + " seconds of sleep!");
+
+                            }
+
+                        });
+
+                    }
+
+                });
+                myThread.start();
+
+            }
+
+        });
     }
 
     public void init(FancyNotifications notifications) {

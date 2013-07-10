@@ -95,6 +95,7 @@ public class CssLayoutDemo extends VerticalLayout {
 
         addContent.addClickListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 addCssLayoutContent(cssLayout);
             }
@@ -102,6 +103,7 @@ public class CssLayoutDemo extends VerticalLayout {
 
         middleCbox.addValueChangeListener(new Property.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 addCssMiddle = (Boolean) event.getProperty().getValue();
             }
@@ -110,6 +112,7 @@ public class CssLayoutDemo extends VerticalLayout {
 
         marginCbox.addValueChangeListener(new Property.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 cssLayout.setSlideEnabled((Boolean) event.getProperty()
                         .getValue());
@@ -119,9 +122,10 @@ public class CssLayoutDemo extends VerticalLayout {
 
         styleCbox.addValueChangeListener(new Property.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 boolean value = (Boolean) event.getProperty().getValue();
-                Iterator<Component> iter = cssLayout.getComponentIterator();
+                Iterator<Component> iter = cssLayout.iterator();
                 while (iter.hasNext()) {
                     Component component = iter.next();
                     if (value) {
@@ -137,6 +141,7 @@ public class CssLayoutDemo extends VerticalLayout {
 
         cssLayout.addLayoutClickListener(new LayoutClickListener() {
 
+            @Override
             public void layoutClick(LayoutClickEvent event) {
                 ++clickCounter;
                 if (event.getChildComponent() == null) {
@@ -154,7 +159,7 @@ public class CssLayoutDemo extends VerticalLayout {
                 + ")";
     }
 
-	private void addCssLayoutContent(final FancyCssLayout layout) {
+    private void addCssLayoutContent(final FancyCssLayout layout) {
         final HorizontalLayout hLayout = new HorizontalLayout();
         hLayout.addStyleName("demo-removable-layout");
 
@@ -168,6 +173,7 @@ public class CssLayoutDemo extends VerticalLayout {
         remove.addStyleName("remove-button");
         remove.addClickListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 layout.fancyRemoveComponent(hLayout);
             }

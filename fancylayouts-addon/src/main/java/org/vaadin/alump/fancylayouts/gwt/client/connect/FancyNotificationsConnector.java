@@ -20,6 +20,7 @@ package org.vaadin.alump.fancylayouts.gwt.client.connect;
 
 import org.vaadin.alump.fancylayouts.gwt.client.GwtFancyTimedCssLayout;
 import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyNotificationsState;
+import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyNotificationsState.Position;
 
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.shared.ui.Connect;
@@ -27,42 +28,63 @@ import com.vaadin.shared.ui.Connect;
 @SuppressWarnings("serial")
 @Connect(org.vaadin.alump.fancylayouts.FancyNotifications.class)
 public class FancyNotificationsConnector extends FancyCssLayoutConnector {
-	
-	@Override
-	public void init() {
-		super.init();
-	}
-	
-	@Override
-	public FancyNotificationsState getState() {
-		return (FancyNotificationsState)super.getState();
-	}
-	
-	@Override
-	public GwtFancyTimedCssLayout createWidget() {
-		GwtFancyTimedCssLayout widget = new GwtFancyTimedCssLayout() {
-		    @Override
-		    public void setHorizontalMarginTransitionEnabled(boolean enabled) {
-		    	super.setHorizontalMarginTransitionEnabled(false);
-		    }
-		};
-		widget.setStylePrimaryName("fancy-notifs");
-		attachFancyRemover(widget);
-		return widget;
-	}
-	
-	@Override
-	public GwtFancyTimedCssLayout getWidget() {
-		return (GwtFancyTimedCssLayout)super.getWidget();
-	}
-	
-	
-	@Override
-	public void onStateChanged(StateChangeEvent stateChangeEvent) {
-		getWidget().setAutomaticRemoveTimeout(getState().closeTimeoutMs);
-		
-		super.onStateChanged(stateChangeEvent);
-	}
-	
+
+    public final static String STYLE_NAME = "fancy-notifs";
+    private String positionStyleName = null;
+
+    @Override
+    public void init() {
+        super.init();
+    }
+
+    @Override
+    public FancyNotificationsState getState() {
+        return (FancyNotificationsState) super.getState();
+    }
+
+    @Override
+    public GwtFancyTimedCssLayout createWidget() {
+        GwtFancyTimedCssLayout widget = new GwtFancyTimedCssLayout() {
+            @Override
+            public void setHorizontalMarginTransitionEnabled(boolean enabled) {
+                super.setHorizontalMarginTransitionEnabled(false);
+            }
+        };
+        widget.setStylePrimaryName(STYLE_NAME);
+        attachFancyRemover(widget);
+        return widget;
+    }
+
+    @Override
+    public GwtFancyTimedCssLayout getWidget() {
+        return (GwtFancyTimedCssLayout) super.getWidget();
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        getWidget().setAutomaticRemoveTimeout(getState().closeTimeoutMs);
+
+        super.onStateChanged(stateChangeEvent);
+
+        if (positionStyleName != null) {
+            getWidget().removeStyleName(positionStyleName);
+        }
+        positionStyleName = STYLE_NAME + "-"
+                + generatePositionStyleSuffix(getState().position);
+        getWidget().addStyleName(positionStyleName);
+    }
+
+    private String generatePositionStyleSuffix(Position position) {
+        switch (position) {
+        case TOP_RIGHT:
+            return "topright";
+        case BOTTOM_RIGHT:
+            return "bottomright";
+        case BOTTOM_LEFT:
+            return "bottomleft";
+        default:
+            return "topleft";
+        }
+    }
 
 }

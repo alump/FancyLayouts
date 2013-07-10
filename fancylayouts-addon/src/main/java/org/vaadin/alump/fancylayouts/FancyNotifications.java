@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyNotificationsState;
+import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyNotificationsState.Position;
 
 import com.vaadin.event.LayoutEvents;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
@@ -219,7 +220,7 @@ public class FancyNotifications extends FancyCssLayout {
 
         if (title == null && description == null) {
             throw new IllegalArgumentException(
-                    "You have to define title or description");
+                    "You have to define title or description for notification");
         }
 
         if (icon == null) {
@@ -229,7 +230,12 @@ public class FancyNotifications extends FancyCssLayout {
         NotificationLayout notification = new NotificationLayout(id, title,
                 description, icon, styleName);
 
-        addComponent(notification);
+        if (getState().position == Position.TOP_RIGHT
+                || getState().position == Position.TOP_LEFT) {
+            addComponent(notification);
+        } else {
+            addComponent(notification, 0);
+        }
     }
 
     /**
@@ -340,5 +346,42 @@ public class FancyNotifications extends FancyCssLayout {
         boolean ret = super.setTransitionEnabled(trans, enabled);
         getState().horMarginTransition = false;
         return ret;
+    }
+
+    /**
+     * Get position where notification cards are stacked.
+     * 
+     * @return Position of notifications
+     */
+    public Position getPosition() {
+        return getState().position;
+    }
+
+    /**
+     * Set position where notification cards are stacked.
+     * 
+     * @param position
+     *            Position of notifications
+     */
+    public void setPosition(Position position) {
+        if (getState().position != position) {
+            boolean revert = isTopPosition(getState().position) != isTopPosition(position);
+            getState().position = position;
+            if (revert) {
+                revertChildOrder();
+            }
+        }
+    }
+
+    /**
+     * Check if given position is "top position". Used to identify when children
+     * has to be reordered.
+     * 
+     * @param position
+     *            Position checked
+     * @return true if "top position"
+     */
+    private boolean isTopPosition(Position position) {
+        return (position == Position.TOP_LEFT || position == Position.TOP_RIGHT);
     }
 }

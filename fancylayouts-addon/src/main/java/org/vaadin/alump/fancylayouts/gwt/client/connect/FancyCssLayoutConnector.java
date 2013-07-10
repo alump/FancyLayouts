@@ -64,7 +64,7 @@ public class FancyCssLayoutConnector extends AbstractLayoutConnector {
 
         @Override
         protected LayoutClickRpc getLayoutClickRPC() {
-            return cssServerRpc;
+            return getRpcProxy(FancyCssLayoutServerRpc.class);
         }
     };
 

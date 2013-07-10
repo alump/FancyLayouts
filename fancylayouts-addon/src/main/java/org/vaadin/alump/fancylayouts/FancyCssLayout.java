@@ -67,7 +67,7 @@ public class FancyCssLayout extends AbstractLayout implements
     };
 
     public FancyCssLayout() {
-        registerRpc(rpc);
+        registerRpc(rpc, FancyCssLayoutServerRpc.class);
     }
 
     @Override
@@ -248,6 +248,22 @@ public class FancyCssLayout extends AbstractLayout implements
     @Override
     public Iterator<Component> iterator() {
         return components.iterator();
+    }
+
+    /**
+     * Reorders children to reverse order.
+     */
+    public void revertChildOrder() {
+        int middle = (int) Math.floor(components.size() * 0.5);
+        int otherEnd = components.size() - 1;
+        for (int i = 0; i < middle; ++i) {
+            Component a = components.get(i);
+            Component b = components.get(otherEnd);
+            components.set(i, b);
+            components.set(otherEnd, a);
+            otherEnd -= 1;
+        }
+        markAsDirty();
     }
 
 }

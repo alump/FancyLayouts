@@ -3,7 +3,4 @@
 <module>
 	<inherits name="com.vaadin.DefaultWidgetSet" />
     <stylesheet src="fancylayouts/styles.css"/>
-    
-    <!-- to speed up things -->
-    <!-- <set-property name="user.agent" value="safari"/> -->
 </module>

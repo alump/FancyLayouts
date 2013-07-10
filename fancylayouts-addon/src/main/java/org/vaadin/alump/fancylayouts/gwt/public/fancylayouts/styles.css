@@ -70,11 +70,25 @@
 }
 .fancy-notifs {
  position: absolute;
- right: 0px;
- top: 0px;
  max-height: 100%;
  overflow: hidden;
  z-index: 1000;
+}
+.fancy-notifs-topleft {
+ left: 0px;
+ top: 0px;
+}
+.fancy-notifs-topright {
+ right: 0px;
+ top: 0px;
+}
+.fancy-notifs-bottomleft {
+ left: 0px;
+ bottom: 0px;
+}
+.fancy-notifs-bottomright {
+ right: 0px;
+ bottom: 0px;
 }
 .fancy-notifs .fancy-csslayout-item {
  display: block;

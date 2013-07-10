@@ -22,8 +22,8 @@ import org.vaadin.alump.fancylayouts.FancyNotifications;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
-import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -40,6 +40,7 @@ import com.vaadin.ui.themes.BaseTheme;
 @SuppressWarnings("serial")
 @Theme("demo")
 @Title("FancyLayouts Demo")
+// @Push
 public class FancyLayoutsUI extends UI {
 
     private FancyNotifications notifications;
@@ -57,13 +58,14 @@ public class FancyLayoutsUI extends UI {
         tabs.addTab(new ImageDemo(), "FancyImage");
         tabs.addTab(new PanelDemo(), "FancyPanel");
         tabs.addTab(new CssLayoutDemo(), "FancyLayout");
-        
+
         NotificationsDemo notDemo = new NotificationsDemo();
         tabs.addTab(notDemo, "FancyNotifications");
-        
+
+        // Add notification to top most UI elements you have. Then just give it
+        // as reference to child components.
         notifications = new FancyNotifications();
         topLayout.addComponent(notifications);
-        
         notDemo.init(notifications);
 
         return topLayout;
@@ -90,7 +92,6 @@ public class FancyLayoutsUI extends UI {
         desc.addStyleName("demo-desc");
         layout.addComponent(desc);
         layout.setExpandRatio(desc, 1.0f);
-        
 
         Link link = new Link(
                 "Source code of this demo application",
@@ -108,10 +109,10 @@ public class FancyLayoutsUI extends UI {
         return notifications;
     }
 
-	@Override
-	protected void init(VaadinRequest request) {
-		this.setContent(buildLayout());
-		
-	}
+    @Override
+    protected void init(VaadinRequest request) {
+        this.setContent(buildLayout());
+
+    }
 
 }

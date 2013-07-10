@@ -3,5 +3,6 @@
 <module>
     <inherits name="org.vaadin.alump.fancylayouts.gwt.FancyLayoutsWidgetset" />
 
-
+    <!-- to speed up things -->
+    <!-- <set-property name="user.agent" value="safari"/> -->
 </module>

@@ -22,6 +22,7 @@
             <param-name>widgetset</param-name>
             <param-value>org.vaadin.alump.fancylayouts.demo.widgetset.FancyLayoutsDemoWidgetset</param-value>
         </init-param>
+        <!-- <async-supported>true</async-supported> -->
     </servlet>
     <servlet-mapping>
         <servlet-name>FancyLayouts Demo Application</servlet-name>

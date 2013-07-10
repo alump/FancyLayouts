@@ -20,5 +20,14 @@ package org.vaadin.alump.fancylayouts.gwt.client.shared;
 
 @SuppressWarnings("serial")
 public class FancyNotificationsState extends FancyCssLayoutState {
-	public int closeTimeoutMs = 10000;
+    public int closeTimeoutMs = 10000;
+
+    /**
+     * Position where notification cards are stacked.
+     */
+    public enum Position {
+        TOP_RIGHT, BOTTOM_RIGHT, BOTTOM_LEFT, TOP_LEFT;
+    }
+
+    public Position position = Position.TOP_RIGHT;
 }

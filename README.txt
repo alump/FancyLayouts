@@ -3,7 +3,7 @@ FancyLayouts Vaadin UI Component Add On
 FancyLayouts are fancy layouts and components which add transitions to normal
 vaadin counterparts.
 
-Demo application: http://siika.fi:8080/FancyLayouts
+Demo application: http://siika.fi:8080/FancyLayoutsDemo
 Source code: https://github.com/alump/FancyLayouts
 Vaadin Directory: http://vaadin.com/directory#addon/fancylayouts
 License: Apache License 2.0

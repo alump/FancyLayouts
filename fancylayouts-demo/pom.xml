@@ -10,7 +10,7 @@
 	<version>${fancylayouts.version}</version>
 
 	<properties>
-		<fancylayouts.version>1.0.0.beta2</fancylayouts.version>
+		<fancylayouts.version>1.0.0.beta3-SNAPSHOT</fancylayouts.version>
 		<Implementation-Version>${project.version}</Implementation-Version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

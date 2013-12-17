@@ -10,15 +10,15 @@
 	<version>${fancylayouts.version}</version>
 
 	<properties>
-		<fancylayouts.version>1.0.0.beta2-SNAPSHOT</fancylayouts.version>
+		<fancylayouts.version>1.0.0.beta2</fancylayouts.version>
 		<Implementation-Version>${project.version}</Implementation-Version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- May be overridden by the build system -->
 		<license.short.name>apache2</license.short.name>
-		<vaadin.version>7.1.0</vaadin.version>
-		<vaadin.plugin.version>7.1.0</vaadin.plugin.version>
+		<vaadin.version>7.1.8</vaadin.version>
+		<vaadin.plugin.version>7.1.8</vaadin.plugin.version>
 
 		<!-- Must not change this because of the Directory -->
 		<Implementation-Title>FancyLayouts</Implementation-Title>

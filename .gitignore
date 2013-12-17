@@ -1,0 +1,12 @@
+.project
+.settings/
+fancylayouts-addon/.classpath
+fancylayouts-addon/.project
+fancylayouts-addon/.settings/
+fancylayouts-addon/target/
+fancylayouts-demo/.classpath
+fancylayouts-demo/.project
+fancylayouts-demo/.settings/
+fancylayouts-demo/src/main/webapp/VAADIN/gwt-unitCache/
+fancylayouts-demo/src/main/webapp/VAADIN/widgetsets/
+fancylayouts-demo/target/

@@ -18,6 +18,12 @@
 
 package org.vaadin.alump.fancylayouts.demo;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.vaadin.alump.fancylayouts.FancyImage;
 
 import com.vaadin.data.Property;
@@ -25,11 +31,13 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.FileResource;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
@@ -40,8 +48,9 @@ import com.vaadin.ui.VerticalLayout;
  */
 @SuppressWarnings("serial")
 public class ImageDemo extends VerticalLayout {
-	
-	protected CheckBox horizontal;
+
+    protected CheckBox horizontal;
+    private final Set<Component> disableWhenAutoPlay = new HashSet<Component>();
 
     public ImageDemo() {
         setMargin(true);
@@ -57,10 +66,7 @@ public class ImageDemo extends VerticalLayout {
         image.setHeight("281px");
 
         // Setting images used
-        final Resource resources[] = new Resource[] {
-                new ExternalResource("http://misc.siika.fi/fancy-demo1.jpg"),
-                new ExternalResource("http://misc.siika.fi/fancy-demo2.jpg"),
-                new ExternalResource("http://misc.siika.fi/fancy-demo3.jpg") };
+        final List<Resource> resources = getImageResources();
         for (Resource resource : resources) {
             image.addResource(resource);
         }
@@ -74,57 +80,40 @@ public class ImageDemo extends VerticalLayout {
         addComponent(image);
         setComponentAlignment(image, Alignment.TOP_CENTER);
 
-        final Button pic1 = new Button("Pic 1");
-        buttonLayout.addComponent(pic1);
-        pic1.addClickListener(new Button.ClickListener() {
+        for (int i = 0; i < resources.size(); ++i) {
+            final Button button = new Button("Pic " + (i + 1));
+            buttonLayout.addComponent(button);
+            final Resource res = resources.get(i);
+            button.addClickListener(new Button.ClickListener() {
 
-            public void buttonClick(ClickEvent event) {
-                // Ask to show image 0
-                image.showResource(resources[0]);
+                @Override
+                public void buttonClick(ClickEvent event) {
+                    image.showResource(res);
 
-            }
-        });
-
-        final Button pic2 = new Button("Pic 2");
-        buttonLayout.addComponent(pic2);
-        pic2.addClickListener(new Button.ClickListener() {
-
-            public void buttonClick(ClickEvent event) {
-                // Ask to show image 1
-                image.showResource(resources[1]);
-
-            }
-        });
-
-        final Button pic3 = new Button("Pic 3");
-        buttonLayout.addComponent(pic3);
-        pic3.addClickListener(new Button.ClickListener() {
-
-            public void buttonClick(ClickEvent event) {
-                // Ask to show image 2
-                image.showResource(resources[2]);
-
-            }
-        });
+                }
+            });
+            disableWhenAutoPlay.add(button);
+        }
 
         CheckBox auto = new CheckBox("Slide show");
         auto.setImmediate(true);
         buttonLayout.addComponent(auto);
-        
+
         CheckBox fade = new CheckBox("Fade");
         fade.setDescription("Fade image when changing");
         fade.setImmediate(true);
         fade.setValue(image.isFadeTransition());
         buttonLayout.addComponent(fade);
-        
+
         CheckBox rotate = new CheckBox("Rotate");
         rotate.setDescription("Rotate image when changing");
         rotate.setImmediate(true);
         rotate.setValue(image.isRotateTransition());
         buttonLayout.addComponent(rotate);
-        
+
         horizontal = new CheckBox("Horizontal");
-        horizontal.setDescription("Should rotate happen horizontally or vertically.");
+        horizontal
+                .setDescription("Should rotate happen horizontally or vertically.");
         horizontal.setValue(true);
         buttonLayout.addComponent(horizontal);
 
@@ -135,6 +124,7 @@ public class ImageDemo extends VerticalLayout {
         buttonLayout.addComponent(timeout);
         timeout.addTextChangeListener(new TextChangeListener() {
 
+            @Override
             public void textChange(TextChangeEvent event) {
                 try {
                     int value = Integer.parseInt(event.getText());
@@ -148,39 +138,60 @@ public class ImageDemo extends VerticalLayout {
 
         auto.addValueChangeListener(new Property.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 Boolean value = (Boolean) event.getProperty().getValue();
                 // Enable/disable slideshow mode
                 image.setSlideShowEnabled(value);
-                pic1.setEnabled(!value);
-                pic2.setEnabled(!value);
-                pic3.setEnabled(!value);
+                for (Component component : disableWhenAutoPlay) {
+                    component.setEnabled(!value);
+                }
             }
         });
-        
+
         fade.addValueChangeListener(new Property.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 Boolean value = (Boolean) event.getProperty().getValue();
                 image.setFadeTransition(value.booleanValue());
             }
         });
-        
+
         rotate.addValueChangeListener(new Property.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 Boolean value = (Boolean) event.getProperty().getValue();
-                image.setRotateTransition(value.booleanValue(), horizontal.getValue());
+                image.setRotateTransition(value.booleanValue(),
+                        horizontal.getValue());
             }
         });
 
         horizontal.addValueChangeListener(new Property.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
-            	if (image.isRotateTransition()) {
-            		image.setRotateTransition(true, (Boolean) event.getProperty().getValue());
-            	}
+                if (image.isRotateTransition()) {
+                    image.setRotateTransition(true, (Boolean) event
+                            .getProperty().getValue());
+                }
             }
         });
+    }
+
+    private List<Resource> getImageResources() {
+        List<Resource> list = new ArrayList<Resource>();
+        list.add(new ExternalResource("http://misc.siika.fi/fancy-demo1.jpg"));
+        list.add(new ExternalResource("http://misc.siika.fi/fancy-demo2.jpg"));
+        list.add(new ExternalResource("http://misc.siika.fi/fancy-demo3.jpg"));
+
+        // Image is only added if present in file system. Will not be there
+        // unless manually added!
+        File fileResImage = new File("/tmp/test.png");
+        if (fileResImage.exists()) {
+            list.add(new FileResource(fileResImage));
+        }
+        return list;
     }
 }

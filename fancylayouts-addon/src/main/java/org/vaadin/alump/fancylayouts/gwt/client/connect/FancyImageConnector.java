@@ -19,6 +19,7 @@
 package org.vaadin.alump.fancylayouts.gwt.client.connect;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.vaadin.alump.fancylayouts.gwt.client.GwtFancyImage;
 import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyImageState;
@@ -35,8 +36,15 @@ public class FancyImageConnector extends AbstractComponentConnector {
 
     private final FancyImageClientRpc rpc = new FancyImageClientRpc() {
         @Override
-        public void showImage(URLReference image) {
-            getWidget().showImage(image.getURL());
+        public void showImage(String key) {
+            URLReference url = getState().resources.get(key);
+            if (url != null) {
+                getWidget().showImage(url.getURL());
+            } else {
+                Logger.getLogger(
+                        FancyImageConnector.this.getClass().getSimpleName())
+                        .severe("Resource not found!");
+            }
         }
     };
 
@@ -65,11 +73,12 @@ public class FancyImageConnector extends AbstractComponentConnector {
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
-        List<URLReference> urls = getState().images;
-        getWidget().trimImages(urls.size());
+        List<String> ids = getState().imageResIds;
+        getWidget().trimImages(ids.size());
 
-        for (int i = 0; i < urls.size(); ++i) {
-            getWidget().setImage(urls.get(i).getURL(), i);
+        for (int i = 0; i < ids.size(); ++i) {
+            String key = ids.get(i);
+            getWidget().setImage(getState().resources.get(key).getURL(), i);
         }
 
         getWidget().setAutoBrowseTimeout(getState().timeoutMs);

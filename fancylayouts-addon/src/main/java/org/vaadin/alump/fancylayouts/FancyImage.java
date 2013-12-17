@@ -18,15 +18,11 @@
 
 package org.vaadin.alump.fancylayouts;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.vaadin.alump.fancylayouts.gwt.client.connect.FancyImageClientRpc;
 import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyImageState;
 import org.vaadin.alump.fancylayouts.gwt.client.shared.RotateDirection;
 
 import com.vaadin.server.Resource;
-import com.vaadin.server.ResourceReference;
 import com.vaadin.ui.AbstractComponent;
 
 /**
@@ -37,7 +33,10 @@ import com.vaadin.ui.AbstractComponent;
 @SuppressWarnings("serial")
 public class FancyImage extends AbstractComponent {
 
-    protected List<Resource> resources = new LinkedList<Resource>();
+    /**
+     * Counter used to generate always unique resource ids
+     */
+    private int nextResourceIndex = 1;
 
     @Override
     protected FancyImageState getState() {
@@ -51,13 +50,26 @@ public class FancyImage extends AbstractComponent {
      *            New image resource
      */
     public void addResource(Resource resource) {
-        if (resources.contains(resource)) {
-            return;
-        }
+        addResourceWithName(resource);
+    }
 
-        resources.add(resource);
-        ResourceReference ref = ResourceReference.create(resource, this, null);
-        getState().images.add(ref);
+    private String addResourceWithName(Resource resource) {
+        String name = "image-" + nextResourceIndex;
+        nextResourceIndex += 1;
+        setResource(name, resource);
+
+        getState().imageResIds.add(name);
+        return name;
+    }
+
+    private String resourceToKey(Resource resource) {
+        for (String key : getState().imageResIds) {
+            Resource res = getResource(key);
+            if (res.equals(resource)) {
+                return key;
+            }
+        }
+        return null;
     }
 
     /**
@@ -68,14 +80,12 @@ public class FancyImage extends AbstractComponent {
      */
     public void showResource(Resource resource) {
 
-        if (!resources.contains(resource)) {
-            addResource(resource);
+        String key = resourceToKey(resource);
+        if (key == null) {
+            key = addResourceWithName(resource);
         }
 
-        int index = resources.indexOf(resource);
-
-        getRpcProxy(FancyImageClientRpc.class).showImage(
-                getState().images.get(index));
+        getRpcProxy(FancyImageClientRpc.class).showImage(key);
     }
 
     /**
@@ -86,9 +96,10 @@ public class FancyImage extends AbstractComponent {
      */
     public void removeResource(Resource resource) {
 
-        int index = resources.indexOf(resource);
-        if (index >= 0) {
-            getState().images.remove(index);
+        String key = resourceToKey(resource);
+        if (key != null) {
+            getState().imageResIds.remove(key);
+            setResource(key, null);
         }
     }
 

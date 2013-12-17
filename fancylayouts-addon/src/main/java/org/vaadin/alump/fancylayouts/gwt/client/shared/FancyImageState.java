@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.shared.AbstractComponentState;
-import com.vaadin.shared.communication.URLReference;
 
 @SuppressWarnings("serial")
 public class FancyImageState extends AbstractComponentState {
@@ -31,7 +30,7 @@ public class FancyImageState extends AbstractComponentState {
 
     public boolean autoBrowse = false;
 
-    public List<URLReference> images = new ArrayList<URLReference>();
+    public List<String> imageResIds = new ArrayList<String>();
 
     public boolean fadeTransition = true;
 

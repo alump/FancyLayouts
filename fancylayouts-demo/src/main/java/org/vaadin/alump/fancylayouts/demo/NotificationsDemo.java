@@ -1,5 +1,6 @@
 package org.vaadin.alump.fancylayouts.demo;
 
+import org.vaadin.alump.fancylayouts.FancyNotification;
 import org.vaadin.alump.fancylayouts.FancyNotifications;
 import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyNotificationsState.Position;
 
@@ -7,6 +8,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.ThemeResource;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -199,6 +201,22 @@ public class NotificationsDemo extends VerticalLayout {
             }
         });
         buttonLayout.addComponent(messageExample);
+
+        final Button htmlExample = new Button("HTML example");
+        htmlExample.addClickListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                FancyNotification notif = new FancyNotification(
+                        null,
+                        "Hello <span style=\"text-decoration: underline;\">World</span>",
+                        "Lorem <span style=\"font-size: 80%;\">ipsum.</span>");
+                notif.getTitleLabel().setContentMode(ContentMode.HTML);
+                notif.getDescriptionLabel().setContentMode(ContentMode.HTML);
+                notifications.showNotification(notif);
+            }
+        });
+        buttonLayout.addComponent(htmlExample);
 
         buttonLayout = new HorizontalLayout();
         buttonLayout.setCaption("Close notifications:");

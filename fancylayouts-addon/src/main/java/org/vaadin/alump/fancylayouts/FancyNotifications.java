@@ -30,9 +30,6 @@ import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.Image;
-import com.vaadin.ui.Label;
 
 /**
  * Easy way to add notification bubbles to your web application.
@@ -76,7 +73,7 @@ public class FancyNotifications extends FancyCssLayout {
 
             Component component = event.getChildComponent();
             while (component != null && component != FancyNotifications.this) {
-                if (component instanceof NotificationLayout) {
+                if (component instanceof FancyNotification) {
                     break;
                 }
                 component = component.getParent();
@@ -159,48 +156,6 @@ public class FancyNotifications extends FancyCssLayout {
         showNotification(id, title, description, icon, null);
     }
 
-    private class NotificationLayout extends CssLayout {
-        public NotificationLayout(Object id, String title, String description,
-                Resource icon, String styleName) {
-
-            setStyleName("fancy-notif");
-
-            if (id != null) {
-                setData(id);
-            }
-
-            if (styleName != null) {
-                addStyleName(styleName);
-            }
-
-            if (title != null) {
-                Label titleLabel = new Label(title);
-                titleLabel.setStyleName("fancy-notif-title");
-                addComponent(titleLabel);
-            } else {
-                addStyleName("fancy-notif-notitle");
-            }
-
-            if (description != null) {
-                Label descLabel = new Label(description);
-                descLabel.setStyleName("fancy-notif-desc");
-                addComponent(descLabel);
-            } else {
-                addStyleName("fancy-notif-nodesc");
-            }
-
-            if (icon != null) {
-                Image image = new Image();
-                image.setStyleName("fancy-notif-icon");
-                image.setSource(icon);
-                addComponent(image);
-            } else {
-                addStyleName("fancy-notif-noicon");
-            }
-
-        }
-    }
-
     /**
      * Show notification with given options
      * 
@@ -227,9 +182,18 @@ public class FancyNotifications extends FancyCssLayout {
             icon = defaultIcon;
         }
 
-        NotificationLayout notification = new NotificationLayout(id, title,
-                description, icon, styleName);
+        showNotification(new FancyNotification(id, title, description, icon,
+                styleName));
+    }
 
+    /**
+     * Allows to construct your own notification as you want. Default options
+     * (e.g. icon) will not be applied to notification given to this function.
+     * 
+     * @param notification
+     *            Notification presented.
+     */
+    public void showNotification(FancyNotification notification) {
         if (getState().position == Position.TOP_RIGHT
                 || getState().position == Position.TOP_LEFT) {
             addComponent(notification);

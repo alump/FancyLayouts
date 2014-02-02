@@ -135,7 +135,7 @@ public class FancyPanel extends AbstractLayout implements
      * @return Currently visible component
      */
     public Component getCurrentComponent() {
-        return (ComponentContainer) getState().currentComponent;
+        return (Component) getState().currentComponent;
     }
 
     /**

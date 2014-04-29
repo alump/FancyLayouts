@@ -109,7 +109,7 @@ public enum BrowserMode {
     public String getTransform() {
         switch (this) {
         case MODERN_WEBKIT:
-            return "-webkit-transform";
+            return "webkitTransform";
         default:
             return "transform";
         }

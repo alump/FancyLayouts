@@ -1,39 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app id="WebApp_ID" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
-    <display-name>FancyLayouts Demo</display-name>
-    <context-param>
-        <description>
-        Vaadin production mode</description>
-        <param-name>productionMode</param-name>
-        <param-value>false</param-value>
-    </context-param>
-    <servlet>
-        <servlet-name>FancyLayouts Demo Application</servlet-name>
-        <servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
-        <init-param>
-            <description>
-            Vaadin UI class to start</description>
-            <param-name>UI</param-name>
-            <param-value>org.vaadin.alump.fancylayouts.demo.FancyLayoutsUI</param-value>
-        </init-param>
-        <init-param>
-            <description>
-            Application widgetset</description>
-            <param-name>widgetset</param-name>
-            <param-value>org.vaadin.alump.fancylayouts.demo.widgetset.FancyLayoutsDemoWidgetset</param-value>
-        </init-param>
-        <!-- <async-supported>true</async-supported> -->
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>FancyLayouts Demo Application</servlet-name>
-        <url-pattern>/*</url-pattern>
-    </servlet-mapping>
-    <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
-        <welcome-file>index.htm</welcome-file>
-        <welcome-file>index.jsp</welcome-file>
-        <welcome-file>default.html</welcome-file>
-        <welcome-file>default.htm</welcome-file>
-        <welcome-file>default.jsp</welcome-file>
-    </welcome-file-list>
+<web-app
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://java.sun.com/xml/ns/javaee"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+        id="WebApp_ID" version="3.0">
 </web-app>

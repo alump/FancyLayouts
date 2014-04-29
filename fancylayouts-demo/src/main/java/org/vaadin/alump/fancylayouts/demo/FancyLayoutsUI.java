@@ -18,6 +18,8 @@
 
 package org.vaadin.alump.fancylayouts.demo;
 
+import com.vaadin.annotations.VaadinServletConfiguration;
+import com.vaadin.server.VaadinServlet;
 import org.vaadin.alump.fancylayouts.FancyNotifications;
 
 import com.vaadin.annotations.Push;
@@ -35,14 +37,22 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.BaseTheme;
 
+import javax.servlet.annotation.WebServlet;
+
 /**
  * Demo application using FancyLayouts components
  */
 @SuppressWarnings("serial")
 @Theme("demo")
 @Title("FancyLayouts Demo")
+// enable push
 @Push
 public class FancyLayoutsUI extends UI {
+
+    @WebServlet(value = "/*")
+    @VaadinServletConfiguration(productionMode = false, ui = FancyLayoutsUI.class, widgetset = "org.vaadin.alump.fancylayouts.demo.widgetset.FancyLayoutsDemoWidgetset")
+    public static class FancyLayoutsUIServlet extends VaadinServlet {
+    }
 
     private FancyNotifications notifications;
 

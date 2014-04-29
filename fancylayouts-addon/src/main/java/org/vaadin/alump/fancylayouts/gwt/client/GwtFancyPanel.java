@@ -20,6 +20,7 @@ package org.vaadin.alump.fancylayouts.gwt.client;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import org.vaadin.alump.fancylayouts.gwt.client.model.BrowserMode;
 import org.vaadin.alump.fancylayouts.gwt.client.model.ElementStyler;
@@ -39,7 +40,6 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.VConsole;
 
 public class GwtFancyPanel extends SimplePanel {
 
@@ -63,6 +63,8 @@ public class GwtFancyPanel extends SimplePanel {
     protected FadeOutListener fadeOutListener;
 
     protected boolean activeTransition = false;
+
+    private final static Logger logger = Logger.getLogger(GwtFancyPanel.class.getName());
 
     protected class ContentPanel extends ComplexPanel {
 
@@ -103,7 +105,7 @@ public class GwtFancyPanel extends SimplePanel {
                     getElement().removeChild(wrapper);
                 }
             } else {
-                VConsole.error("FancyPanel: Failed to remove child!");
+                logger.warning("Failed to remove child!");
             }
 
             return removed;
@@ -143,10 +145,8 @@ public class GwtFancyPanel extends SimplePanel {
 
     public GwtFancyPanel() {
 
-        Element root = Document.get().createDivElement();
-        root.addClassName(CLASS_NAME);
-        root.getStyle().setOverflow(Overflow.HIDDEN);
-        setElement(root);
+        getElement().addClassName(CLASS_NAME);
+        getElement().getStyle().setOverflow(Overflow.HIDDEN);
 
         contentPanel = new ContentPanel();
         super.add(contentPanel);
@@ -196,7 +196,7 @@ public class GwtFancyPanel extends SimplePanel {
     private void onTransitionEnd(Object object) {
 
         if (!activeTransition) {
-            VConsole.log("onTransitionEnd after transitions cancelled");
+            logger.warning("onTransitionEnd after transitions cancelled");
             return;
         }
 
@@ -211,7 +211,7 @@ public class GwtFancyPanel extends SimplePanel {
                 if (elementStyler.isElementStyledOut(element)) {
                     onFadeOutEnded();
                 } else {
-                    VConsole.log("onTransitionEnd for hidden: wrong state?");
+                    logger.warning("onTransitionEnd for hidden: wrong state?");
                 }
             }
         } else {
@@ -219,7 +219,7 @@ public class GwtFancyPanel extends SimplePanel {
                 if (elementStyler.isElementStyledOn(element)) {
                     onFadeInEnded();
                 } else {
-                    VConsole.log("onTransitionEnd for shown: wrong state?");
+                    logger.warning("onTransitionEnd for shown: wrong state?");
                 }
             }
         }
@@ -244,7 +244,7 @@ public class GwtFancyPanel extends SimplePanel {
                 }
             });
         } else {
-            VConsole.error("Failed to fade in new widget");
+            logger.warning("Failed to fade in new widget");
         }
     }
 
@@ -256,7 +256,7 @@ public class GwtFancyPanel extends SimplePanel {
     @Override
     public void add(Widget widget) {
         if (widget == null) {
-            VConsole.error("null widget can not be added to fancy panel");
+            logger.warning("null widget can not be added to fancy panel");
             return;
         }
 
@@ -299,7 +299,7 @@ public class GwtFancyPanel extends SimplePanel {
 
         Element prevWrapper = getContentElement(currentWidget);
         if (prevWrapper == null) {
-            VConsole.log("Missing wrapper of old widget, transition skipped.");
+            logger.fine("Missing wrapper of old widget, transition skipped.");
             changeContentWithoutTransition(content);
             return;
         }
@@ -340,7 +340,7 @@ public class GwtFancyPanel extends SimplePanel {
         }
 
         if (!contentWidgets.contains(content)) {
-            VConsole.error("Setting widget not found from children as current.");
+            logger.warning("Setting widget not found from children as current.");
             add(content);
         }
 

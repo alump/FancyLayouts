@@ -28,13 +28,14 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.Util;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractLayoutConnector;
 import com.vaadin.client.ui.LayoutClickEventHandler;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.LayoutClickRpc;
+
+import java.util.logging.Logger;
 
 @SuppressWarnings("serial")
 @Connect(org.vaadin.alump.fancylayouts.FancyPanel.class)
@@ -76,11 +77,14 @@ public class FancyPanelConnector extends AbstractLayoutConnector {
     protected final FadeOutListener fancyRemover = new FadeOutListener() {
         @Override
         public void fadeOut(Widget widget) {
-            VConsole.error("Hidden information sent");
+            logger.fine("Hidden information sent");
             panelServerRpc
                     .hidden(findConnectorWithElement(widget.getElement()));
         }
     };
+
+    private final static Logger logger = Logger.getLogger(FancyPanelConnector.class.getName());
+
 
     @Override
     public void init() {
@@ -131,7 +135,7 @@ public class FancyPanelConnector extends AbstractLayoutConnector {
         // Remove old children
         for (ComponentConnector child : event.getOldChildren()) {
             if (child.getParent() != this) {
-                VConsole.error("Remove old child widget");
+                logger.fine("Remove old child widget");
                 Widget widget = child.getWidget();
                 if (widget != null && widget.isAttached()) {
                     getWidget().remove(widget);
@@ -143,7 +147,7 @@ public class FancyPanelConnector extends AbstractLayoutConnector {
             try {
                 getWidget().add(child.getWidget());
             } catch (Exception e) {
-                VConsole.error("Failed to add! " + e.getMessage());
+                logger.severe("Failed to add! " + e.getMessage());
             }
         }
 

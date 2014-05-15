@@ -1,285 +1,295 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.vaadin.alump.fancylayouts</groupId>
-	<artifactId>fancylayouts-addon</artifactId>
-	<packaging>jar</packaging>
-	<name>FancyLayouts addon</name>
-	<version>1.1.0-SNAPSHOT</version>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.vaadin.alump.fancylayouts</groupId>
+    <artifactId>fancylayouts-addon</artifactId>
+    <packaging>jar</packaging>
+    <name>FancyLayouts addon</name>
+    <version>2.0.0-SNAPSHOT</version>
 
-	<description>FancyLayouts Vaadin 7 addon</description>
+    <description>FancyLayouts Vaadin 7 addon</description>
 
-	<organization>
-		<name>Sami Viitanen</name>
-		<url>http://vaadin.com/alump</url>
-	</organization>
+    <organization>
+        <name>Sami Viitanen</name>
+        <url>http://vaadin.com/alump</url>
+    </organization>
 
-	<url>http://vaadin.com/alump</url>
+    <url>http://vaadin.com/alump</url>
 
-	<developers>
-		<developer>
-			<name>Sami Viitanen</name>
-			<id>alump</id>
-			<email>sami.viitanen at vaadin.com</email>
-			<organization>Vaadin Ltd</organization>
-			<timezone>+2</timezone>
-		</developer>
-	</developers>
+    <developers>
+        <developer>
+            <name>Sami Viitanen</name>
+            <id>alump</id>
+            <email>sami.viitanen at vaadin.com</email>
+            <organization>Vaadin Ltd</organization>
+            <timezone>+2</timezone>
+        </developer>
+    </developers>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<!-- May be overridden by the build system -->
-		<license.short.name>apache2</license.short.name>
-		<vaadin.version>7.1.13</vaadin.version>
-		<vaadin.plugin.version>7.1.13</vaadin.plugin.version>
+        <!-- May be overridden by the build system -->
+        <license.short.name>apache2</license.short.name>
+        <vaadin.version>7.2.0</vaadin.version>
+        <vaadin.plugin.version>7.2.0</vaadin.plugin.version>
 
-		<snapshot.repository.url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</snapshot.repository.url>
+        <snapshot.repository.url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/
+        </snapshot.repository.url>
 
-		<Implementation-Version>${project.version}</Implementation-Version>
-		<!-- Must not change this because of the Directory -->
-		<Implementation-Title>FancyLayouts</Implementation-Title>
-		<Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
-		<Vaadin-Addon>FancyLayouts-${project.version}.jar</Vaadin-Addon>
+        <Implementation-Version>${project.version}</Implementation-Version>
+        <!-- Must not change this because of the Directory -->
+        <Implementation-Title>FancyLayouts</Implementation-Title>
+        <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
+        <Vaadin-Addon>FancyLayouts-${project.version}.jar</Vaadin-Addon>
+        <Vaadin-Stylesheets>VAADIN/addons/fancylayouts/fancylayouts.scss</Vaadin-Stylesheets>
+        <Vaadin-Widgetset>org.vaadin.alump.fancylayouts.gwt.FancyLayoutsWidgetset</Vaadin-Widgetset>
+    </properties>
 
-	</properties>
+    <repositories>
+        <repository>
+            <id>vaadin-addons</id>
+            <url>http://maven.vaadin.com/vaadin-addons</url>
+        </repository>
+        <repository>
+            <id>vaadin-snapshots</id>
+            <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
-	<repositories>
-		<repository>
-			<id>vaadin-addons</id>
-			<url>http://maven.vaadin.com/vaadin-addons</url>
-		</repository>
-		<repository>
-			<id>vaadin-snapshots</id>
-			<url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>vaadin-snapshots</id>
+            <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 
-	<pluginRepositories>
-		<pluginRepository>
-			<id>vaadin-snapshots</id>
-			<url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
+    <dependencies>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-server</artifactId>
+            <version>${vaadin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-client-compiler</artifactId>
+            <version>${vaadin.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
-	<dependencies>
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-server</artifactId>
-			<version>${vaadin.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-client-compiler</artifactId>
-			<version>${vaadin.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
 
-	<build>
-		<resources>
-			<resource>
-				<directory>src/main/java</directory>
-			</resource>
-		</resources>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-					<encoding>UTF-8</encoding>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>2.1.2</version>
-				<configuration>
-					<archive>
-						<index>true</index>
-						<manifest>
-							<addClasspath>false</addClasspath>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-						</manifest>
-						<manifestEntries>
-							<Implementation-Title>FancyLayouts source</Implementation-Title>
-						</manifestEntries>
-					</archive>
-					<outputDirectory>target/extra</outputDirectory>
-					<attach>false</attach>
-				</configuration>
-				<executions>
-					<execution>
-						<id>create-sources</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.3.1</version>
-				<configuration>
-					<archive>
-						<index>true</index>
-						<manifest>
-							<addClasspath>false</addClasspath>
-							<!-- Implementation-Title and Implementation-Version come from the 
-								POM by default -->
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-						</manifest>
-						<manifestEntries>
-							<!-- Keep old name of addon -->
-							<Implementation-Title>FancyLayouts</Implementation-Title>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.1.2</version>
+                <configuration>
+                    <archive>
+                        <index>true</index>
+                        <manifest>
+                            <addClasspath>false</addClasspath>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <Implementation-Title>FancyLayouts source</Implementation-Title>
+                        </manifestEntries>
+                    </archive>
+                    <outputDirectory>target/extra</outputDirectory>
+                    <attach>false</attach>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>create-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.1</version>
+                <configuration>
+                    <archive>
+                        <index>true</index>
+                        <manifest>
+                            <addClasspath>false</addClasspath>
+                            <!-- Implementation-Title and Implementation-Version come from the
+                                POM by default -->
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <!-- Keep old name of addon -->
+                            <Implementation-Title>FancyLayouts</Implementation-Title>
 
-							<!-- Package format version - do not change -->
-							<Vaadin-Package-Version>1</Vaadin-Package-Version>
+                            <!-- Package format version - do not change -->
+                            <Vaadin-Package-Version>1</Vaadin-Package-Version>
 
-							<!-- Comma-separated list of widgetsets in the package -->
-							<Vaadin-Widgetsets>org.vaadin.alump.fancylayouts.gwt.FancyLayoutsWidgetset</Vaadin-Widgetsets>
-						</manifestEntries>
-					</archive>
-					<!-- exclude other META-INF data under build directory -->
-					<includes>
-						<include>META-INF/maven/${project.groupId}/${project.artifactId}/**</include>
-						<include>org/**</include>
-					</includes>
-				</configuration>
-			</plugin>
+                            <!-- Comma-separated list of widgetsets in the package -->
+                            <Vaadin-Widgetsets>${Vaadin-Widgetset}</Vaadin-Widgetsets>
 
-			<plugin>
-				<groupId>com.vaadin</groupId>
-				<artifactId>vaadin-maven-plugin</artifactId>
-				<version>${vaadin.plugin.version}</version>
-				<configuration>
-					<modules>
-						<module>org.vaadin.alump.fancylayouts.gwt.FancyLayoutsWidgetset</module>
-					</modules>
-					<extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
-					<runTarget>xsite</runTarget>
-					<noServer>true</noServer>
-					<port>8080</port>
-					<validateOnly>true</validateOnly>
-					<strict>true</strict>
-				</configuration>
-			</plugin>
+                            <!-- SCSS files of addon -->
+                            <Vaadin-Stylesheets>${Vaadin-Stylesheets}</Vaadin-Stylesheets>
+                        </manifestEntries>
+                    </archive>
+                    <!-- exclude other META-INF data under build directory -->
+                    <includes>
+                        <include>META-INF/maven/${project.groupId}/${project.artifactId}/**</include>
+                        <include>org/**</include>
+                        <include>VAADIN/**</include>
+                    </includes>
+                </configuration>
+            </plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.2.1</version>
-				<configuration>
-					<appendAssemblyId>false</appendAssemblyId>
-					<descriptors>
-						<descriptor>assembly/assembly.xml</descriptor>
-					</descriptors>
-				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-		<finalName>FancyLayouts-${project.version}</finalName>
-		<pluginManagement>
-			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
-					only. It has no influence on the Maven build itself. -->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>com.vaadin</groupId>
-										<artifactId>
-											vaadin-maven-plugin
-										</artifactId>
-										<versionRange>
-											[7.0-SNAPSHOT,)
-										</versionRange>
-										<goals>
-											<goal>resources</goal>
-											<goal>update-widgetset</goal>
-											<goal>compile</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>2.8.1</version>
-					<configuration>
-						<archive>
-							<index>true</index>
-							<manifest>
-								<addClasspath>false</addClasspath>
-								<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-							</manifest>
-							<manifestEntries>
-								<Implementation-Title>FancyLayouts documentation</Implementation-Title>
-							</manifestEntries>
-						</archive>
-						<sourceEncoding>UTF-8</sourceEncoding>
-						<links>
-							<link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
-							<link>https://vaadin.com/api/</link>
-						</links>
-						<doctitle>FancyLayouts Vaadin Addon</doctitle>
-						<sourcepath>src/main/java</sourcepath>
-						<show>public</show>
-						<source>1.5</source>
-						<nohelp>true</nohelp>
-						<excludePackageNames>*.widgetset.*</excludePackageNames>
-					</configuration>
-					<executions>
-						<execution>
-							<id>create-javadocs</id>
-							<goals>
-								<goal>jar</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
+            <plugin>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-maven-plugin</artifactId>
+                <version>${vaadin.plugin.version}</version>
+                <configuration>
+                    <modules>
+                        <module>${Vaadin-Widgetset}</module>
+                    </modules>
+                    <extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
+                    <runTarget>xsite</runTarget>
+                    <noServer>true</noServer>
+                    <port>8080</port>
+                    <validateOnly>true</validateOnly>
+                    <strict>true</strict>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2.1</version>
+                <configuration>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <descriptors>
+                        <descriptor>assembly/assembly.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <finalName>FancyLayouts-${project.version}</finalName>
+        <pluginManagement>
+            <plugins>
+                <!--This plugin's configuration is used to store Eclipse m2e settings
+                    only. It has no influence on the Maven build itself. -->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>com.vaadin</groupId>
+                                        <artifactId>
+                                            vaadin-maven-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [7.0-SNAPSHOT,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>resources</goal>
+                                            <goal>update-widgetset</goal>
+                                            <goal>compile</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore></ignore>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.8.1</version>
+                    <configuration>
+                        <archive>
+                            <index>true</index>
+                            <manifest>
+                                <addClasspath>false</addClasspath>
+                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            </manifest>
+                            <manifestEntries>
+                                <Implementation-Title>FancyLayouts documentation</Implementation-Title>
+                            </manifestEntries>
+                        </archive>
+                        <sourceEncoding>UTF-8</sourceEncoding>
+                        <links>
+                            <link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
+                            <link>https://vaadin.com/api/</link>
+                        </links>
+                        <doctitle>FancyLayouts Vaadin Addon</doctitle>
+                        <sourcepath>src/main/java</sourcepath>
+                        <show>public</show>
+                        <source>1.5</source>
+                        <nohelp>true</nohelp>
+                        <excludePackageNames>*.widgetset.*</excludePackageNames>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>create-javadocs</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

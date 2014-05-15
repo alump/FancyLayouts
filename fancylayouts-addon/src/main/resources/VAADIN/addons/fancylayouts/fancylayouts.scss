@@ -1,0 +1,192 @@
+@mixin fancylayouts {
+
+  $fancy-img-trans-len: 0.5s !default;
+  $fancy-perspective: 700px !default;
+
+  .fancy-image {
+    border-width: 0px;
+    -webkit-perspective: $fancy-perspective;
+    -ie-perspective: $fancy-perspective;
+    perspective: $fancy-perspective;
+
+    > IMG {
+      -moz-transition: opacity $fancy-img-trans-len ease-in-out;
+      -webkit-transition: opacity $fancy-img-trans-len ease-in-out;
+      -o-transition: opacity $fancy-img-trans-len ease-in-out;
+      transition: opacity $fancy-img-trans-len ease-in-out;
+
+      &.rotate-image {
+        backface-visibility: hidden;
+        -webkit-transform-style: preserve-3d;
+        -moz-transform-style: preserve-3d;
+        -o-transform-style: preserve-3d;
+        -ms-transform-style: preserve-3d;
+        transform-style: preserve-3d;
+      }
+
+      &.fancy--on, &.fancy-out {
+        -moz-transition: opacity $fancy-img-trans-len ease-in-out, -moz-transform $fancy-img-trans-len linear;
+        -moz-backface-visibility: hidden;
+        -webkit-transition: opacity $fancy-img-trans-len ease-in-out, -webkit-transform $fancy-img-trans-len linear;
+        -webkit-backface-visibility: hidden;
+        -o-transition: opacity $fancy-img-trans-len ease-in-out, -o-transform $fancy-img-trans-len linear;
+        -o-backface-visibility: hidden;
+        transition: opacity $fancy-img-trans-len ease-in-out, transform $fancy-img-trans-len linear;
+      }
+    }
+  }
+
+  .fancy-panel {
+    -webkit-perspective: $fancy-perspective;
+    -ie-perspective: $fancy-perspective;
+    perspective: $fancy-perspective;
+  }
+
+  .fancy-panel-container {
+    &.fancy-fade {
+      > .fancy-panel-cwrapper {
+        -moz-transition: opacity 0.25s ease-in-out;
+        -webkit-transition: opacity 0.25s ease-in-out;
+        -o-transition: opacity 0.25s ease-in-out;
+        transition: opacity 0.25s ease-in-out;
+      }
+    }
+
+    &.fancy-zoom, &.fancy-rotate {
+      > .fancy-panel-cwrapper {
+        -moz-transition: transform 0.25s ease-in-out;
+        -webkit-transition: -webkit-transform 0.25s ease-in-out;
+        -o-transition: transform 0.25s ease-in-out;
+        transition: transform 0.25s ease-in-out;
+      }
+    }
+
+    &.fancy-rotate {
+      > .fancy-panel-cwrapper {
+        -webkit-transform-style: preserve-3d;
+        -moz-transform-style: preserve-3d;
+        -o-transform-style: preserve-3d;
+        -ms-transform-style: preserve-3d;
+        transform-style: preserve-3d;
+        backface-visibility: hidden;
+
+      }
+    }
+
+    &.fancy-fade {
+      &.fancy-zoom, &.fancy-rotate {
+        > .fancy-panel-cwrapper {
+          -moz-transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
+          -webkit-transition: opacity 0.25s ease-in-out, -webkit-transform 0.25s ease-in-out;
+          -o-transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
+          transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
+        }
+      }
+
+      &.fancy-rotate {
+      }
+    }
+
+  }
+  .fancy-csslayout-item {
+    -moz-transition: opacity 0.34s ease-in, margin 0.34s ease-in;
+    -webkit-transition: opacity 0.34s ease-in, margin 0.34s ease-in;
+    -o-transition: opacity 0.34s ease-in, margin 0.34s ease-in;
+    transition: opacity 0.34s ease-in, margin 0.34s ease-in;
+    margin: 0px;
+  }
+  .fancy-notifs {
+    position: absolute;
+    max-height: 100%;
+    overflow: hidden;
+    z-index: 1000;
+
+    .fancy-csslayout-item {
+      display: block;
+    }
+
+    .fancy-notif {
+      position: relative;
+      margin: 3px 12px 3px 3px;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      border-radius: 10px;
+      min-height: 56px;
+      width: 300px;
+      box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.75);
+      }
+
+      .fancy-notif-icon {
+        position: absolute;
+        left: 8px;
+        top: 50%;
+        margin-top: -24px;
+        max-width: 48px;
+        max-height: 48px;
+      }
+
+      .fancy-notif-title {
+        position: absolute;
+        left: 64px;
+        top: 8px;
+        color: white;
+        text-shadow: rgba(0, 0, 0, 0.5) 1px 1px 2px;
+        font-weight: bold;
+        font-size: 12px;
+        max-width: 226px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .fancy-notif-desc {
+        position: relative;
+        color: white;
+        text-shadow: rgba(0, 0, 0, 0.5) 1px 1px 2px;
+        margin-left: 64px;
+        margin-top: 28px;
+        margin-bottom: 8px;
+        font-size: 12px;
+        max-width: 226px;
+        overflow: hidden;
+        white-space: normal;
+        max-height: 55px;
+      }
+
+      &.fancy-notif-noicon {
+        .fancy-notif-title, .fancy-notif-desc {
+          left: 12px;
+          max-width: 278px;
+        }
+        .fancy-notif-desc {
+          margin-left: 12px;
+          max-width: 278px;
+        }
+        .fancy-notif-title {
+          margin-top: 8px;
+          max-height: 75px;
+        }
+      }
+    }
+  }
+  .fancy-notifs-topleft {
+    left: 0px;
+    top: 0px;
+  }
+  .fancy-notifs-topright {
+    right: 0px;
+    top: 0px;
+  }
+  .fancy-notifs-bottomleft {
+    left: 0px;
+    bottom: 0px;
+  }
+  .fancy-notifs-bottomright {
+    right: 0px;
+    bottom: 0px;
+  }
+}

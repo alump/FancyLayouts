@@ -16,3 +16,4 @@ fancylayouts-demo/fancylayouts-demo.iml
 fancylayouts-demo/src/main/webapp/VAADIN/gwt-unitCache/
 fancylayouts-demo/src/main/webapp/VAADIN/widgetsets/
 fancylayouts-demo/target/
+fancylayouts-demo/src/main/webapp/VAADIN/themes/demo/addons.scss

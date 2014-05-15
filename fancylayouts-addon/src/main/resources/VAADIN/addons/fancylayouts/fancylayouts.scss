@@ -2,12 +2,11 @@
 
   $fancy-img-trans-len: 0.5s !default;
   $fancy-perspective: 700px !default;
+  $fancy-css-fade-len: 0.34s !default;
+  $fancy-panel-tran-len: 0.25s !default;
 
   .fancy-image {
     border-width: 0px;
-    -webkit-perspective: $fancy-perspective;
-    -ie-perspective: $fancy-perspective;
-    perspective: $fancy-perspective;
 
     > IMG {
       -moz-transition: opacity $fancy-img-trans-len ease-in-out;
@@ -15,24 +14,31 @@
       -o-transition: opacity $fancy-img-trans-len ease-in-out;
       transition: opacity $fancy-img-trans-len ease-in-out;
 
-      &.rotate-image {
-        backface-visibility: hidden;
-        -webkit-transform-style: preserve-3d;
-        -moz-transform-style: preserve-3d;
-        -o-transform-style: preserve-3d;
-        -ms-transform-style: preserve-3d;
-        transform-style: preserve-3d;
-      }
-
-      &.fancy--on, &.fancy-out {
+      &.fancy--on, &.fancy--out {
         -moz-transition: opacity $fancy-img-trans-len ease-in-out, -moz-transform $fancy-img-trans-len linear;
-        -moz-backface-visibility: hidden;
         -webkit-transition: opacity $fancy-img-trans-len ease-in-out, -webkit-transform $fancy-img-trans-len linear;
-        -webkit-backface-visibility: hidden;
         -o-transition: opacity $fancy-img-trans-len ease-in-out, -o-transform $fancy-img-trans-len linear;
-        -o-backface-visibility: hidden;
         transition: opacity $fancy-img-trans-len ease-in-out, transform $fancy-img-trans-len linear;
       }
+    }
+
+    &.fancy-image-rotate {
+      -webkit-transform-style: preserve-3d;
+      -moz-transform-style: preserve-3d;
+      -o-transform-style: preserve-3d;
+      -ms-transform-style: preserve-3d;
+      transform-style: preserve-3d;
+      -webkit-perspective: $fancy-perspective;
+      -ie-perspective: $fancy-perspective;
+      perspective: $fancy-perspective;
+
+      > IMG {
+        -moz-backface-visibility: hidden;
+        -o-backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+      }
+
     }
   }
 
@@ -45,19 +51,19 @@
   .fancy-panel-container {
     &.fancy-fade {
       > .fancy-panel-cwrapper {
-        -moz-transition: opacity 0.25s ease-in-out;
-        -webkit-transition: opacity 0.25s ease-in-out;
-        -o-transition: opacity 0.25s ease-in-out;
-        transition: opacity 0.25s ease-in-out;
+        -moz-transition: opacity $fancy-panel-tran-len ease-in-out;
+        -webkit-transition: opacity $fancy-panel-tran-len ease-in-out;
+        -o-transition: opacity $fancy-panel-tran-len ease-in-out;
+        transition: opacity $fancy-panel-tran-len ease-in-out;
       }
     }
 
     &.fancy-zoom, &.fancy-rotate {
       > .fancy-panel-cwrapper {
-        -moz-transition: transform 0.25s ease-in-out;
-        -webkit-transition: -webkit-transform 0.25s ease-in-out;
-        -o-transition: transform 0.25s ease-in-out;
-        transition: transform 0.25s ease-in-out;
+        -moz-transition: transform $fancy-panel-tran-len ease-in-out;
+        -webkit-transition: -webkit-transform $fancy-panel-tran-len ease-in-out;
+        -o-transition: transform $fancy-panel-tran-len ease-in-out;
+        transition: transform $fancy-panel-tran-len ease-in-out;
       }
     }
 
@@ -68,18 +74,20 @@
         -o-transform-style: preserve-3d;
         -ms-transform-style: preserve-3d;
         transform-style: preserve-3d;
+        -moz-backface-visibility: hidden;
+        -o-backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
         backface-visibility: hidden;
-
       }
     }
 
     &.fancy-fade {
       &.fancy-zoom, &.fancy-rotate {
         > .fancy-panel-cwrapper {
-          -moz-transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
-          -webkit-transition: opacity 0.25s ease-in-out, -webkit-transform 0.25s ease-in-out;
-          -o-transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
-          transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
+          -moz-transition: opacity $fancy-panel-tran-len ease-in-out, transform $fancy-panel-tran-len ease-in-out;
+          -webkit-transition: opacity $fancy-panel-tran-len ease-in-out, -webkit-transform $fancy-panel-tran-len ease-in-out;
+          -o-transition: opacity $fancy-panel-tran-len ease-in-out, transform $fancy-panel-tran-len ease-in-out;
+          transition: opacity $fancy-panel-tran-len ease-in-out, transform $fancy-panel-tran-len ease-in-out;
         }
       }
 
@@ -89,10 +97,10 @@
 
   }
   .fancy-csslayout-item {
-    -moz-transition: opacity 0.34s ease-in, margin 0.34s ease-in;
-    -webkit-transition: opacity 0.34s ease-in, margin 0.34s ease-in;
-    -o-transition: opacity 0.34s ease-in, margin 0.34s ease-in;
-    transition: opacity 0.34s ease-in, margin 0.34s ease-in;
+    -moz-transition: opacity $fancy-css-fade-len ease-in, margin $fancy-css-fade-len ease-in;
+    -webkit-transition: opacity $fancy-css-fade-len ease-in, margin $fancy-css-fade-len ease-in;
+    -o-transition: opacity $fancy-css-fade-len ease-in, margin $fancy-css-fade-len ease-in;
+    transition: opacity $fancy-css-fade-len ease-in, margin $fancy-css-fade-len ease-in;
     margin: 0px;
   }
   .fancy-notifs {

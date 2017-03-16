@@ -7,7 +7,7 @@
     <packaging>war</packaging>
     <name>FancyLayouts demo</name>
     <description>FancyLayouts Demo Application</description>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.0.0</version>
 
     <properties>
         <Implementation-Version>${project.version}</Implementation-Version>
@@ -16,8 +16,8 @@
 
         <!-- May be overridden by the build system -->
         <license.short.name>apache2</license.short.name>
-        <vaadin.version>7.2.0</vaadin.version>
-        <vaadin.plugin.version>7.2.0</vaadin.plugin.version>
+        <vaadin.version>8.0.2</vaadin.version>
+        <vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
 
         <!-- Must not change this because of the Directory -->
         <Implementation-Title>FancyLayouts</Implementation-Title>
@@ -73,8 +73,9 @@
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-theme-compiler</artifactId>
-            <version>7.1.15</version>
+            <artifactId>vaadin-client-compiler</artifactId>
+            <version>${vaadin.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -94,11 +95,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.5.1</version>
+                <version>3.0</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                    <encoding>UTF-8</encoding>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -133,6 +133,7 @@
                             <goal>clean</goal>
                             <goal>resources</goal>
                             <goal>update-theme</goal>
+                            <goal>compile-theme</goal>
                             <!-- <goal>update-widgetset</goal> -->
                             <goal>compile</goal>
                             <goal>test</goal>
@@ -189,76 +190,19 @@
                 </configuration>
             </plugin>
 
-            <!-- Jetty is used for development testing -->
             <plugin>
-                <groupId>org.mortbay.jetty</groupId>
+                <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>8.1.13.v20130916</version>
+                <version>9.2.6.v20141205</version>
                 <configuration>
-                    <stopPort>9966</stopPort>
-                    <stopKey>fancylayouts</stopKey>
-                    <scanIntervalSeconds>0</scanIntervalSeconds>
-                    <!-- make sure Jetty also finds the widgetset -->
-                    <webAppConfig>
-                        <contextPath>/fancylayouts</contextPath>
-                    </webAppConfig>
+                    <webApp>
+                        <contextPath>/</contextPath>
+                    </webApp>
                 </configuration>
             </plugin>
-
-            <!-- This is used to autodeploy demo to Tomcat in CI -->
-            <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.0</version>
-                <configuration>
-                    <url>http://localhost:8080/manager/text</url>
-                    <server>mytomcat</server>
-                    <path>/FancyLayoutsDemo</path>
-                </configuration>
-            </plugin>
-
         </plugins>
 
         <finalName>FancyLayoutsDemo</finalName>
-
-        <pluginManagement>
-            <plugins>
-                <!--This plugin's configuration is used to store Eclipse m2e settings
-                    only. It has no influence on the Maven build itself. -->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>
-                                            com.vaadin
-                                        </groupId>
-                                        <artifactId>
-                                            vaadin-maven-plugin
-                                        </artifactId>
-                                        <versionRange>
-                                            [7.0-SNAPSHOT,)
-                                        </versionRange>
-                                        <goals>
-                                            <goal>resources</goal>
-                                            <goal>update-widgetset</goal>
-                                            <goal>compile</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore/>
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
     </build>
 
 </project>

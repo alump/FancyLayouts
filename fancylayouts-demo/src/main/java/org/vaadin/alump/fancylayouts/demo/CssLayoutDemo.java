@@ -23,10 +23,6 @@ import java.util.Iterator;
 import org.vaadin.alump.fancylayouts.FancyCssLayout;
 import org.vaadin.alump.fancylayouts.FancyTransition;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.event.LayoutEvents.LayoutClickEvent;
-import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -67,18 +63,15 @@ public class CssLayoutDemo extends VerticalLayout {
         hLayout.addComponent(addContent);
 
         CheckBox middleCbox = new CheckBox("add middle");
-        middleCbox.setImmediate(true);
         middleCbox.setValue(addCssMiddle);
         hLayout.addComponent(middleCbox);
 
         CheckBox marginCbox = new CheckBox("slide");
-        marginCbox.setImmediate(true);
         marginCbox.setValue(cssLayout
                 .isTransitionEnabled(FancyTransition.SLIDE));
         hLayout.addComponent(marginCbox);
 
         CheckBox styleCbox = new CheckBox("cards");
-        styleCbox.setImmediate(true);
         styleCbox.setValue(boxMode);
         hLayout.addComponent(styleCbox);
 
@@ -101,55 +94,34 @@ public class CssLayoutDemo extends VerticalLayout {
             }
         });
 
-        middleCbox.addValueChangeListener(new Property.ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                addCssMiddle = (Boolean) event.getProperty().getValue();
-            }
-
+        middleCbox.addValueChangeListener(event -> {
+                addCssMiddle = event.getValue();
         });
 
-        marginCbox.addValueChangeListener(new Property.ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                cssLayout.setSlideEnabled((Boolean) event.getProperty()
-                        .getValue());
-            }
-
+        marginCbox.addValueChangeListener(event -> {
+                cssLayout.setSlideEnabled(event.getValue());
         });
 
-        styleCbox.addValueChangeListener(new Property.ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                boolean value = (Boolean) event.getProperty().getValue();
-                Iterator<Component> iter = cssLayout.iterator();
-                while (iter.hasNext()) {
-                    Component component = iter.next();
-                    if (value) {
-                        component.addStyleName("demo-removable-two");
-                    } else {
-                        component.removeStyleName("demo-removable-two");
-                    }
+        styleCbox.addValueChangeListener(event ->  {
+            boolean value = event.getValue();
+            Iterator<Component> iter = cssLayout.iterator();
+            while (iter.hasNext()) {
+                Component component = iter.next();
+                if (value) {
+                    component.addStyleName("demo-removable-two");
+                } else {
+                    component.removeStyleName("demo-removable-two");
                 }
-                boxMode = value;
             }
-
+            boxMode = value;
         });
 
-        cssLayout.addLayoutClickListener(new LayoutClickListener() {
-
-            @Override
-            public void layoutClick(LayoutClickEvent event) {
-                ++clickCounter;
-                if (event.getChildComponent() == null) {
-                    ++layoutClickCounter;
-                }
-                counterLabel.setValue(getClickCounterCaption());
+        cssLayout.addLayoutClickListener(event -> {
+            ++clickCounter;
+            if (event.getChildComponent() == null) {
+                ++layoutClickCounter;
             }
-
+            counterLabel.setValue(getClickCounterCaption());
         });
 
     }

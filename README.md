@@ -12,6 +12,15 @@ Components:
   * **FancyCssLayout** - Adds transitions to CssLayout
   * **FancyPanel** - Paging component with transitions
   * **FancyNotifications** - OSX style notification bubbles
+  
+Releases:
+---------
+
+#### 2.0.0 (2017-03-16)
+- Vaadin 8 support
+
+#### 1.0.2
+- Current Vaadin 7 version
 
 Links:
 ------

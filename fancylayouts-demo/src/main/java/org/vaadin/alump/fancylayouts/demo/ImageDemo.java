@@ -26,10 +26,6 @@ import java.util.Set;
 
 import org.vaadin.alump.fancylayouts.FancyImage;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.event.FieldEvents.TextChangeEvent;
-import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.Resource;
@@ -96,18 +92,15 @@ public class ImageDemo extends VerticalLayout {
         }
 
         CheckBox auto = new CheckBox("Slide show");
-        auto.setImmediate(true);
         buttonLayout.addComponent(auto);
 
         CheckBox fade = new CheckBox("Fade");
         fade.setDescription("Fade image when changing");
-        fade.setImmediate(true);
         fade.setValue(image.isFadeTransition());
         buttonLayout.addComponent(fade);
 
         CheckBox rotate = new CheckBox("Rotate");
         rotate.setDescription("Rotate image when changing");
-        rotate.setImmediate(true);
         rotate.setValue(image.isRotateTransition());
         buttonLayout.addComponent(rotate);
 
@@ -122,60 +115,38 @@ public class ImageDemo extends VerticalLayout {
         timeout.setValue(String.valueOf(image.getSlideShowTimeout()));
         timeout.setDescription("How many millisec the slideshow shows one image");
         buttonLayout.addComponent(timeout);
-        timeout.addTextChangeListener(new TextChangeListener() {
-
-            @Override
-            public void textChange(TextChangeEvent event) {
-                try {
-                    int value = Integer.parseInt(event.getText());
-                    // Change slide show value
-                    image.setSlideShowTimeout(value);
-                } catch (NumberFormatException e) {
-                }
-            }
-
-        });
-
-        auto.addValueChangeListener(new Property.ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                Boolean value = (Boolean) event.getProperty().getValue();
-                // Enable/disable slideshow mode
-                image.setSlideShowEnabled(value);
-                for (Component component : disableWhenAutoPlay) {
-                    component.setEnabled(!value);
-                }
+        timeout.addValueChangeListener(event -> {
+            try {
+                int value = Integer.parseInt(event.getValue());
+                // Change slide show value
+                image.setSlideShowTimeout(value);
+            } catch (NumberFormatException e) {
             }
         });
 
-        fade.addValueChangeListener(new Property.ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                Boolean value = (Boolean) event.getProperty().getValue();
-                image.setFadeTransition(value.booleanValue());
+        auto.addValueChangeListener(event -> {
+            Boolean value = event.getValue();
+            // Enable/disable slideshow mode
+            image.setSlideShowEnabled(value);
+            for (Component component : disableWhenAutoPlay) {
+                component.setEnabled(!value);
             }
         });
 
-        rotate.addValueChangeListener(new Property.ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                Boolean value = (Boolean) event.getProperty().getValue();
-                image.setRotateTransition(value.booleanValue(),
-                        horizontal.getValue());
-            }
+        fade.addValueChangeListener(event -> {
+            Boolean value = event.getValue();
+            image.setFadeTransition(value.booleanValue());
         });
 
-        horizontal.addValueChangeListener(new Property.ValueChangeListener() {
+        rotate.addValueChangeListener(event -> {
+            Boolean value = event.getValue();
+            image.setRotateTransition(value.booleanValue(),
+                    horizontal.getValue());
+        });
 
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (image.isRotateTransition()) {
-                    image.setRotateTransition(true, (Boolean) event
-                            .getProperty().getValue());
-                }
+        horizontal.addValueChangeListener(event -> {
+            if (image.isRotateTransition()) {
+                image.setRotateTransition(true, event.getValue());
             }
         });
     }

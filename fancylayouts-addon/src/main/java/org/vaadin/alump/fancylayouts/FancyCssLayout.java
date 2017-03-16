@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.vaadin.shared.Registration;
 import org.vaadin.alump.fancylayouts.gwt.client.connect.FancyCssLayoutClientRpc;
 import org.vaadin.alump.fancylayouts.gwt.client.connect.FancyCssLayoutServerRpc;
 import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyCssLayoutState;
@@ -220,8 +221,8 @@ public class FancyCssLayout extends AbstractLayout implements
     }
 
     @Override
-    public void addLayoutClickListener(LayoutClickListener listener) {
-        addListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
+    public Registration addLayoutClickListener(LayoutClickListener listener) {
+        return addListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
                 LayoutClickEvent.class, listener,
                 LayoutClickListener.clickMethod);
     }
@@ -230,19 +231,6 @@ public class FancyCssLayout extends AbstractLayout implements
     public void removeLayoutClickListener(LayoutClickListener listener) {
         removeListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
                 LayoutClickEvent.class, listener);
-    }
-
-    @Override
-    @Deprecated
-    public void addListener(LayoutClickListener listener) {
-        addLayoutClickListener(listener);
-
-    }
-
-    @Override
-    @Deprecated
-    public void removeListener(LayoutClickListener listener) {
-        removeLayoutClickListener(listener);
     }
 
     @Override

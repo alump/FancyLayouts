@@ -1,14 +1,11 @@
 package org.vaadin.alump.fancylayouts.demo;
 
+import com.vaadin.shared.ui.ContentMode;
 import org.vaadin.alump.fancylayouts.FancyNotification;
 import org.vaadin.alump.fancylayouts.FancyNotifications;
 import org.vaadin.alump.fancylayouts.gwt.client.shared.FancyNotificationsState.Position;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.ThemeResource;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -47,81 +44,48 @@ public class NotificationsDemo extends VerticalLayout {
 
         timeout = new TextField("Auto close (ms)");
         timeout.setDescription("This value only applies to new notifications made.");
-        timeout.addValueChangeListener(new Property.ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                try {
-                    int value = Integer.valueOf((String) event.getProperty()
-                            .getValue());
-                    notifications.setCloseTimeout(value);
-                } catch (NumberFormatException e) {
-                }
-                timeout.setValue(String.valueOf(notifications.getCloseTimeout()));
+        timeout.addValueChangeListener(event -> {
+            try {
+                int value = Integer.valueOf(event.getValue());
+                notifications.setCloseTimeout(value);
+            } catch (NumberFormatException e) {
             }
+            timeout.setValue(String.valueOf(notifications.getCloseTimeout()));
         });
         optionLayout.addComponent(timeout);
 
         CheckBox clickCloseCB = new CheckBox("Click to close");
-        clickCloseCB.setImmediate(true);
         clickCloseCB.setDescription("Close notifications when clicked");
         optionLayout.addComponent(clickCloseCB);
-        clickCloseCB.addValueChangeListener(new Property.ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                notifications.setClickClose((Boolean) event.getProperty()
-                        .getValue());
-            }
+        clickCloseCB.addValueChangeListener(event -> {
+            notifications.setClickClose(event.getValue());
         });
 
         CheckBox clickNotificationCB = new CheckBox("Notify clicks");
-        clickNotificationCB.setImmediate(true);
         clickNotificationCB
                 .setDescription("Make new notification when notification made by these buttons are clicked.");
         optionLayout.addComponent(clickNotificationCB);
-        clickNotificationCB
-                .addValueChangeListener(new Property.ValueChangeListener() {
-
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        clickNotifications = (Boolean) event.getProperty()
-                                .getValue();
-                    }
-                });
+        clickNotificationCB.addValueChangeListener(event -> {
+            clickNotifications = event.getValue();
+        });
 
         CheckBox defaultIconCB = new CheckBox("Use default icon");
-        defaultIconCB.setImmediate(true);
         defaultIconCB
                 .setDescription("Use default icon in notifications without defined icon");
         optionLayout.addComponent(defaultIconCB);
-        defaultIconCB
-                .addValueChangeListener(new Property.ValueChangeListener() {
-
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        if ((Boolean) event.getProperty().getValue()) {
-                            notifications.setDefaultIcon(new ThemeResource(
-                                    "images/vaadin.png"));
-                        } else {
-                            notifications.setDefaultIcon(null);
-                        }
-                    }
-                });
+        defaultIconCB.addValueChangeListener(event -> {
+            if (event.getValue()) {
+                notifications.setDefaultIcon(new ThemeResource(
+                        "images/vaadin.png"));
+            } else {
+                notifications.setDefaultIcon(null);
+            }
+        });
 
         positionCB = new ComboBox("Position");
-        positionCB.setImmediate(true);
-        for (Position position : Position.values()) {
-            positionCB.addItem(position);
-        }
-        positionCB.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                notifications.setPosition((Position) event.getProperty()
-                        .getValue());
-            }
-
+        positionCB.setItems(Position.values());
+        positionCB.addValueChangeListener(event -> {
+            notifications.setPosition((Position) event.getValue());
         });
         optionLayout.addComponent(positionCB);
 
@@ -307,6 +271,6 @@ public class NotificationsDemo extends VerticalLayout {
 
         timeout.setValue(String.valueOf(notifications.getCloseTimeout()));
         positionCB.setValue(notifications.getPosition());
-        positionCB.setNullSelectionAllowed(false);
+        positionCB.setEmptySelectionAllowed(false);
     }
 }

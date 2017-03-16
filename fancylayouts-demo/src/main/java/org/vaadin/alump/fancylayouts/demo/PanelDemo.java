@@ -20,8 +20,6 @@ package org.vaadin.alump.fancylayouts.demo;
 
 import org.vaadin.alump.fancylayouts.FancyPanel;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.Alignment;
@@ -82,119 +80,82 @@ public class PanelDemo extends VerticalLayout {
 
         CheckBox scrollable = new CheckBox("scrollable");
         scrollable.setValue(panel.isScrollable());
-        scrollable.setImmediate(true);
         buttonLayout.addComponent(scrollable);
 
         fade = new CheckBox("fade");
-        fade.setImmediate(true);
         buttonLayout.addComponent(fade);
 
         zoom = new CheckBox("zoom");
-        zoom.setImmediate(true);
         buttonLayout.addComponent(zoom);
 
         rotate = new CheckBox("rotate");
-        rotate.setImmediate(true);
         buttonLayout.addComponent(rotate);
 
         horizontal = new CheckBox("horizontal");
         horizontal.setValue(true);
-        horizontal.setImmediate(true);
         buttonLayout.addComponent(horizontal);
 
         panel.setSizeFull();
         addComponent(panel);
         setExpandRatio(panel, 1.0f);
 
-        contA.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                if (panelA == null) {
-                    panelA = createPanelContentA();
-                }
-                panel.showComponent(panelA);
-                removeIntro();
+        contA.addClickListener(event -> {
+            if (panelA == null) {
+                panelA = createPanelContentA();
             }
+            panel.showComponent(panelA);
+            removeIntro();
         });
 
-        contB.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                if (panelB == null) {
-                    panelB = createPanelContentB();
-                }
-                panel.showComponent(panelB);
-                removeIntro();
+        contB.addClickListener(event -> {
+            if (panelB == null) {
+                panelB = createPanelContentB();
             }
+            panel.showComponent(panelB);
+            removeIntro();
         });
 
-        contC.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                if (panelC == null) {
-                    panelC = createPanelContentD();
-                }
-                panel.showComponent(panelC);
-                removeIntro();
+        contC.addClickListener(event -> {
+            if (panelC == null) {
+                panelC = createPanelContentD();
             }
+            panel.showComponent(panelC);
+            removeIntro();
         });
 
-        scrollable.addValueChangeListener(new Property.ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                boolean enable = (Boolean) event.getProperty().getValue();
-                // Set scrollable value of panel
-                panel.setScrollable(enable);
-            }
+        scrollable.addValueChangeListener(event -> {
+            boolean enable = event.getValue();
+            // Set scrollable value of panel
+            panel.setScrollable(enable);
         });
 
-        fade.addValueChangeListener(new Property.ValueChangeListener() {
+        fade.addValueChangeListener(event -> {
+            boolean enable = event.getValue();
+            // Enable/disable transitions
+            panel.setFadeTransition(enable);
+            updateTransitionCheckboxes();
+        });
 
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                boolean enable = (Boolean) event.getProperty().getValue();
+        zoom.addValueChangeListener(event -> {
+            boolean enable = event.getValue();
+            // Enable/disable transitions
+            panel.setZoomTransition(enable);
+            updateTransitionCheckboxes();
+        });
+
+        rotate.addValueChangeListener(event -> {
+            boolean enable = event.getValue();
+            // Enable/disable transitions
+            panel.setRotateTransition(enable, horizontal.getValue());
+            updateTransitionCheckboxes();
+        });
+
+        horizontal.addValueChangeListener(event -> {
+            if (rotate.getValue()) {
+                boolean enable = event.getValue();
                 // Enable/disable transitions
-                panel.setFadeTransition(enable);
+                panel.setRotateTransition(true, enable);
                 updateTransitionCheckboxes();
-            }
-        });
-
-        zoom.addValueChangeListener(new Property.ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                boolean enable = (Boolean) event.getProperty().getValue();
-                // Enable/disable transitions
-                panel.setZoomTransition(enable);
-                updateTransitionCheckboxes();
-            }
-        });
-
-        rotate.addValueChangeListener(new Property.ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                boolean enable = (Boolean) event.getProperty().getValue();
-                // Enable/disable transitions
-                panel.setRotateTransition(enable, horizontal.getValue());
-                updateTransitionCheckboxes();
-            }
-        });
-
-        horizontal.addValueChangeListener(new Property.ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (rotate.getValue()) {
-                    boolean enable = (Boolean) event.getProperty().getValue();
-                    // Enable/disable transitions
-                    panel.setRotateTransition(true, enable);
-                    updateTransitionCheckboxes();
-                }
             }
         });
 
@@ -246,6 +207,7 @@ public class PanelDemo extends VerticalLayout {
         layout.setSpacing(true);
 
         Label label = new Label(LOREM_STR);
+        label.setWidth(100, Unit.PERCENTAGE);
         layout.addComponent(label);
 
         Embedded image = new Embedded();
@@ -272,6 +234,7 @@ public class PanelDemo extends VerticalLayout {
         layout.setSpacing(true);
 
         Label label = new Label(BECON_STR);
+        label.setWidth(100, Unit.PERCENTAGE);
         layout.addComponent(label);
 
         Embedded image = new Embedded();
@@ -283,6 +246,7 @@ public class PanelDemo extends VerticalLayout {
         layout.setComponentAlignment(image, Alignment.MIDDLE_CENTER);
 
         Label label2 = new Label(BECON_STR);
+        label2.setWidth(100, Unit.PERCENTAGE);
         layout.addComponent(label2);
 
         return layout;

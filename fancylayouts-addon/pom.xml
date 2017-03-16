@@ -5,9 +5,9 @@
     <artifactId>fancylayouts-addon</artifactId>
     <packaging>jar</packaging>
     <name>FancyLayouts addon</name>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.0.0</version>
 
-    <description>FancyLayouts Vaadin 7 addon</description>
+    <description>FancyLayouts Vaadin addon</description>
 
     <organization>
         <name>Sami Viitanen</name>
@@ -31,8 +31,8 @@
 
         <!-- May be overridden by the build system -->
         <license.short.name>apache2</license.short.name>
-        <vaadin.version>7.2.0</vaadin.version>
-        <vaadin.plugin.version>7.2.0</vaadin.plugin.version>
+        <vaadin.version>8.0.2</vaadin.version>
+        <vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
 
         <snapshot.repository.url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/
         </snapshot.repository.url>
@@ -110,11 +110,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.5.1</version>
+                <version>3.0</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                    <encoding>UTF-8</encoding>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -221,38 +220,6 @@
         <finalName>FancyLayouts-${project.version}</finalName>
         <pluginManagement>
             <plugins>
-                <!--This plugin's configuration is used to store Eclipse m2e settings
-                    only. It has no influence on the Maven build itself. -->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>com.vaadin</groupId>
-                                        <artifactId>
-                                            vaadin-maven-plugin
-                                        </artifactId>
-                                        <versionRange>
-                                            [7.0-SNAPSHOT,)
-                                        </versionRange>
-                                        <goals>
-                                            <goal>resources</goal>
-                                            <goal>update-widgetset</goal>
-                                            <goal>compile</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore></ignore>
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
@@ -270,13 +237,13 @@
                         </archive>
                         <sourceEncoding>UTF-8</sourceEncoding>
                         <links>
-                            <link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
+                            <link>http://java.sun.com/j2se/1.8.0/docs/api/</link>
                             <link>https://vaadin.com/api/</link>
                         </links>
                         <doctitle>FancyLayouts Vaadin Addon</doctitle>
                         <sourcepath>src/main/java</sourcepath>
                         <show>public</show>
-                        <source>1.5</source>
+                        <source>1.8</source>
                         <nohelp>true</nohelp>
                         <excludePackageNames>*.widgetset.*</excludePackageNames>
                     </configuration>

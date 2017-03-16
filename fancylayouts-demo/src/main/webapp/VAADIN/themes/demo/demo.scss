@@ -1,8 +1,10 @@
-@import "../reindeer/reindeer.scss";
+@import "../valo/valo.scss";
+@import "addons.scss";
 
 @mixin demo {
 
-  @include reindeer;
+  @include valo;
+  @include addons;
 
   .demo-header {
     font-size: 18px;

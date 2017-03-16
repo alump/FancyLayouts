@@ -20,6 +20,7 @@ package org.vaadin.alump.fancylayouts.demo;
 
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinServlet;
+import com.vaadin.ui.themes.ValoTheme;
 import org.vaadin.alump.fancylayouts.FancyNotifications;
 
 import com.vaadin.annotations.Push;
@@ -35,7 +36,6 @@ import com.vaadin.ui.Link;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.BaseTheme;
 
 import javax.servlet.annotation.WebServlet;
 
@@ -111,7 +111,7 @@ public class FancyLayoutsUI extends UI {
         layout.addComponent(link);
 
         Button sourceLink = new Button();
-        sourceLink.addStyleName(BaseTheme.BUTTON_LINK);
+        sourceLink.addStyleName(ValoTheme.BUTTON_LINK);
 
         return layout;
     }
